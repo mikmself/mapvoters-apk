@@ -1,15 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/koordinator.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
-  runApp(SidebarXExampleApp());
+  runApp(SidebarApp());
 }
 
-class SidebarXExampleApp extends StatelessWidget {
-  SidebarXExampleApp({Key? key}) : super(key: key);
+class SidebarApp extends StatefulWidget {
+  @override
+  _SidebarAppState createState() => _SidebarAppState();
+}
 
+class _SidebarAppState extends State<SidebarApp> {
+  int _selectedIndex = 0;
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
+
+  final List<Widget> _widgetOptions = <Widget>[
+    Center(child: Text('DASHBOARD')),
+    Center(child: Koordinator()),
+    Center(child: Text('SAKSI')),
+    Center(child: Text('CALON PEMILIH')),
+    Center(child: Text('PETA SUARA')),
+    Center(child: Text('C1 SUARA')),
+    Center(child: Text('PENGATURAN')),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      _controller.selectIndex(index);
+    });
+    // Close the drawer if it is open
+    if (_key.currentState?.isDrawerOpen ?? false) {
+      Navigator.of(context).pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +50,27 @@ class SidebarXExampleApp extends StatelessWidget {
             appBar: isSmallScreen
                 ? AppBar(
               backgroundColor: canvasColor,
-              title: Text("Map Voters"),
+              title: Text(
+                "Map Voters",
+                style: TextStyle(color: Colors.white),
+              ),
               leading: IconButton(
                 onPressed: () {
                   _key.currentState?.openDrawer();
                 },
-                icon: const Icon(Icons.menu),
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
               ),
             )
                 : null,
-            drawer: ExampleSidebarX(controller: _controller),
+            drawer: isSmallScreen ? Sidebar(controller: _controller, onItemTapped: _onItemTapped) : null,
             body: Row(
               children: [
-                if (!isSmallScreen) ExampleSidebarX(controller: _controller),
+                if (!isSmallScreen) Sidebar(controller: _controller, onItemTapped: _onItemTapped),
                 Expanded(
-                  child: Center(
-                    child: _ScreensExample(
-                      controller: _controller,
-                    ),
-                  ),
+                  child: _widgetOptions[_selectedIndex],
                 ),
               ],
             ),
@@ -53,19 +81,20 @@ class SidebarXExampleApp extends StatelessWidget {
   }
 }
 
-class ExampleSidebarX extends StatelessWidget {
-  const ExampleSidebarX({
-    Key? key,
-    required SidebarXController controller,
-  })  : _controller = controller,
-        super(key: key);
+class Sidebar extends StatelessWidget {
+  const Sidebar({
+    super.key,
+    required this.controller,
+    required this.onItemTapped,
+  });
 
-  final SidebarXController _controller;
+  final SidebarXController controller;
+  final ValueChanged<int> onItemTapped;
 
   @override
   Widget build(BuildContext context) {
     return SidebarX(
-      controller: _controller,
+      controller: controller,
       theme: SidebarXTheme(
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -80,7 +109,7 @@ class ExampleSidebarX extends StatelessWidget {
           fontWeight: FontWeight.w500,
         ),
         itemTextPadding: const EdgeInsets.only(left: 30),
-        selectedItemTextPadding: const EdgeInsets.only(left: 30),
+        selectedItemTextPadding: const EdgeInsets.only(left: 40),
         itemDecoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: canvasColor),
@@ -102,11 +131,11 @@ class ExampleSidebarX extends StatelessWidget {
         ),
         iconTheme: IconThemeData(
           color: Colors.white.withOpacity(0.7),
-          size: 20,
+          size: 30,
         ),
         selectedIconTheme: const IconThemeData(
           color: Colors.white,
-          size: 20,
+          size: 35,
         ),
       ),
       extendedTheme: const SidebarXTheme(
@@ -117,70 +146,64 @@ class ExampleSidebarX extends StatelessWidget {
       ),
       footerDivider: divider,
       headerBuilder: (context, extended) {
-        return Padding(padding: EdgeInsets.only(top: 40));
+        return Padding(padding: EdgeInsets.only(top: 50));
       },
       items: [
         SidebarXItem(
           icon: Icons.home,
           label: 'DASHBOARD',
-
+          onTap: () {
+            onItemTapped(0);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.account_tree,
           label: 'KOORDINATOR',
+          onTap: () {
+            onItemTapped(1);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.account_box,
           label: 'SAKSI',
+          onTap: () {
+            onItemTapped(2);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.people,
           label: 'CALON PEMILIH',
+          onTap: () {
+            onItemTapped(3);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.map,
           label: 'PETA SUARA',
+          onTap: () {
+            onItemTapped(4);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.photo,
           label: 'C1 SUARA',
+          onTap: () {
+            onItemTapped(5);
+          },
         ),
-        const SidebarXItem(
+        SidebarXItem(
           icon: Icons.settings,
           label: 'PENGATURAN',
+          onTap: () {
+            onItemTapped(6);
+          },
         ),
       ],
     );
   }
-
-  void _showDisabledAlert(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Item disabled for selecting',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-      ),
-    );
-  }
 }
 
-class _ScreensExample extends StatelessWidget {
-  const _ScreensExample({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
-
-  final SidebarXController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(padding: EdgeInsets.all(10));
-  }
-}
-const canvasColor = Color(0xFF27A18B);
+const canvasColor = Color(0xFF00A6A6);
 const scaffoldBackgroundColor = Color(0xFF70CED4);
 const accentCanvasColor = Color(0xFF27A18B);
 const white = Colors.white;
