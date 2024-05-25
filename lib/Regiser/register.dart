@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/WidgetCollection/textfieldwithpadding.dart';
-import 'package:mapvotersapk/nextRegister.dart';
+import 'package:mapvotersapk/WidgetCollection/textfield.dart';
+import 'package:mapvotersapk/Regiser/nextRegister.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -40,7 +40,7 @@ class _RegisterState extends State<Register> {
                 physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    PaddingwithTextFieldWidget(
+                    textfield(
                       hinttext: "Nama",
                       controllerUse: _namacontroller,
                       warna: Colors.black12,
@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
                       lebar: 350,
                       tinggi: 60,
                     ),
-                    PaddingwithTextFieldWidget(
+                    textfield(
                       hinttext: "Email",
                       controllerUse: _emailcontroller,
                       warna: Colors.black12,
@@ -62,7 +62,7 @@ class _RegisterState extends State<Register> {
                       lebar: 350,
                       tinggi: 60,
                     ),
-                    PaddingwithTextFieldWidget(
+                    textfield(
                       hinttext: "Telephone",
                       controllerUse: _noHPcontroller,
                       warna: Colors.black12,
@@ -73,7 +73,7 @@ class _RegisterState extends State<Register> {
                       lebar: 350,
                       tinggi: 60,
                     ),
-                    PaddingwithTextFieldWidget(
+                    textfield(
                       hinttext: "Password",
                       controllerUse: _passwordcontroller,
                       warna: Colors.black12,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/WidgetCollection/dropDown.dart';
-import 'package:mapvotersapk/WidgetCollection/textfieldwithpadding.dart';
-import 'package:mapvotersapk/modelregister.dart';
+import 'package:mapvotersapk/WidgetCollection/textfield.dart';
 
 List<String> type = ["PRESIDEN", "DPR RI", "DPRD PROVINSI"];
 List<String> partai = ["PDIP", "GERINDRA", "PKS"];
@@ -61,7 +60,7 @@ class _nextRegisterState extends State<nextRegister> {
                         });
                       },
                       hint: "Type"),
-                  PaddingwithTextFieldWidget(
+                  textfield(
                     hinttext: "No Urut",
                     controllerUse: _noUrutcontroller,
                     warna: Colors.black12,
@@ -72,7 +71,7 @@ class _nextRegisterState extends State<nextRegister> {
                     lebar: 350,
                     tinggi: 60,
                   ),
-                  PaddingwithTextFieldWidget(
+                  textfield(
                     hinttext: "Dapil",
                     controllerUse: _Dapilcontroller,
                     warna: Colors.black12,
@@ -97,18 +96,7 @@ class _nextRegisterState extends State<nextRegister> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          modelRegis register = modelRegis(
-                              context,
-                              widget.nama,
-                              widget.email,
-                              widget.noHP,
-                              widget.password,
-                              _typecontroller.text,
-                              int.parse(_noUrutcontroller.text),
-                              _Dapilcontroller.text,
-                              _partaicontroller.text);
-                        });
+                        setState(() {});
                       },
                       child: Text("SIGN UP")),
                 ],
