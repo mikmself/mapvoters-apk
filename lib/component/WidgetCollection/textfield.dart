@@ -21,31 +21,33 @@ class textfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: lebar,
-      height: tinggi,
-      decoration: BoxDecoration(
-        color: warna,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      margin: EdgeInsets.fromLTRB(L, T, R, B),
-      child: TextField(
-        obscureText: obscure(),
-        style: GoogleFonts.nunito(
-          fontWeight: FontWeight.w700,
-          fontSize: 24,
-          color: Colors.white,
+    return Expanded(
+      child: Container(
+        width: lebar,
+        height: tinggi,
+        decoration: BoxDecoration(
+          color: warna,
+          borderRadius: BorderRadius.circular(10),
         ),
-        controller: controllerUse,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 10),
-          border: InputBorder.none,
-          hintText: hinttext,
-          hintStyle: GoogleFonts.nunito(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        margin: EdgeInsets.fromLTRB(L, T, R, B),
+        child: TextField(
+          obscureText: obscure(),
+          style: GoogleFonts.nunito(
             fontWeight: FontWeight.w700,
             fontSize: 24,
             color: Colors.white,
+          ),
+          controller: controllerUse,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10),
+            border: InputBorder.none,
+            hintText: hinttext,
+            hintStyle: GoogleFonts.nunito(
+              fontWeight: FontWeight.w700,
+              fontSize: 24,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

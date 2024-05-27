@@ -10,11 +10,11 @@ Widget buildtextfield({
     hinttext: hinttext,
     controllerUse: controllerUse,
     warna: warna,
-    L: 13,
-    T: 20,
-    R: 13,
+    L: 0,
+    T: 10,
+    R: 0,
     B: 0,
-    lebar: 275,
-    tinggi: 50,
+    lebar: 350,
+    tinggi: 70,
   );
 }

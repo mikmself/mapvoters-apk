@@ -86,7 +86,7 @@ class _loginpageState extends State<loginpage> {
                             hinttext: "Sign In",
                             warnatombol: const Color(0x75005E73),
                             warnatext: Colors.white,
-                            metod: ()=> SignIn(context),
+                            metod: () => SignIn(context),
                           ),
                           buildbutton(
                             context: context,
