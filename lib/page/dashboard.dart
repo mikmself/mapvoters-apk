@@ -12,12 +12,10 @@ class Dashboard extends StatelessWidget {
           decoration: BoxDecoration(color: Color(0xFFF6F5F2)),
           child: Stack(
             children: [
-              Positioned(
-                left: 15,
-                top: 50,
+              Center(
                 child: Container(
                   width: 381,
-                  height: 578,
+                  height: 730,
                   child: Stack(
                     children: [
                       Positioned(
