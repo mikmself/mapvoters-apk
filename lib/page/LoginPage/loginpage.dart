@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/LoginPage/builderbutton.dart';
-import 'package:mapvotersapk/LoginPage/buildertextfield.dart';
-import 'package:mapvotersapk/LoginPage/method.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/method.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class loginpage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _loginpageState extends State<loginpage> {
                             hinttext: "Sign In",
                             warnatombol: const Color(0x75005E73),
                             warnatext: Colors.white,
-                            metod: SignIn,
+                            metod: ()=> SignIn(context),
                           ),
                           buildbutton(
                             context: context,

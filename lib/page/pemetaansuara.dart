@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'calonpemilih.dart';
 
-class Pemtaansuaraprov extends StatefulWidget {
-  const Pemtaansuaraprov({super.key});
+class PemtaanSuara extends StatefulWidget {
+  const PemtaanSuara({super.key});
 
   @override
-  State<Pemtaansuaraprov> createState() => _PemtaansuaraprovState();
+  State<PemtaanSuara> createState() => _PemtaanSuaraState();
 }
 
-class _PemtaansuaraprovState extends State<Pemtaansuaraprov> {
+class _PemtaanSuaraState extends State<PemtaanSuara> {
   TextEditingController cariprov = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class _PemtaansuaraprovState extends State<Pemtaansuaraprov> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
               child: Text(
-                'Provinsi',
+                'Pemetaan Suara',
                 style: GoogleFonts.getFont(
                   'Nunito',
                   fontWeight: FontWeight.w900,

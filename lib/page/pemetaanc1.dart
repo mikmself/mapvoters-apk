@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class ProvC1 extends StatefulWidget {
-  const ProvC1({super.key});
+class PemetaanC1 extends StatefulWidget {
+  const PemetaanC1({super.key});
 
   @override
-  State<ProvC1> createState() => _ProvC1State();
+  State<PemetaanC1> createState() => _PemetaanC1State();
 }
 
-class _ProvC1State extends State<ProvC1> {
+class _PemetaanC1State extends State<PemetaanC1> {
   TextEditingController cariprov = TextEditingController();
 
   @override

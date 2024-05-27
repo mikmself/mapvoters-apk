@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/Regiser/builderwidget.dart';
-import 'package:mapvotersapk/Regiser/nextRegister.dart';
+import 'package:mapvotersapk/page/Register/pageComponent/builderwidget.dart';
+import 'package:mapvotersapk/page/Register/nextRegister.dart';
 import 'package:file_picker/file_picker.dart';
 
 class Register extends StatefulWidget {

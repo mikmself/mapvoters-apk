@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/Regiser/builderwidget.dart';
-import 'package:mapvotersapk/modelregister.dart';
+import 'package:mapvotersapk/page/Register/pageComponent/builderwidget.dart';
+import 'package:mapvotersapk/component/model/modelregister.dart';
 
 List<String> type = ["PRESIDEN", "DPR RI", "DPRD PROVINSI"];
 List<String> partai = ["PDIP", "GERINDRA", "PKS"];

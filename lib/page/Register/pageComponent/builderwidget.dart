@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mapvotersapk/WidgetCollection/dropDown.dart';
-import 'package:mapvotersapk/WidgetCollection/textfield.dart';
+import 'package:mapvotersapk/component/WidgetCollection/dropDown.dart';
+import 'package:mapvotersapk/component/WidgetCollection/textfield.dart';
 
 Widget buildtextfield({
   required String hinttext,

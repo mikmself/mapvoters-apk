@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/WidgetCollection/button.dart';
+import 'package:mapvotersapk/component/WidgetCollection/button.dart';
 
 Widget buildbutton(
     {required String hinttext,

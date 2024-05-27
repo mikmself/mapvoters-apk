@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/page/koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
+import 'package:mapvotersapk/page/pemetaanc1.dart';
+import 'package:mapvotersapk/page/pemetaansuara.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
@@ -24,8 +26,8 @@ class _SidebarAppState extends State<SidebarApp> {
     const Center(child: Koordinator()),
     const Center(child: Text('SAKSI')),
     const Center(child: Text('CALON PEMILIH')),
-    const Center(child: Text('PETA SUARA')),
-    const Center(child: Text('C1 SUARA')),
+    const Center(child: PemtaanSuara()),
+    const Center(child: PemetaanC1()),
     const Center(child: Text('PENGATURAN')),
   ];
 

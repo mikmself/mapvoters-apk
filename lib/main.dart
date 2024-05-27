@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/LoginPage/loginpage.dart';
+import 'package:mapvotersapk/page/LoginPage/loginpage.dart';
 
 void main() {
   runApp(const MyApp());
