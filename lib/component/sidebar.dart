@@ -4,10 +4,12 @@ import 'package:mapvotersapk/page/dashboard.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
-  runApp(SidebarApp());
+  runApp(const SidebarApp());
 }
 
 class SidebarApp extends StatefulWidget {
+  const SidebarApp({super.key});
+
   @override
   _SidebarAppState createState() => _SidebarAppState();
 }
@@ -18,13 +20,13 @@ class _SidebarAppState extends State<SidebarApp> {
   final _key = GlobalKey<ScaffoldState>();
 
   final List<Widget> _widgetOptions = <Widget>[
-    Center(child: Dashboard()),
-    Center(child: Koordinator()),
-    Center(child: Text('SAKSI')),
-    Center(child: Text('CALON PEMILIH')),
-    Center(child: Text('PETA SUARA')),
-    Center(child: Text('C1 SUARA')),
-    Center(child: Text('PENGATURAN')),
+    const Center(child: Dashboard()),
+    const Center(child: Koordinator()),
+    const Center(child: Text('SAKSI')),
+    const Center(child: Text('CALON PEMILIH')),
+    const Center(child: Text('PETA SUARA')),
+    const Center(child: Text('C1 SUARA')),
+    const Center(child: Text('PENGATURAN')),
   ];
 
   void _onItemTapped(int index) {
@@ -52,7 +54,7 @@ class _SidebarAppState extends State<SidebarApp> {
             appBar: isSmallScreen
                 ? AppBar(
               backgroundColor: canvasColor,
-              title: Text(
+              title: const Text(
                 "Map Voters",
                 style: TextStyle(color: Colors.white),
               ),
@@ -60,7 +62,7 @@ class _SidebarAppState extends State<SidebarApp> {
                 onPressed: () {
                   _key.currentState?.openDrawer();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.menu,
                   color: Colors.white,
                 ),
@@ -88,10 +90,10 @@ class _SidebarAppState extends State<SidebarApp> {
 
 class Sidebar extends StatelessWidget {
   const Sidebar({
-    Key? key,
+    super.key,
     required this.controller,
     required this.onItemTapped,
-  }) : super(key: key);
+  });
 
   final SidebarXController controller;
   final ValueChanged<int> onItemTapped;
@@ -151,7 +153,7 @@ class Sidebar extends StatelessWidget {
       ),
       footerDivider: divider,
       headerBuilder: (context, extended) {
-        return Padding(padding: EdgeInsets.only(top: 50));
+        return const Padding(padding: EdgeInsets.only(top: 50));
       },
       items: [
         SidebarXItem(

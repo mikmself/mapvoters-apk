@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
+  const Dashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -9,11 +11,11 @@ class Dashboard extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(color: Color(0xFFF6F5F2)),
+          decoration: const BoxDecoration(color: Color(0xFFF6F5F2)),
           child: Stack(
             children: [
               Center(
-                child: Container(
+                child: SizedBox(
                   width: 381,
                   height: 730,
                   child: Stack(
@@ -21,7 +23,7 @@ class Dashboard extends StatelessWidget {
                       Positioned(
                         left: 2,
                         top: 0,
-                        child: Container(
+                        child: SizedBox(
                           width: 180,
                           height: 180,
                           child: Stack(
@@ -33,16 +35,16 @@ class Dashboard extends StatelessWidget {
                                   width: 180,
                                   height: 180,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFABB7BD),
+                                    color: const Color(0xFFABB7BD),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           width: 2, color: Color(0xFF848484)),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 16,
                                 top: 15,
                                 child: SizedBox(
@@ -59,7 +61,7 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 10,
                                 top: 63,
                                 child: SizedBox(
@@ -83,7 +85,7 @@ class Dashboard extends StatelessWidget {
                       Positioned(
                         left: 201,
                         top: 0,
-                        child: Container(
+                        child: SizedBox(
                           width: 180,
                           height: 180,
                           child: Stack(
@@ -95,16 +97,16 @@ class Dashboard extends StatelessWidget {
                                   width: 180,
                                   height: 180,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFABB7BD),
+                                    color: const Color(0xFFABB7BD),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           width: 2, color: Color(0xFF848484)),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 16,
                                 top: 15,
                                 child: SizedBox(
@@ -121,7 +123,7 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 37,
                                 top: 62,
                                 child: SizedBox(
@@ -145,7 +147,7 @@ class Dashboard extends StatelessWidget {
                       Positioned(
                         left: 2,
                         top: 199,
-                        child: Container(
+                        child: SizedBox(
                           width: 180,
                           height: 180,
                           child: Stack(
@@ -157,16 +159,16 @@ class Dashboard extends StatelessWidget {
                                   width: 180,
                                   height: 180,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFABB7BD),
+                                    color: const Color(0xFFABB7BD),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           width: 2, color: Color(0xFF848484)),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 16,
                                 top: 15,
                                 child: SizedBox(
@@ -183,7 +185,7 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 23,
                                 top: 62,
                                 child: SizedBox(
@@ -207,7 +209,7 @@ class Dashboard extends StatelessWidget {
                       Positioned(
                         left: 201,
                         top: 199,
-                        child: Container(
+                        child: SizedBox(
                           width: 180,
                           height: 180,
                           child: Stack(
@@ -219,16 +221,16 @@ class Dashboard extends StatelessWidget {
                                   width: 180,
                                   height: 180,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFABB7BD),
+                                    color: const Color(0xFFABB7BD),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           width: 2, color: Color(0xFF848484)),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 16,
                                 top: 15,
                                 child: SizedBox(
@@ -245,7 +247,7 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 10,
                                 top: 62,
                                 child: SizedBox(
@@ -269,7 +271,7 @@ class Dashboard extends StatelessWidget {
                       Positioned(
                         left: 0,
                         top: 398,
-                        child: Container(
+                        child: SizedBox(
                           width: 381,
                           height: 180,
                           child: Stack(
@@ -281,16 +283,16 @@ class Dashboard extends StatelessWidget {
                                   width: 381,
                                   height: 180,
                                   decoration: ShapeDecoration(
-                                    color: Color(0xFFABB7BD),
+                                    color: const Color(0xFFABB7BD),
                                     shape: RoundedRectangleBorder(
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                           width: 2, color: Color(0xFF848484)),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: SizedBox(
@@ -307,7 +309,7 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21.17,
                                 top: 63,
                                 child: SizedBox(
