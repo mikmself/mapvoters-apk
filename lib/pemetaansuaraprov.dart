@@ -12,7 +12,6 @@ class Pemtaansuaraprov extends StatefulWidget {
 
 class _PemtaansuaraprovState extends State<Pemtaansuaraprov> {
   TextEditingController cariprov = TextEditingController();
-  final shome = Ihome();
   @override
   Widget build(BuildContext context) {
    final   screenWidth = MediaQuery.of(context).size.width;
