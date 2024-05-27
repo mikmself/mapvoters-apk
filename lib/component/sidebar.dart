@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/component/koordinator.dart';
+import 'package:mapvotersapk/page/koordinator.dart';
+import 'package:mapvotersapk/page/dashboard.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class _SidebarAppState extends State<SidebarApp> {
   final _key = GlobalKey<ScaffoldState>();
 
   final List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('DASHBOARD')),
+    Center(child: Dashboard()),
     Center(child: Koordinator()),
     Center(child: Text('SAKSI')),
     Center(child: Text('CALON PEMILIH')),
@@ -31,9 +32,10 @@ class _SidebarAppState extends State<SidebarApp> {
       _selectedIndex = index;
       _controller.selectIndex(index);
     });
+
     // Close the drawer if it is open
     if (_key.currentState?.isDrawerOpen ?? false) {
-      Navigator.of(context).pop();
+      Navigator.of(_key.currentContext!).pop();
     }
   }
 
@@ -65,10 +67,13 @@ class _SidebarAppState extends State<SidebarApp> {
               ),
             )
                 : null,
-            drawer: isSmallScreen ? Sidebar(controller: _controller, onItemTapped: _onItemTapped) : null,
+            drawer: isSmallScreen
+                ? Sidebar(controller: _controller, onItemTapped: _onItemTapped)
+                : null,
             body: Row(
               children: [
-                if (!isSmallScreen) Sidebar(controller: _controller, onItemTapped: _onItemTapped),
+                if (!isSmallScreen)
+                  Sidebar(controller: _controller, onItemTapped: _onItemTapped),
                 Expanded(
                   child: _widgetOptions[_selectedIndex],
                 ),
@@ -83,10 +88,10 @@ class _SidebarAppState extends State<SidebarApp> {
 
 class Sidebar extends StatelessWidget {
   const Sidebar({
-    super.key,
+    Key? key,
     required this.controller,
     required this.onItemTapped,
-  });
+  }) : super(key: key);
 
   final SidebarXController controller;
   final ValueChanged<int> onItemTapped;
