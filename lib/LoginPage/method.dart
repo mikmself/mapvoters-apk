@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/Regiser/register.dart';
 
-void Masuk() {}
+void SignIn() {}
 
-void Daftar(BuildContext context) {
+void SignUp(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => Register()),

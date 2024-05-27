@@ -5,6 +5,7 @@ class MyDropdownMenu extends StatelessWidget {
   final List<String> field;
   final ValueChanged<String?> onSelected;
   final String hint;
+  final double L, T, R, B;
 
   final TextEditingController controllerUse;
 
@@ -13,11 +14,17 @@ class MyDropdownMenu extends StatelessWidget {
     required this.onSelected,
     required this.hint,
     required this.controllerUse,
+    required this.L,
+    required this.T,
+    required this.R,
+    required this.B,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
+      margin: EdgeInsets.fromLTRB(L, T, R, B),
       decoration: BoxDecoration(
         color: Colors.black12,
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -34,7 +41,7 @@ class MyDropdownMenu extends StatelessWidget {
         ),
         inputDecorationTheme: InputDecorationTheme(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left: 12),
+          contentPadding: EdgeInsets.only(left: 10, bottom: 5),
         ),
         requestFocusOnTap: false,
         onSelected: onSelected,

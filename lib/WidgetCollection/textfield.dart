@@ -39,6 +39,7 @@ class textfield extends StatelessWidget {
         ),
         controller: controllerUse,
         decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 10),
           border: InputBorder.none,
           hintText: hinttext,
           hintStyle: GoogleFonts.nunito(

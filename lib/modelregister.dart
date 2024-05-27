@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class modelRegis {
+class RegistrasiModel {
   BuildContext context;
   String nama = "";
   String email = "";
@@ -11,8 +11,46 @@ class modelRegis {
   int noUrut = 0;
   String dapil = "";
   String partai = "";
-  modelRegis(this.context, this.nama, this.email, this.noHP, this.password,
-      this.type, this.noUrut, this.dapil, this.partai);
+
+  RegistrasiModel(
+    this.context,
+    this.nama,
+    this.email,
+    this.noHP,
+    this.password,
+    this.type,
+    this.noUrut,
+    this.dapil,
+    this.partai,
+  );
+
+  bool isValid() {
+    if (nama.isEmpty) {
+      return false;
+    }
+    if (email.isEmpty) {
+      return false;
+    }
+    if (noHP.toStringAsExponential().isEmpty) {
+      return false;
+    }
+    if (password.isEmpty) {
+      return false;
+    }
+    if (type.isEmpty) {
+      return false;
+    }
+    if (noHP.toStringAsExponential().isEmpty) {
+      return false;
+    }
+    if (dapil.isEmpty) {
+      return false;
+    }
+    if (partai.isEmpty) {
+      return false;
+    }
+    return true;
+  }
 }
 
-List<modelRegis> registrasi = [];
+List<RegistrasiModel> registrasi = [];
