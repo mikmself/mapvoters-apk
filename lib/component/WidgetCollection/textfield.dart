@@ -54,7 +54,6 @@ class textfield extends StatelessWidget {
     );
   }
 
-// branch fix_login
   bool obscure() {
     if (hinttext == "Password") {
       return true;
