@@ -26,8 +26,8 @@ class button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        width: lebar,
-        height: tinggi,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
         margin: EdgeInsets.fromLTRB(L, T, R, B),
         child: TextButton(
           style: TextButton.styleFrom(

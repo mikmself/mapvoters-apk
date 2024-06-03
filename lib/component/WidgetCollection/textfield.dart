@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class textfield extends StatelessWidget {
   final String hinttext;
   final TextEditingController controllerUse;
-  final double L, R, T, B, tinggi, lebar;
+  final double L, R, T, B, tinggi, lebar, fontsize;
   final Color warna;
   const textfield({
     Key? key,
@@ -17,37 +17,36 @@ class textfield extends StatelessWidget {
     required this.B,
     required this.tinggi,
     required this.lebar,
+    required this.fontsize,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        width: lebar,
-        height: tinggi,
-        decoration: BoxDecoration(
-          color: warna,
-          borderRadius: BorderRadius.circular(10),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        color: warna,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 15),
+      margin: EdgeInsets.fromLTRB(L, T, R, B),
+      child: TextField(
+        obscureText: obscure(),
+        style: GoogleFonts.nunito(
+          fontWeight: FontWeight.w700,
+          fontSize: fontsize,
+          color: Color(0xFF3E3E3E),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        margin: EdgeInsets.fromLTRB(L, T, R, B),
-        child: TextField(
-          obscureText: obscure(),
-          style: GoogleFonts.nunito(
+        controller: controllerUse,
+        decoration: InputDecoration(
+          //contentPadding: EdgeInsets.symmetric(vertical: 10),
+          border: InputBorder.none,
+          hintText: hinttext,
+          hintStyle: GoogleFonts.nunito(
             fontWeight: FontWeight.w700,
-            fontSize: 24,
+            fontSize: fontsize,
             color: Colors.white,
-          ),
-          controller: controllerUse,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 10),
-            border: InputBorder.none,
-            hintText: hinttext,
-            hintStyle: GoogleFonts.nunito(
-              fontWeight: FontWeight.w700,
-              fontSize: 24,
-              color: Colors.white,
-            ),
           ),
         ),
       ),

@@ -9,11 +9,11 @@ Widget buildbutton(
     required VoidCallback metod}) {
   return button(
     hinttext: hinttext,
-    L: 20,
+    L: 10,
     T: 10,
-    R: 20,
-    B: 0,
-    tinggi: 50,
+    R: 10,
+    B: 40,
+    tinggi: 0,
     lebar: 0,
     warnatombol: warnatombol,
     warnatext: warnatext,

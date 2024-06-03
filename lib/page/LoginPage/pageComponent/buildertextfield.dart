@@ -6,15 +6,18 @@ Widget buildtextfield({
   required TextEditingController controllerUse,
   required Color warna,
 }) {
-  return textfield(
-    hinttext: hinttext,
-    controllerUse: controllerUse,
-    warna: warna,
-    L: 0,
-    T: 10,
-    R: 0,
-    B: 0,
-    lebar: 350,
-    tinggi: 70,
+  return Expanded(
+    child: textfield(
+      hinttext: hinttext,
+      controllerUse: controllerUse,
+      warna: warna,
+      L: 20,
+      T: 10,
+      R: 20,
+      B: 10,
+      fontsize: 24,
+      lebar: 0,
+      tinggi: 0,
+    ),
   );
 }

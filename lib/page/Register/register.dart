@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/page/Register/pageComponent/builderwidget.dart';
+import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -22,107 +23,173 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Center(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/gambar/background.jpg"),
-                fit: BoxFit.cover),
-          ),
-          child: Center(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(15, 190, 15, 110),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
+      body: DecoratedBox(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/gambar/backgroundb (1).jpg"),
+              fit: BoxFit.cover),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    textSpan(text: "Register!", warna: Colors.black),
+                  ],
                 ),
               ),
-              child: Column(
-                children: [
-                  buildtextfield(
-                    hinttext: "Nama",
-                    controllerUse: _namacontroller,
-                    warna: Colors.black12,
-                  ),
-                  buildtextfield(
-                    hinttext: "Email",
-                    controllerUse: _emailcontroller,
-                    warna: Colors.black12,
-                  ),
-                  buildtextfield(
-                    hinttext: "Telephone",
-                    controllerUse: _noHPcontroller,
-                    warna: Colors.black12,
-                  ),
-                  buildtextfield(
-                    hinttext: "Password",
-                    controllerUse: _passwordcontroller,
-                    warna: Colors.black12,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 20),
-                    width: 340,
-                    height: 170,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              width: 90,
-                              height: 40,
-                              child: Text(
-                                "Foto :",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+              const SizedBox(height: 60),
+              textfield(
+                  controller: _namacontroller, obscure: false, label: 'Nama'),
+              const SizedBox(height: 20),
+              textfield(
+                  controller: _emailcontroller, obscure: false, label: 'Email'),
+              const SizedBox(height: 20),
+              textfield(
+                  controller: _noHPcontroller,
+                  obscure: false,
+                  label: 'Telephone'),
+              const SizedBox(height: 20),
+              textfield(
+                  controller: _passwordcontroller,
+                  obscure: true,
+                  label: 'Password'),
+              const SizedBox(height: 20),
+              SizedBox(
+                // color: Colors.red,
+                width: MediaQuery.of(context).size.width,
+                height: 170,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 30),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 80),
+                          Text(
+                            "FOTO :",
+                            style: GoogleFonts.getFont(
+                              'Nunito',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                              letterSpacing: 1,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black12,
+                                fixedSize: const Size(140, 50),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10))),
+                            onPressed: () {
+                              setState(() {
+                                _pickAnyFile();
+                              });
+                            },
+                            child: Text(
+                              "PILIH FILE",
+                              style: GoogleFonts.getFont(
+                                'Nunito',
+                                fontWeight: FontWeight.w900,
+                                fontSize: 17,
+                                letterSpacing: 0.5,
+                                color: Colors.white,
                               ),
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(100),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10))),
-                              onPressed: () {
-                                _pickAnyFile();
-                              },
-                              child: Container(child: Text("Pilih File")),
-                            ),
-                          ],
-                        ),
-                        _imageFile != null
-                            ? wadahfoto(
-                                foto: _imageFile!,
-                              )
-                            : Icon(
-                                Icons.person,
-                                size: 100,
-                              )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => nextRegister(
-                            nama: _namacontroller.text,
-                            email: _emailcontroller.text,
-                            noHP: int.parse(_noHPcontroller.text),
-                            password: _passwordcontroller.text,
+                    const SizedBox(width: 70),
+                    _imageFile != null
+                        ? wadahfoto(
                             foto: _imageFile!,
+                          )
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            width: 140,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(image: AssetImage('')),
+                                border: Border.all(),
+                                color: Colors.black12,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: Text("Next"),
-                  )
-                ],
+                    SizedBox(
+                      width: 10,
+                    )
+                  ],
+                ),
               ),
-            ),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                // color: Colors.amber,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Login ?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black12,
+                          fixedSize: const Size(130, 50),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => nextRegister(
+                              nama: _namacontroller.text,
+                              email: _emailcontroller.text,
+                              noHP: int.parse(_noHPcontroller.text),
+                              password: _passwordcontroller.text,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "NEXT",
+                        style: GoogleFonts.getFont(
+                          'Nunito',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18,
+                          letterSpacing: 1.1,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 30),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -144,6 +211,22 @@ class _RegisterState extends State<Register> {
       });
     }
   }
+
+  TextSpan textSpan({
+    required String text,
+    required Color warna,
+  }) {
+    return TextSpan(
+      text: text,
+      style: GoogleFonts.getFont(
+        'Nunito',
+        fontWeight: FontWeight.w900,
+        fontSize: 50,
+        letterSpacing: 2.6,
+        color: warna,
+      ),
+    );
+  }
 }
 
 void _showImageDialog(BuildContext context, File imageFile) {
@@ -156,7 +239,10 @@ void _showImageDialog(BuildContext context, File imageFile) {
             Navigator.pop(context);
           },
           child: Container(
-            child: Image.file(imageFile),
+            child: Image.file(
+              imageFile,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       );
@@ -177,12 +263,15 @@ class wadahfoto extends StatelessWidget {
       onTap: () {
         _showImageDialog(context, foto);
       },
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width / 3.5,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(image: FileImage(foto), fit: BoxFit.cover),
+        width: 140,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: FileImage(foto), fit: BoxFit.cover),
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(5),
+          ),
         ),
       ),
     );
