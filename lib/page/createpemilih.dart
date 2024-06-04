@@ -140,7 +140,7 @@ class _CreateDataState extends State<CreateData> {
       R: 5,
       T: 10,
       B: 10,
-      tinggi: 35,
+      tinggi: 50,
       lebar: 350,
     );
   }
