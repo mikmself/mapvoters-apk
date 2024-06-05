@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
-import 'package:mapvotersapk/page/LoginPage/pageComponent/method.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/Controller.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/page/Register/register.dart';
 
 class loginpage extends StatefulWidget {
   const loginpage({super.key});
@@ -31,6 +32,7 @@ class _loginpageState extends State<loginpage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
+                //padding: EdgeInsets.only(right: 30, left: 30),
                 width: MediaQuery.of(context).size.width *
                     0.8, // 80% dari lebar layar
                 height: MediaQuery.of(context).size.height *
@@ -54,7 +56,7 @@ class _loginpageState extends State<loginpage> {
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 20),
+                      margin: EdgeInsets.only(top: 15),
                       child: RichText(
                         text: TextSpan(
                           children: [
@@ -82,19 +84,24 @@ class _loginpageState extends State<loginpage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           buildbutton(
-                            context: context,
-                            hinttext: "Sign In",
-                            warnatombol: const Color(0x75005E73),
-                            warnatext: Colors.white,
-                            metod: ()=> SignIn(context),
-                          ),
+                              context: context,
+                              hinttext: "Sign In",
+                              warnatombol: const Color(0x75005E73),
+                              warnatext: Colors.white,
+                              metod: () {
+                                LoginController().auth(_emailcontroller.text,
+                                    _paswwordcontroller.text);
+                              }),
                           buildbutton(
-                            context: context,
-                            hinttext: "Sign Up",
-                            warnatombol: Colors.white,
-                            warnatext: const Color(0x75005E73),
-                            metod: () => SignUp(context),
-                          )
+                              context: context,
+                              hinttext: "Sign Up",
+                              warnatombol: Colors.white,
+                              warnatext: const Color(0x75005E73),
+                              metod: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Register(),
+                                  )))
                         ],
                       ),
                     ),
