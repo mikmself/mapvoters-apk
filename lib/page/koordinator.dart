@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Koordinator extends StatefulWidget {
-  const Koordinator({super.key});
+  const Koordinator({super.key, required this.title});
+  final String title;
 
   @override
   State<Koordinator> createState() => _KoordinatorState();
