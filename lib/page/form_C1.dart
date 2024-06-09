@@ -1,36 +1,28 @@
 import 'package:flutter/material.dart';
 // import 'package:flutter_application_1/textfield.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FormC1 extends StatefulWidget {
+  const FormC1({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Color.fromARGB(255, 243, 246, 248),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(),
-    );
-  }
+  State<FormC1> createState() => _FormC1State();
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
+class _FormC1State extends State<FormC1> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.menu),
-        //   onPressed: () {
-        //     // Handle menu button
-        //   },
-        // ),
+    TextEditingController jumlahsuaracontroler = TextEditingController();
+    TextEditingController uploadbukticontroler = TextEditingController();
+    final screenWidth = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            // Handle menu button
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),       
@@ -164,3 +156,4 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+
