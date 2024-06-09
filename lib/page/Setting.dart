@@ -60,10 +60,15 @@ class _SettingPageState extends State<SettingPage> {
                 label: 'New Password',
               ),
               const SizedBox(height: 20),
-              textfield(
+              dropdown(
                 controller: _partaiController,
-                obscure: false,
                 label: 'Partai',
+                list: partai,
+                onSelected: (value) {
+                  setState(() {
+                    typeselect = value;
+                  });
+                },
               ),
               const SizedBox(height: 20),
               textfield(
@@ -72,10 +77,15 @@ class _SettingPageState extends State<SettingPage> {
                 label: 'Foto',
               ),
               const SizedBox(height: 20),
-              textfield(
+              dropdown(
                 controller: _typeController,
-                obscure: false,
-                label: 'Type',
+                label: 'Tipe Pemilihan',
+                list: type,
+                onSelected: (value) {
+                  setState(() {
+                    typeselect = value;
+                  });
+                },
               ),
               const SizedBox(height: 20),
               textfield(
