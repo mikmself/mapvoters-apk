@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class PemetaanC1 extends StatefulWidget {
-  const PemetaanC1({super.key});
-
+  const PemetaanC1({super.key, required this.title});
+  final String title;
   @override
   State<PemetaanC1> createState() => _PemetaanC1State();
 }

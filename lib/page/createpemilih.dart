@@ -142,6 +142,7 @@ class _CreateDataState extends State<CreateData> {
       B: 10,
       tinggi: 50,
       lebar: 350,
+      fontsize: 20,
     );
   }
 }

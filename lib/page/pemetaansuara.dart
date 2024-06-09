@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PemtaanSuara extends StatefulWidget {
-  const PemtaanSuara({super.key});
-
+class PemetaanSuara extends StatefulWidget {
+  const PemetaanSuara({super.key, required this.title});
+  final String title;
   @override
-  State<PemtaanSuara> createState() => _PemtaanSuaraState();
+  State<PemetaanSuara> createState() => _PemetaanSuaraState();
 }
 
-class _PemtaanSuaraState extends State<PemtaanSuara> {
+class _PemetaanSuaraState extends State<PemetaanSuara> {
   TextEditingController cariprov = TextEditingController();
   @override
   Widget build(BuildContext context) {
