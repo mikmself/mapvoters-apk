@@ -5,20 +5,29 @@ import 'package:mapvotersapk/component/sidebar.dart';
 
 KoordinatorService service = KoordinatorService();
 
-class GetAllDataKoordinator extends StatelessWidget {
+class GetAllDataKoordinator extends StatefulWidget {
   final String judul;
   final List list;
   final ValueChanged<int> onItemSelected;
 
   const GetAllDataKoordinator({
     super.key,
-    required this.labeltext,
     required this.judul,
     required this.list,
     required this.onItemSelected,
   });
 
-  final String labeltext;
+  @override
+  _GetAllDataKoordinatorState createState() => _GetAllDataKoordinatorState();
+}
+
+class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
+  void _deleteKoordinator(int id) {
+    service.DeleteKoordinator(id);
+    setState(() {
+      widget.list.removeWhere((koordinator) => koordinator.id == id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class GetAllDataKoordinator extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(judul,
+                    Text(widget.judul,
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                         )),
@@ -53,7 +62,7 @@ class GetAllDataKoordinator extends StatelessWidget {
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: labeltext,
+                  labelText: "Pencarian By Nama",
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -70,24 +79,36 @@ class GetAllDataKoordinator extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      if (list.length == 0) {
+                      if (widget.list.length == 0) {
                         return const Center(
                           child: Text("data tidak ditemukaxn"),
                         );
                       }
                     }
                     return ListView.builder(
-                      itemCount: list.length,
+                      itemCount: widget.list.length,
                       itemBuilder: (context, index) {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
-                            title: Text(list[index].user!.name), //perbedaan
-                            trailing: IconButton(
-                                icon: const Icon(Icons.info),
-                                onPressed: () {
-                                  // onItemSelected(1);
-                                }),
+                            title: Text(widget.list[index].user!.name),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.info),
+                                  onPressed: () {
+                                    // onItemSelected(1);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    _deleteKoordinator(widget.list[index].id!);
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -102,7 +123,7 @@ class GetAllDataKoordinator extends StatelessWidget {
             right: 16,
             child: FloatingActionButton(
               onPressed: () {
-                onItemSelected(1);
+                widget.onItemSelected(1);
               },
               child: Icon(Icons.add),
             ),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/controller/KoordinatorController.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
-import 'package:mapvotersapk/page/Koordinator/RegisterKoordinator.dart';
-
+import 'package:mapvotersapk/page/Koordinator/CreateKoordinator.dart';
 
 class Koordinator extends StatefulWidget {
   const Koordinator({
-    super.key, required this.title,
+    super.key,
+    required this.title,
   });
   final String title;
+
   @override
   State<Koordinator> createState() => _KoordinatorState();
 }
@@ -31,15 +32,13 @@ class _KoordinatorState extends State<Koordinator> {
           GetAllDataKoordinator(
             onItemSelected: _changeIndex,
             judul: 'Koordinator',
-            labeltext: "Pencarian By Nama",
             list: koorList,
           ),
-          // ShowData(onBack: () => _changeIndex(0)), // Kembali ke Koordinator
-          RegistrasiKoordinator(
-              onBack: () => _changeIndex(0)), // Kembali ke Koordinator
+          CreateKoordinator(
+            onBack: () => _changeIndex(0),
+          ),
         ],
       ),
     );
   }
 }
-
