@@ -31,6 +31,40 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
       widget.list.removeWhere((koordinator) => koordinator.id == id);
     });
   }
+  void _showKoordinatorDetailDialog(int id) async {
+    KoordinatorModel? koordinator = await service.GetKoordinatorDetail(id);
+    if (koordinator != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Detail Koordinator'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Nama: ${koordinator.user!.name}'),
+                SizedBox(height: 8),
+                Text('NIK: ${koordinator.nik}'),
+                SizedBox(height: 8),
+                Text('Email: ${koordinator.user!.email}'),
+                SizedBox(height: 8),
+                Text('Telephone: ${koordinator.user!.telephone}'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Tutup'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
   void _editKoordinator(KoordinatorModel koordinator) {
     final nameController = TextEditingController(text: koordinator.user!.name);
     final NIKController = TextEditingController(text: koordinator.nik);
@@ -189,7 +223,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                                 IconButton(
                                   icon: const Icon(Icons.info),
                                   onPressed: () {
-                                    // onItemSelected(1);
+                                    _showKoordinatorDetailDialog(widget.list[index].id!);
                                   },
                                 ),
                                 IconButton(

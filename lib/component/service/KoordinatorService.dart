@@ -26,6 +26,26 @@ class KoordinatorService {
       print(response.reasonPhrase);
     }
   }
+  GetKoordinatorDetail(int id) async {
+    try {
+      var request = http.Request('GET', Uri.parse('$BASE_URL/koordinator/$id'));
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseString = await response.stream.bytesToString();
+        Map<String, dynamic> responsDecode = jsonDecode(responseString);
+        KoordinatorModel koordinator = KoordinatorModel.fromJson(responsDecode['data']);
+        return koordinator;
+      } else {
+        print('Gagal mendapatkan detail koordinator: ${response.reasonPhrase}');
+        return null;
+      }
+    } catch (e) {
+      print('Terjadi kesalahan saat mendapatkan detail koordinator: $e');
+      return null;
+    }
+  }
+
   CreateKoordinator(String nama, String NIK, String Email, String telp,
       String Password, File foto) async {
     try {
