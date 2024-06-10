@@ -13,17 +13,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CreateData(),
+      home: CreatePemilih(),
     );
   }
 }
 
-class CreateData extends StatefulWidget {
+class CreatePemilih extends StatefulWidget {
   @override
-  _CreateDataState createState() => _CreateDataState();
+  _CreatePemilihState createState() => _CreatePemilihState();
 }
 
-class _CreateDataState extends State<CreateData> {
+class _CreatePemilihState extends State<CreatePemilih> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();

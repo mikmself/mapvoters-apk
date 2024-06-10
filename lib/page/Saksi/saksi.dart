@@ -2,64 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/model/model.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
-import 'package:mapvotersapk/page/RegisterKoordinator.dart';
 
 methodRegister getdata = methodRegister();
 
-class loaddatakoor extends StatefulWidget {
-  const loaddatakoor({
-    super.key,
-  });
-
-  @override
-  State<loaddatakoor> createState() => _loaddatakoorState();
-}
-
-class _loaddatakoorState extends State<loaddatakoor> {
-  int _currentIndex = 0;
-
-  void _changeIndex(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: [
-          loaddataKoorx(
-            onItemSelected: _changeIndex,
-            judul: 'Koordinator',
-            labeltext: "Pencarian By Nama",
-            list: koorlist,
-          ),
-          // ShowData(onBack: () => _changeIndex(0)), // Kembali ke Koordinator
-          RegistrasiKoordinator(
-              onBack: () => _changeIndex(0)), // Kembali ke Koordinator
-        ],
-      ),
-    );
-  }
-}
-
-class loaddataKoorx extends StatelessWidget {
+class Saksi extends StatelessWidget {
   final String judul;
   final List list;
-  final ValueChanged<int> onItemSelected;
 
-  const loaddataKoorx({
+  const Saksi({
     super.key,
     required this.labeltext,
     required this.judul,
-    required this.list,
-    required this.onItemSelected,
+    required this.list, required this.title,
   });
 
   final String labeltext;
-
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -103,14 +61,14 @@ class loaddataKoorx extends StatelessWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder(
-                  future: getdata.showkoordinator(),
+                  future: getdata.showsaksi(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      if (list.length == 0) {
+                      if (saksiList.length == 0) {
                         return const Center(
                           child: Text("data tidak ditemukaxn"),
                         );
@@ -122,12 +80,13 @@ class loaddataKoorx extends StatelessWidget {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
-                            title: Text(list[index].user!.name), //perbedaan
+                            title: Text(list[index].user!.name),
                             trailing: IconButton(
-                                icon: const Icon(Icons.info),
-                                onPressed: () {
-                                  // onItemSelected(1);
-                                }),
+                              icon: const Icon(Icons.info),
+                              onPressed: () {
+                                // Seharusnya Show Saksi
+                              },
+                            ),
                           ),
                         );
                       },
@@ -141,8 +100,8 @@ class loaddataKoorx extends StatelessWidget {
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
-              onPressed: () {
-                onItemSelected(1);
+              onPressed: () => {
+                // form saksi
               },
               child: Icon(Icons.add),
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/model/model.dart';
+import 'package:mapvotersapk/page/PemetaanC1/C1.dart';
+import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
+import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:mapvotersapk/page/Setting.dart';
-import 'package:mapvotersapk/page/koordinator.dart';
+import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
-import 'package:mapvotersapk/page/pemetaanc1.dart';
-import 'package:mapvotersapk/page/pemetaansuara.dart';
+import 'package:mapvotersapk/page/PemetaanSuara/pemetaansuara.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
@@ -25,10 +28,10 @@ class _SidebarAppState extends State<SidebarApp> {
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator'),
-    Text('SAKSI'),
-    Text('CALON PEMILIH'),
+    Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
+    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title:"Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
-    PemetaanC1(title: 'Pemetaan C1'),
+    C1(title: 'Pemetaan C1'),
     SettingPage(title: 'Pengaturan'),
   ];
 
@@ -60,7 +63,8 @@ class _SidebarAppState extends State<SidebarApp> {
                 _widgetOptions[_selectedIndex] is Dashboard ||
                     _widgetOptions[_selectedIndex] is Koordinator ||
                     _widgetOptions[_selectedIndex] is PemetaanSuara ||
-                    _widgetOptions[_selectedIndex] is PemetaanC1 ||
+                    _widgetOptions[_selectedIndex] is C1 ||
+                    _widgetOptions[_selectedIndex] is Saksi ||
                     _widgetOptions[_selectedIndex] is SettingPage
                     ? (_widgetOptions[_selectedIndex] as dynamic).title
                     : 'Map Voters',
@@ -217,6 +221,8 @@ class Sidebar extends StatelessWidget {
     );
   }
 }
+
+
 
 const canvasColor = Color(0xFF00A6A6);
 const scaffoldBackgroundColor = Color(0xFF70CED4);

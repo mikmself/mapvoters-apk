@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/model/model.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
+import 'package:mapvotersapk/page/Pemilih/CreatePemilih.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
-import 'package:mapvotersapk/page/createpemilih.dart';
 
 methodRegister getdata = methodRegister();
 
-class loaddataPemilih extends StatelessWidget {
+class Pemilih extends StatelessWidget {
   final String judul;
   final List list;
 
-  const loaddataPemilih({
+  const Pemilih({
     super.key,
     required this.labeltext,
     required this.judul,
-    required this.list,
+    required this.list, required this.title,
   });
 
   final String labeltext;
-
+  final String title;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -103,7 +103,7 @@ class loaddataPemilih extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateData(),
+                      builder: (context) => CreatePemilih(),
                     ))
               },
               child: Icon(Icons.add),
