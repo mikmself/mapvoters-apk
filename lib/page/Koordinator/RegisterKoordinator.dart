@@ -3,21 +3,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/page/Register/metod.dart';
+
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 import 'package:file_picker/file_picker.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class RegistrasiKoordinator extends StatefulWidget {
+  final VoidCallback onBack;
+
+  const RegistrasiKoordinator({super.key, required this.onBack});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegistrasiKoordinator> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends State<RegistrasiKoordinator> {
   TextEditingController _namacontroller = TextEditingController();
+  TextEditingController _NIKcontroller = TextEditingController();
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _noHPcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
+
   File _imageFile = File('');
 
   @override
@@ -38,16 +44,23 @@ class _RegisterState extends State<Register> {
                 margin: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.04,
                 ),
-                width: MediaQuery.of(context).size.width,
+                width: 350,
                 height: MediaQuery.of(context).size.height,
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        textSpan(text: "Register!", warna: Colors.black),
-                      ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          textSpan(text: "Koordinator", warna: Colors.black),
+                        ],
+                      ),
                     ),
-                  ),
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: widget.onBack,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -55,6 +68,12 @@ class _RegisterState extends State<Register> {
               flex: 2,
               child: textfield(
                   controller: _namacontroller, obscure: false, label: 'Nama'),
+            ),
+            const SizedBox(height: 15),
+            Flexible(
+              flex: 2,
+              child: textfield(
+                  controller: _NIKcontroller, obscure: false, label: 'NIK'),
             ),
             const SizedBox(height: 15),
             Flexible(
@@ -134,26 +153,22 @@ class _RegisterState extends State<Register> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => nextRegister(
-                                    nama: _namacontroller.text,
-                                    email: _emailcontroller.text,
-                                    noHP: _noHPcontroller.text,
-                                    password: _passwordcontroller.text,
-                                    foto: _imageFile,
-                                  ),
-                                ),
-                              );
+                              methodRegister regis = methodRegister();
+                              regis.registerKoor(
+                                  _namacontroller.text,
+                                  _NIKcontroller.text,
+                                  _emailcontroller.text,
+                                  _noHPcontroller.text,
+                                  _passwordcontroller.text,
+                                  _imageFile);
                             },
                             child: Text(
-                              "NEXT",
+                              "TAMBAH",
                               style: GoogleFonts.getFont(
                                 'Nunito',
                                 fontWeight: FontWeight.w900,
                                 fontSize: 17,
-                                letterSpacing: 3,
+                                letterSpacing: 1,
                                 color: Colors.white,
                               ),
                             ),
@@ -171,26 +186,7 @@ class _RegisterState extends State<Register> {
             Flexible(
               flex: 2,
               child: Container(
-                width: 350,
                 height: MediaQuery.of(context).size.height,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Sudah Punya Akun? Log In",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             )
           ],
@@ -224,7 +220,7 @@ class _RegisterState extends State<Register> {
       style: GoogleFonts.getFont(
         'Nunito',
         fontWeight: FontWeight.w900,
-        fontSize: 50,
+        fontSize: 30,
         letterSpacing: 2.6,
         color: warna,
       ),

@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class PemetaanC1 extends StatefulWidget {
-  const PemetaanC1({super.key});
-
+class C1 extends StatefulWidget {
+  const C1({super.key, required this.title});
+  final String title;
   @override
-  State<PemetaanC1> createState() => _PemetaanC1State();
+  State<C1> createState() => _C1State();
 }
 
-class _PemetaanC1State extends State<PemetaanC1> {
+class _C1State extends State<C1> {
   TextEditingController cariprov = TextEditingController();
 
   @override
@@ -34,7 +34,7 @@ class _PemetaanC1State extends State<PemetaanC1> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
               child: Text(
-                'Provinsi -C1',
+                'Pemetan daerah -C1',
                 style: GoogleFonts.getFont(
                   'Nunito',
                   fontWeight: FontWeight.w900,
@@ -69,7 +69,7 @@ class _PemetaanC1State extends State<PemetaanC1> {
                     
                     controller: cariprov,
                     decoration: InputDecoration(
-                      hintText: "Provinsi Yang Di Cari",
+                      hintText: "Daerah Yang Ingin Di Cari",
                       hintStyle: GoogleFonts.getFont(
                         'Nunito',
                         fontSize: 20,
@@ -97,7 +97,11 @@ class _PemetaanC1State extends State<PemetaanC1> {
                   borderRadius: BorderRadius.circular(10)
                 ),
                 child: Column(children: [
-                  _buildInfoContainer('Data')
+                  _buildInfoContainer('Jawa Tengah'),
+                  _buildInfoContainer('Jawa Barat'),
+                  _buildInfoContainer('jawa Timur'),
+                  _buildInfoContainer('Banyumas')
+
                 ],),
               ),
             )

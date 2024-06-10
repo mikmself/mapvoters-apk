@@ -8,16 +8,19 @@ Widget buildtextfield({
   required TextEditingController controllerUse,
   required Color warna,
 }) {
-  return textfield(
-    hinttext: hinttext,
-    controllerUse: controllerUse,
-    warna: warna,
-    L: 3,
-    T: 20,
-    R: 3,
-    B: 0,
-    lebar: 344,
-    tinggi: 50,
+  return Expanded(
+    child: textfield(
+      hinttext: hinttext,
+      controllerUse: controllerUse,
+      warna: warna,
+      L: 20,
+      T: 0,
+      R: 20,
+      B: 0,
+      fontsize: 20,
+      lebar: 0,
+      tinggi: 0,
+    ),
   );
 }
 
@@ -32,9 +35,9 @@ Widget builddropdown(
     hint: hinttext,
     controllerUse: controllerUse,
     onSelected: metod,
-    L: 13,
-    T: 20,
-    R: 13,
+    L: 20,
+    T: 0,
+    R: 20,
     B: 0,
   );
 }
