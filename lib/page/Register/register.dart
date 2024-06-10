@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,7 @@ class _RegisterState extends State<Register> {
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _noHPcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
-  File? _imageFile;
+  File _imageFile = File('');
 
   @override
   Widget build(BuildContext context) {
@@ -29,168 +30,170 @@ class _RegisterState extends State<Register> {
               image: AssetImage("assets/gambar/backgroundb (1).jpg"),
               fit: BoxFit.cover),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 100),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    textSpan(text: "Register!", warna: Colors.black),
-                  ],
+        child: Column(
+          children: [
+            Flexible(
+              flex: 5,
+              child: Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.04,
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        textSpan(text: "Register!", warna: Colors.black),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 60),
-              textfield(
+            ),
+            Flexible(
+              flex: 2,
+              child: textfield(
                   controller: _namacontroller, obscure: false, label: 'Nama'),
-              const SizedBox(height: 20),
-              textfield(
+            ),
+            const SizedBox(height: 15),
+            Flexible(
+              flex: 2,
+              child: textfield(
                   controller: _emailcontroller, obscure: false, label: 'Email'),
-              const SizedBox(height: 20),
-              textfield(
+            ),
+            const SizedBox(height: 15),
+            Flexible(
+              flex: 2,
+              child: textfield(
                   controller: _noHPcontroller,
                   obscure: false,
                   label: 'Telephone'),
-              const SizedBox(height: 20),
-              textfield(
+            ),
+            const SizedBox(height: 15),
+            Flexible(
+              flex: 2,
+              child: textfield(
                   controller: _passwordcontroller,
                   obscure: true,
                   label: 'Password'),
-              const SizedBox(height: 20),
-              SizedBox(
-                // color: Colors.red,
-                width: MediaQuery.of(context).size.width,
-                height: 170,
+            ),
+            const SizedBox(height: 15),
+            Flexible(
+              flex: 5,
+              child: Container(
+                width: 350,
+                height: MediaQuery.of(context).size.height,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(width: 30),
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 80),
-                          Text(
-                            "FOTO :",
-                            style: GoogleFonts.getFont(
-                              'Nunito',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20,
-                              letterSpacing: 1,
-                              color: Colors.black54,
+                    Flexible(
+                      flex: 3,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _pickAnyFile();
+                          });
+                        },
+                        onLongPress: () {
+                          _showImageDialog(context, _imageFile);
+                        },
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: FileImage(
+                                    _imageFile,
+                                  ),
+                                  fit: BoxFit.cover),
+                              border: Border.all(),
+                              color: Colors.black12,
+                              borderRadius: BorderRadius.circular(5),
                             ),
                           ),
-                          const SizedBox(height: 10),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                          // color: Colors.amber,
+                          width: MediaQuery.of(context).size.width),
+                    ),
+                    Flexible(
+                      flex: 3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black12,
-                                fixedSize: const Size(140, 50),
+                                fixedSize:
+                                    Size(MediaQuery.of(context).size.width, 50),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                             onPressed: () {
-                              setState(() {
-                                _pickAnyFile();
-                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => nextRegister(
+                                    nama: _namacontroller.text,
+                                    email: _emailcontroller.text,
+                                    noHP: _noHPcontroller.text,
+                                    password: _passwordcontroller.text,
+                                    foto: _imageFile,
+                                  ),
+                                ),
+                              );
                             },
                             child: Text(
-                              "PILIH FILE",
+                              "NEXT",
                               style: GoogleFonts.getFont(
                                 'Nunito',
                                 fontWeight: FontWeight.w900,
                                 fontSize: 17,
-                                letterSpacing: 0.5,
+                                letterSpacing: 3,
                                 color: Colors.white,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 70),
-                    _imageFile != null
-                        ? wadahfoto(
-                            foto: _imageFile!,
-                          )
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height,
-                            width: 140,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(image: AssetImage('')),
-                                border: Border.all(),
-                                color: Colors.black12,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                    SizedBox(
-                      width: 10,
-                    )
                   ],
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                // color: Colors.amber,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Flexible(
+              flex: 2,
+              child: Container(
+                width: 350,
+                height: MediaQuery.of(context).size.height,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Login ?",
+                        "Sudah Punya Akun? Log In",
                         style: TextStyle(
                           fontWeight: FontWeight.w900,
                           color: Colors.black,
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black12,
-                          fixedSize: const Size(130, 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => nextRegister(
-                              nama: _namacontroller.text,
-                              email: _emailcontroller.text,
-                              noHP: int.parse(_noHPcontroller.text),
-                              password: _passwordcontroller.text,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "NEXT",
-                        style: GoogleFonts.getFont(
-                          'Nunito',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          letterSpacing: 1.1,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 30),
                   ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -207,7 +210,7 @@ class _RegisterState extends State<Register> {
       });
     } else {
       setState(() {
-        _imageFile = null;
+        _imageFile;
       });
     }
   }

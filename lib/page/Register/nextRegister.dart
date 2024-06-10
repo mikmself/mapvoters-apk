@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
-import 'package:mapvotersapk/page/Register/pageComponent/builderwidget.dart';
 
 List<String> type = ["PRESIDEN", "DPR RI", "DPRD PROVINSI"];
 List<String> partai = ["PDIP", "GERINDRA", "PKS"];
@@ -10,10 +11,11 @@ String? typeselect;
 String? partaiselect;
 
 class nextRegister extends StatefulWidget {
-  final String? nama;
-  final String? email;
-  final int? noHP;
+  final String nama;
+  final String email;
+  final String noHP;
   final String password;
+  final File foto;
 
   const nextRegister({
     super.key,
@@ -21,6 +23,7 @@ class nextRegister extends StatefulWidget {
     required this.email,
     required this.noHP,
     required this.password,
+    required this.foto,
   });
 
   @override
@@ -91,7 +94,19 @@ class _nextRegisterState extends State<nextRegister> {
                 height: 70,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  methodRegister regis = methodRegister();
+                  regis.registerUser(
+                      widget.nama,
+                      widget.email,
+                      widget.noHP,
+                      widget.password,
+                      _typecontroller.text,
+                      _partaicontroller.text,
+                      _dapilcontroller.text,
+                      _noUrutcontroller.text,
+                      widget.foto);
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black12,
                     shape: RoundedRectangleBorder(
@@ -145,7 +160,8 @@ class textfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      //color: Colors.amber,
       height: 60,
       width: 350,
       child: TextField(
