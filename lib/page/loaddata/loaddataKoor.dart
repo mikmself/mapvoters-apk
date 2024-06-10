@@ -1,18 +1,61 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/model/model.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
+import 'package:mapvotersapk/page/RegisterKoordinator.dart';
 
 methodRegister getdata = methodRegister();
 
-class loaddataKoor extends StatelessWidget {
+class loaddatakoor extends StatefulWidget {
+  const loaddatakoor({
+    super.key,
+  });
+
+  @override
+  State<loaddatakoor> createState() => _loaddatakoorState();
+}
+
+class _loaddatakoorState extends State<loaddatakoor> {
+  int _currentIndex = 0;
+
+  void _changeIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          loaddataKoorx(
+            onItemSelected: _changeIndex,
+            judul: 'Koordinator',
+            labeltext: "Pencarian By Nama",
+            list: koorlist,
+          ),
+          // ShowData(onBack: () => _changeIndex(0)), // Kembali ke Koordinator
+          RegistrasiKoordinator(
+              onBack: () => _changeIndex(0)), // Kembali ke Koordinator
+        ],
+      ),
+    );
+  }
+}
+
+class loaddataKoorx extends StatelessWidget {
   final String judul;
   final List list;
+  final ValueChanged<int> onItemSelected;
 
-  const loaddataKoor({
+  const loaddataKoorx({
     super.key,
     required this.labeltext,
     required this.judul,
     required this.list,
+    required this.onItemSelected,
   });
 
   final String labeltext;
@@ -81,7 +124,10 @@ class loaddataKoor extends StatelessWidget {
                           child: ListTile(
                             title: Text(list[index].user!.name), //perbedaan
                             trailing: IconButton(
-                                icon: const Icon(Icons.info), onPressed: () {}),
+                                icon: const Icon(Icons.info),
+                                onPressed: () {
+                                  // onItemSelected(1);
+                                }),
                           ),
                         );
                       },
@@ -95,8 +141,8 @@ class loaddataKoor extends StatelessWidget {
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
-              onPressed: () => {
-                // seharusnya regist koor
+              onPressed: () {
+                onItemSelected(1);
               },
               child: Icon(Icons.add),
             ),
