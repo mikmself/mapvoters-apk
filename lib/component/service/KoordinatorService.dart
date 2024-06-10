@@ -52,6 +52,45 @@ class KoordinatorService {
       print(e);
     }
   }
+  EditKoordinator(int id, String nama, String NIK, String Email, String telp,
+      String Password, File foto) async {
+    try {
+      var request = http.MultipartRequest(
+        'PUT',
+        Uri.parse('$BASE_URL/koordinator/$id'),
+      );
+      request.fields.addAll({
+        'name': nama,
+        'email': Email,
+        'telephone': telp,
+        'password': Password,
+        'nik': NIK,
+        'paslon_id': loginData['paslonID']!,
+      });
+      if (foto.path.isNotEmpty) {
+        request.files.add(await http.MultipartFile.fromPath('foto', foto.path));
+      }
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('Koordinator berhasil diedit');
+        // Perbarui data koordinator di daftar koorList
+        KoordinatorModel editedKoordinator = koorList.firstWhere(
+              (koordinator) => koordinator.id == id,
+        );
+        editedKoordinator.nik = NIK;
+        editedKoordinator.foto = foto.path;
+        editedKoordinator.user!.name = nama;
+        editedKoordinator.user!.email = Email;
+        editedKoordinator.user!.telephone = telp;
+      } else {
+        print('Gagal mengedit koordinator: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan saat mengedit koordinator: $e');
+    }
+  }
   DeleteKoordinator(int id) async {
     try {
       var request = http.Request('DELETE', Uri.parse('$BASE_URL/koordinator/$id'));

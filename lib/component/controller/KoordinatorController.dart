@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 import 'package:mapvotersapk/component/service/KoordinatorService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 
@@ -28,6 +31,94 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
       widget.list.removeWhere((koordinator) => koordinator.id == id);
     });
   }
+  void _editKoordinator(KoordinatorModel koordinator) {
+    final nameController = TextEditingController(text: koordinator.user!.name);
+    final NIKController = TextEditingController(text: koordinator.nik);
+    final emailController = TextEditingController(text: koordinator.user!.email);
+    final phoneController = TextEditingController(text: koordinator.user!.telephone);
+    final passwordController = TextEditingController(text: '');
+    File? imageFile;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Koordinator'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Nama',
+                ),
+              ),
+              TextField(
+                controller: NIKController,
+                decoration: InputDecoration(
+                  labelText: 'NIK',
+                ),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                ),
+              ),
+              TextField(
+                controller: phoneController,
+                decoration: InputDecoration(
+                  labelText: 'Telephone',
+                ),
+              ),
+              TextField(
+                controller: passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                print(koordinator.id);
+                print(nameController.text);
+                print(NIKController.text);
+                print(emailController.text);
+                print(phoneController.text);
+                print(passwordController.text);
+                service.EditKoordinator(
+                  koordinator.id!,
+                  nameController.text,
+                  NIKController.text,
+                  emailController.text,
+                  phoneController.text,
+                  passwordController.text,
+                  imageFile ?? File(''),
+                );
+                setState(() {
+                  koordinator.user!.name = nameController.text;
+                  koordinator.nik = NIKController.text;
+                  koordinator.user!.email = emailController.text;
+                  koordinator.user!.telephone = phoneController.text;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +190,12 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                                   icon: const Icon(Icons.info),
                                   onPressed: () {
                                     // onItemSelected(1);
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit),
+                                  onPressed: () {
+                                    _editKoordinator(widget.list[index]);
                                   },
                                 ),
                                 IconButton(
