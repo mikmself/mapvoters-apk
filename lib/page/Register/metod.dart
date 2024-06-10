@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/ListData.dart';
-import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 import 'package:mapvotersapk/component/model/PartaiModel.dart';
 import 'package:mapvotersapk/component/model/PemilihModel.dart';
 import 'package:mapvotersapk/component/model/SaksiModel.dart';
@@ -86,26 +85,7 @@ class methodRegister {
     }
   }
 
-  showkoordinator() async {
-    var request =
-        http.Request('GET', Uri.parse('http://47.236.54.237/api/koordinator'));
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-      print(responseString);
-      Map<String, dynamic> responsDecode = jsonDecode(responseString);
-      List<dynamic> data = responsDecode['data'];
-      koorList.clear();
-      for (var element in data) {
-        koorList.add(KoordinatorModel.fromJson(element));
-      }
-      print(koorList.toString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
 
   showpemilih() async {
     var request = http.Request(
