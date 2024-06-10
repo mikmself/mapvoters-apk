@@ -80,7 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: SizedBox(
                   height: 170,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const SizedBox(width: 10),
                       Container(
@@ -125,7 +125,6 @@ class _SettingPageState extends State<SettingPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 50),
                       _imageFile != null
                           ? wadahfoto(
                         foto: _imageFile!,
@@ -142,9 +141,7 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10,
-                      )
+                      const SizedBox(width: 10),
                     ],
                   ),
                 ),
