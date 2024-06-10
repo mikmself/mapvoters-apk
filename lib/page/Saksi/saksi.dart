@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/model/model.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
+import 'package:mapvotersapk/page/Saksi/RegisterSaksi.dart';
 
 methodRegister getdata = methodRegister();
 
@@ -101,7 +102,11 @@ class Saksi extends StatelessWidget {
             right: 16,
             child: FloatingActionButton(
               onPressed: () => {
-                // form saksi
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => RegisterSaksi(),
+                    ))
               },
               child: Icon(Icons.add),
             ),
