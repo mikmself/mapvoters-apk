@@ -63,7 +63,7 @@ class GetAllDataKoordinator extends StatelessWidget {
               const SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder(
-                  future: service.ShowDataKoordinator(),
+                  future: service.GetAllDataKoordinator(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(

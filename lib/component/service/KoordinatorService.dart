@@ -6,7 +6,7 @@ import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 
 class KoordinatorService {
-  ShowDataKoordinator() async {
+  GetAllDataKoordinator() async {
     var request =
     http.Request('GET', Uri.parse(BASE_URL + '/koordinator'));
 
