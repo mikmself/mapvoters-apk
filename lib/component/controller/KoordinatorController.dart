@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:mapvotersapk/component/service/KoordinatorService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
-import 'package:mapvotersapk/page/Pemilih/CreatePemilih.dart';
-import 'package:mapvotersapk/page/Register/metod.dart';
 
-methodRegister getdata = methodRegister();
+KoordinatorService service = KoordinatorService();
 
-class Pemilih extends StatelessWidget {
+class GetAllDataKoordinator extends StatelessWidget {
   final String judul;
   final List list;
+  final ValueChanged<int> onItemSelected;
 
-  const Pemilih({
+  const GetAllDataKoordinator({
     super.key,
     required this.labeltext,
     required this.judul,
-    required this.list, required this.title,
+    required this.list,
+    required this.onItemSelected,
   });
 
   final String labeltext;
-  final String title;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -61,50 +62,47 @@ class Pemilih extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Expanded(
-                  child: FutureBuilder(
-                future: getdata.showpemilih(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    if (pemilihlist.length == 0) {
+                child: FutureBuilder(
+                  future: service.GetAllDataKoordinator(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
-                        child: Text("data tidak ditemukaxn"),
+                        child: CircularProgressIndicator(),
                       );
+                    } else {
+                      if (list.length == 0) {
+                        return const Center(
+                          child: Text("data tidak ditemukaxn"),
+                        );
+                      }
                     }
-                  }
-                  return ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          title: Text(list[index].nama!), //perbedaan
-                          trailing: IconButton(
-                              icon: const Icon(Icons.info),
-                              onPressed: () {
-                                // Seharusnya show pemilih
-                              }),
-                        ),
-                      );
-                    },
-                  );
-                },
-              )),
+                    return ListView.builder(
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            title: Text(list[index].user!.name), //perbedaan
+                            trailing: IconButton(
+                                icon: const Icon(Icons.info),
+                                onPressed: () {
+                                  // onItemSelected(1);
+                                }),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
             ],
           ),
           Positioned(
             bottom: 16,
             right: 16,
             child: FloatingActionButton(
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreatePemilih(),
-                    ))
+              onPressed: () {
+                onItemSelected(1);
               },
               child: Icon(Icons.add),
             ),

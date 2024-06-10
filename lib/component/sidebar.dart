@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/component/model/model.dart';
+import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/page/PemetaanC1/C1.dart';
 import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
 import 'package:mapvotersapk/page/Saksi/saksi.dart';
