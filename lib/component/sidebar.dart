@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
-import 'package:mapvotersapk/page/PemetaanC1/C1.dart';
+import 'package:mapvotersapk/page/PemetaanC1/C1Controller.dart';
 import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
 import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:mapvotersapk/page/Setting.dart';
@@ -28,10 +28,18 @@ class _SidebarAppState extends State<SidebarApp> {
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator'),
-    Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
-    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title:"Pemilih"),
+    Saksi(
+        labeltext: "Search by nama",
+        judul: "Saksi",
+        list: saksiList,
+        title: "Saksi"),
+    Pemilih(
+        labeltext: "Search by nama",
+        judul: "Pemilih",
+        list: pemilihlist,
+        title: "Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
-    C1(title: 'Pemetaan C1'),
+    PemetaanSuaraC1(labeltext: 'cari', judul: 'Provinsi', title: 'Pemetaan C1'),
     SettingPage(title: 'Pengaturan'),
   ];
 
@@ -58,28 +66,29 @@ class _SidebarAppState extends State<SidebarApp> {
             key: _key,
             appBar: isSmallScreen
                 ? AppBar(
-              backgroundColor: canvasColor,
-              title: Text(
-                _widgetOptions[_selectedIndex] is Dashboard ||
-                    _widgetOptions[_selectedIndex] is Koordinator ||
-                    _widgetOptions[_selectedIndex] is PemetaanSuara ||
-                    _widgetOptions[_selectedIndex] is C1 ||
-                    _widgetOptions[_selectedIndex] is Saksi ||
-                    _widgetOptions[_selectedIndex] is SettingPage
-                    ? (_widgetOptions[_selectedIndex] as dynamic).title
-                    : 'Map Voters',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  _key.currentState?.openDrawer();
-                },
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                ),
-              ),
-            )
+                    backgroundColor: canvasColor,
+                    title: Text(
+                      _widgetOptions[_selectedIndex] is Dashboard ||
+                              _widgetOptions[_selectedIndex] is Koordinator ||
+                              _widgetOptions[_selectedIndex] is PemetaanSuara ||
+                              _widgetOptions[_selectedIndex]
+                                  is PemetaanSuaraC1 ||
+                              _widgetOptions[_selectedIndex] is Saksi ||
+                              _widgetOptions[_selectedIndex] is SettingPage
+                          ? (_widgetOptions[_selectedIndex] as dynamic).title
+                          : 'Map Voters',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    leading: IconButton(
+                      onPressed: () {
+                        _key.currentState?.openDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
                 : null,
             drawer: isSmallScreen
                 ? Sidebar(controller: _controller, onItemTapped: _onItemTapped)
@@ -221,8 +230,6 @@ class Sidebar extends StatelessWidget {
     );
   }
 }
-
-
 
 const canvasColor = Color(0xFF00A6A6);
 const scaffoldBackgroundColor = Color(0xFF70CED4);
