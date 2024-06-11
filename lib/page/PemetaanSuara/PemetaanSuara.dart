@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'model.dart';
 
 class PemetaanSuara extends StatefulWidget {
-  const PemetaanSuara({super.key, required this.title});
+  const PemetaanSuara({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -12,6 +13,7 @@ class PemetaanSuara extends StatefulWidget {
 class _PemetaanSuaraState extends State<PemetaanSuara> {
   TextEditingController cariprov = TextEditingController();
   String selectedRegion = 'Pemetaan suara provinsi';
+  String? selectedParent;
   final List<String> regions = [
     'Pemetaan suara kabupaten',
     'Pemetaan suara provinsi',
@@ -19,33 +21,39 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
     'Pemetaan suara kecamatan'
   ];
 
-  // Data dummy
-  final Map<String, List<String>> dataDummy = {
-    'Pemetaan suara provinsi': ['Jawa Barat', 'Jawa Timur', 'Jawa Tengah'],
-    'Pemetaan suara kabupaten': [
-      'Kabupaten Bandung',
-      'Kabupaten Bogor',
-      'Kabupaten Bekasi'
-    ],
-    'Pemetaan suara kecamatan': [
-      'Kecamatan Cicendo',
-      'Kecamatan Andir',
-      'Kecamatan Sukajadi'
-    ],
-    'Pemetaan suara kelurahan': [
-      'Kelurahan Sukamaju',
-      'Kelurahan Kebonwaru',
-      'Kelurahan Babakan'
-    ],
+  final Map<String, List<String>> dataMap = {
+    'Pemetaan suara provinsi': provinsi.map((p) => p.provinsi!).toList(),
+    'Pemetaan suara kabupaten': kabupaten.map((k) => k.kabupaten!).toList(),
+    'Pemetaan suara kecamatan': kecamatan.map((k) => k.kecamatan!).toList(),
+    'Pemetaan suara kelurahan': kelurahan.map((k) => k.kelurahan!).toList(),
+  };
+
+  final Map<String, int> suaraMap = {
+    for (var p in provinsi) p.provinsi!: p.suara!,
+    for (var k in kabupaten) k.kabupaten!: k.suara!,
+    for (var k in kecamatan) k.kecamatan!: k.suara!,
+    for (var k in kelurahan) k.kelurahan!: k.suara!,
   };
 
   List<String> filteredData = [];
+  Map<String, String> parentRegionMap = {};
 
   @override
   void initState() {
     super.initState();
-    filteredData = dataDummy[selectedRegion]!;
+    filteredData = dataMap[selectedRegion]!;
     cariprov.addListener(_searchData);
+
+    // Populate parentRegionMap
+    kabupaten.forEach((k) {
+      parentRegionMap[k.kabupaten!] = k.provinsi!;
+    });
+    kecamatan.forEach((k) {
+      parentRegionMap[k.kecamatan!] = k.kabupaten!;
+    });
+    kelurahan.forEach((k) {
+      parentRegionMap[k.kelurahan!] = k.kecamatan!;
+    });
   }
 
   @override
@@ -57,9 +65,11 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
 
   void _searchData() {
     setState(() {
-      filteredData = dataDummy[selectedRegion]!
+      filteredData = dataMap[selectedRegion]!
           .where((item) =>
-              item.toLowerCase().contains(cariprov.text.toLowerCase()))
+              item.toLowerCase().contains(cariprov.text.toLowerCase()) &&
+              (selectedParent == null ||
+                  parentRegionMap[item] == selectedParent))
           .toList();
     });
   }
@@ -80,28 +90,59 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
   }
 
   List<Widget> buildDataContainers() {
-    return filteredData.map((data) => _buildInfoContainer(data)).toList();
+    return filteredData
+        .map((data) => GestureDetector(
+              onTap: () => _handleDoubleTap(data),
+              child: _buildInfoContainer(data, suaraMap[data]!),
+            ))
+        .toList();
+  }
+
+  void _handleDoubleTap(String data) {
+    setState(() {
+      if (selectedRegion == 'Pemetaan suara provinsi') {
+        selectedRegion = 'Pemetaan suara kabupaten';
+        selectedParent = data;
+      } else if (selectedRegion == 'Pemetaan suara kabupaten') {
+        selectedRegion = 'Pemetaan suara kecamatan';
+        selectedParent = data;
+      } else if (selectedRegion == 'Pemetaan suara kecamatan') {
+        selectedRegion = 'Pemetaan suara kelurahan';
+        selectedParent = data;
+      }
+      filteredData = dataMap[selectedRegion]!
+          .where((item) =>
+              item.toLowerCase().contains(cariprov.text.toLowerCase()) &&
+              (selectedParent == null ||
+                  parentRegionMap[item] == selectedParent))
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DropdownButton<String>(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 48, 48, 48),
+                    ),
+                  ),
+                  margin: EdgeInsets.fromLTRB(2, 10, 2, 0),
+                  padding: EdgeInsets.fromLTRB(10, 0, 12, 0),
+                  child: DropdownButton<String>(
                     value: selectedRegion,
-                    icon: Icon(Icons.arrow_downward),
-                    iconSize: 24,
+                    icon: Icon(Icons.ads_click_rounded),
+                    iconSize: 20,
                     elevation: 16,
                     style: GoogleFonts.getFont(
                       'Nunito',
@@ -109,74 +150,107 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
                       fontSize: 20,
                       color: Color(0xFF3E3E3E),
                     ),
-                    underline: Container(
-                      height: 2,
-                      color: Color(0xFF3E3E3E),
-                    ),
+                    borderRadius: BorderRadius.circular(8),
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedRegion = newValue!;
-                        filteredData = dataDummy[selectedRegion]!;
+                        filteredData = dataMap[selectedRegion]!;
+                        selectedParent = null;
                         cariprov.clear();
                       });
                     },
-                    items: regions
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items:
+                        regions.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value),
                       );
                     }).toList(),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.settings),
-                    iconSize: 30,
-                    onPressed: () {
-                      // Tambahkan aksi untuk ikon setting di sini
-                      _showFilterOptions(context);
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
+          if (selectedRegion != 'Pemetaan suara provinsi')
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black45),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                margin: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                child: DropdownButton<String>(
+                  value: selectedParent,
+                  hint: Text(
+                    'KAWASAN WILAYAH',
+                    style: GoogleFonts.getFont(
+                      'Nunito',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 12,
+                      color: Color(0xFF3E3E3E),
+                    ),
+                  ),
+                  items: _getParentRegionItems()
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: GoogleFonts.getFont(
+                          'Nunito',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                          color: Color(0xFF3E3E3E),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedParent = newValue;
+                      _searchData();
+                    });
+                  },
+                ),
+              ),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              margin: EdgeInsets.fromLTRB(11, 10, 11, 0),
+              margin: EdgeInsets.fromLTRB(11, 5, 11, 0),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 179, 179, 179),
+                color: Color.fromARGB(255, 128, 221, 206),
                 border: Border.all(
                   color: Color.fromARGB(166, 214, 214, 214),
                 ),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color.fromARGB(255, 124, 124, 124)
-                        .withOpacity(0.5),
-                    spreadRadius: 5,
-                    blurRadius: 7,
+                    color: Color.fromARGB(255, 63, 63, 63).withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 3,
                     offset: Offset(0, 3),
                   )
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: TextField(
                   controller: cariprov,
                   decoration: InputDecoration(
                     hintText: getPlaceholderText(),
                     hintStyle: GoogleFonts.getFont(
                       'Nunito',
-                      fontSize: 20,
-                      color: Colors.white,
+                      fontSize: 15,
+                      color: Color.fromARGB(255, 255, 255, 255),
                       fontWeight: FontWeight.w900,
                     ),
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       onPressed: () {},
                       icon: Icon(Icons.search_sharp),
-                      iconSize: 30,
+                      iconSize: 20,
                     ),
                   ),
                   style: GoogleFonts.getFont('Nunito'),
@@ -184,126 +258,83 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
               ),
             ),
           ),
-          Center(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-              width: screenWidth * 0.9,
-              height: screenHeight * 0.6,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 124, 124, 124)
-                    .withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10),
-              ),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 children: buildDataContainers(),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildInfoContainer(String text) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 1, 9),
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 184, 184, 184),
-        border: Border.all(
-          color: Color.fromARGB(255, 0, 0, 0),
+  List<String> _getParentRegionItems() {
+    if (selectedRegion == 'Pemetaan suara kabupaten') {
+      return provinsi.map((p) => p.provinsi!).toList();
+    } else if (selectedRegion == 'Pemetaan suara kecamatan') {
+      return kabupaten.map((k) => k.kabupaten!).toList();
+    } else if (selectedRegion == 'Pemetaan suara kelurahan') {
+      return kecamatan.map((k) => k.kecamatan!).toList();
+    }
+    return [];
+  }
+
+  Widget _buildInfoContainer(String text, int suara) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 255, 255, 255),
+          border: Border.all(
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          borderRadius: BorderRadius.circular(8),
         ),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          )
-        ],
-      ),
-      child: SizedBox(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Text(
-                text,
-                style: GoogleFonts.getFont(
-                  'Nunito',
-                  fontSize: 20,
-                  color: Color.fromARGB(255, 233, 233, 233),
-                  fontWeight: FontWeight.w700,
+        child: SizedBox(
+          height: 25,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  text,
+                  style: GoogleFonts.getFont(
+                    'Nunito',
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            Container(
-              width: 200,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(179, 255, 255, 255),
-                borderRadius: BorderRadiusDirectional.circular(5),
+              
+              Container(
+                width: 80,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 189, 247, 247),
+                  borderRadius: BorderRadiusDirectional.circular(5),
+                ),
+                child: Center(
+                  child: Text(
+                    suara.toString(),
+                    style: GoogleFonts.getFont(
+                      'Nunito',
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
-  void _showFilterOptions(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: Text('Provinsi'),
-              onTap: () {
-                _updateDataByRegion('Pemetaan suara provinsi');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Kabupaten'),
-              onTap: () {
-                _updateDataByRegion('Pemetaan suara kabupaten');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Kecamatan'),
-              onTap: () {
-                _updateDataByRegion('Pemetaan suara kecamatan');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('Kelurahan'),
-              onTap: () {
-                _updateDataByRegion('Pemetaan suara kelurahan');
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-void _updateDataByRegion(String region) {
-  setState(() {
-    selectedRegion = region;
-    filteredData = dataDummy[selectedRegion]!;
-    cariprov.clear();
-  });
-}
-
 }
 
 void main() {
