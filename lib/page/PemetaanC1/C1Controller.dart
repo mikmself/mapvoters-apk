@@ -46,6 +46,7 @@ class PemetaanSuaraC1 extends StatefulWidget {
 class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
   bool showKabupaten = false;
   bool ShowKecamatan = false;
+  bool ShowKelurahan = false;
 
   @override
   void initState() {
@@ -56,8 +57,8 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
     var result = await service1.showProvinsi();
     setState(() {
       showKabupaten = false;
-      showKabupaten = false;
       ShowKecamatan = false;
+      ShowKelurahan = false;
     });
   }
 
@@ -67,6 +68,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
     setState(() {
       showKabupaten = true;
       ShowKecamatan = false;
+      ShowKelurahan = false;
     });
   }
 
@@ -75,6 +77,15 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
         .showKec(kabupatenId); // Assuming you have a method to fetch kelurahan
     setState(() {
       ShowKecamatan = true;
+      ShowKelurahan = false;
+    });
+  }
+
+  void fetchKelurahan(String kelurahanId) async {
+    var result = await service1
+        .showKel(kelurahanId); // Assuming you have a method to fetch kelurahan
+    setState(() {
+      ShowKelurahan = true;
     });
   }
 
@@ -99,8 +110,8 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                       IconButton(
                         icon: Icon(Icons.arrow_back),
                         onPressed: () {
-                          if (showKabupaten) {
-                          } else {}
+                          // if (showKabupaten) {
+                          // } else {}
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -138,13 +149,25 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                         }
                       }
                       return ListView.builder(
-                        itemCount: ShowKecamatan
-                            ? kecamatanList.length
-                            : showKabupaten
-                                ? kabupatenList.length
-                                : provinsiList.length,
+                        itemCount: ShowKelurahan
+                            ? kelurahanList.length
+                            : ShowKecamatan
+                                ? kecamatanList.length
+                                : showKabupaten
+                                    ? kabupatenList.length
+                                    : provinsiList.length,
                         itemBuilder: (context, index) {
-                          if (ShowKecamatan) {
+                          if (ShowKelurahan) {
+                            return GestureDetector(
+                              child: Card(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: ListTile(
+                                  title: Text(kelurahanList[index].nama!),
+                                ),
+                              ),
+                            );
+                          } else if (ShowKecamatan) {
                             return GestureDetector(
                               child: Card(
                                 margin:
