@@ -37,12 +37,14 @@ class DetailSaksi extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RegisterSaksi(
-                          saksi: saksi,
-                          onSave: (updatedSaksi) {
-                            onSave(updatedSaksi);
-                            Navigator.pop(context);
-                          },
+                        builder: (context) => Registersaksi(onBack: () {
+                          
+                        },
+                          // saksi: saksi,
+                          // onSave: (updatedSaksi) {
+                          //   onSave(updatedSaksi);
+                          //   Navigator.pop(context);
+                          // },
                         ),
                       ),
                     );

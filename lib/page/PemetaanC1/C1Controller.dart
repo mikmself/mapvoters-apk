@@ -193,11 +193,11 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
               right: 16,
               child: FloatingActionButton(
                 onPressed: () => {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RegisterSaksi(),
-                      ))
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => RegisterSaksi(),
+                  //     ))
                 },
                 child: Icon(Icons.add),
               ),
