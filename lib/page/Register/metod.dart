@@ -37,33 +37,6 @@ class methodRegister {
     }
   }
 
-  registerKoor(String nama, String NIK, String Email, String telp,
-      String Password, File foto) async {
-    try {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('http://47.236.54.237/api/koordinator'));
-      request.fields.addAll({
-        'name': nama,
-        'email': Email,
-        'telephone': telp,
-        'password': Password,
-        'nik': NIK,
-        'paslon_id': '1'
-      });
-      request.files.add(await http.MultipartFile.fromPath('foto', foto.path));
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
-      } else {
-        print(response.reasonPhrase);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
   showsaksi() async {
     var request =
         http.Request('GET', Uri.parse('http://47.236.54.237/api/saksi'));
