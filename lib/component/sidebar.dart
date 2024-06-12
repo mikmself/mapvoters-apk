@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mapvotersapk/page/koordinator.dart';
+import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:mapvotersapk/page/PemetaanC1/C1Controller.dart';
+import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
+import 'package:mapvotersapk/page/Saksi/saksi.dart';
+import 'package:mapvotersapk/page/Setting.dart';
+import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
-import 'package:mapvotersapk/page/pemetaanc1.dart';
-import 'package:mapvotersapk/page/pemetaansuara.dart';
+import 'package:mapvotersapk/page/PemetaanSuara/pemetaansuara.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
@@ -10,7 +14,7 @@ void main() {
 }
 
 class SidebarApp extends StatefulWidget {
-  const SidebarApp({super.key});
+  const SidebarApp({Key? key}) : super(key: key);
 
   @override
   _SidebarAppState createState() => _SidebarAppState();
@@ -22,13 +26,21 @@ class _SidebarAppState extends State<SidebarApp> {
   final _key = GlobalKey<ScaffoldState>();
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Center(child: Dashboard()),
-    const Center(child: Koordinator()),
-    const Center(child: Text('SAKSI')),
-    const Center(child: Text('CALON PEMILIH')),
-    const Center(child: PemtaanSuara()),
-    const Center(child: PemetaanC1()),
-    const Center(child: Text('PENGATURAN')),
+    Dashboard(title: 'Dashboard'),
+    Koordinator(title: 'Koordinator'),
+    Saksi(
+        labeltext: "Search by nama",
+        judul: "Saksi",
+        list: saksiList,
+        title: "Saksi"),
+    Pemilih(
+        labeltext: "Search by nama",
+        judul: "Pemilih",
+        list: pemilihlist,
+        title: "Pemilih"),
+    PemetaanSuara(title: 'Pemetaan Suara'),
+    PemetaanSuaraC1(labeltext: 'cari', judul: 'Provinsi', title: 'Pemetaan C1'),
+    SettingPage(title: 'Pengaturan'),
   ];
 
   void _onItemTapped(int index) {
@@ -37,7 +49,6 @@ class _SidebarAppState extends State<SidebarApp> {
       _controller.selectIndex(index);
     });
 
-    // Close the drawer if it is open
     if (_key.currentState?.isDrawerOpen ?? false) {
       Navigator.of(_key.currentContext!).pop();
     }
@@ -55,21 +66,29 @@ class _SidebarAppState extends State<SidebarApp> {
             key: _key,
             appBar: isSmallScreen
                 ? AppBar(
-              backgroundColor: canvasColor,
-              title: const Text(
-                "Map Voters",
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: IconButton(
-                onPressed: () {
-                  _key.currentState?.openDrawer();
-                },
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                ),
-              ),
-            )
+                    backgroundColor: canvasColor,
+                    title: Text(
+                      _widgetOptions[_selectedIndex] is Dashboard ||
+                              _widgetOptions[_selectedIndex] is Koordinator ||
+                              _widgetOptions[_selectedIndex] is PemetaanSuara ||
+                              _widgetOptions[_selectedIndex]
+                                  is PemetaanSuaraC1 ||
+                              _widgetOptions[_selectedIndex] is Saksi ||
+                              _widgetOptions[_selectedIndex] is SettingPage
+                          ? (_widgetOptions[_selectedIndex] as dynamic).title
+                          : 'Map Voters',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    leading: IconButton(
+                      onPressed: () {
+                        _key.currentState?.openDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
                 : null,
             drawer: isSmallScreen
                 ? Sidebar(controller: _controller, onItemTapped: _onItemTapped)
@@ -92,10 +111,10 @@ class _SidebarAppState extends State<SidebarApp> {
 
 class Sidebar extends StatelessWidget {
   const Sidebar({
-    super.key,
+    Key? key,
     required this.controller,
     required this.onItemTapped,
-  });
+  }) : super(key: key);
 
   final SidebarXController controller;
   final ValueChanged<int> onItemTapped;

@@ -24,25 +24,27 @@ class button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: lebar,
-      height: tinggi,
-      margin: EdgeInsets.fromLTRB(L, T, R, B),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: warnatombol, // Warna latar belakang
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+    return Expanded(
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        margin: EdgeInsets.fromLTRB(L, T, R, B),
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: warnatombol, // Warna latar belakang
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
           ),
+          onPressed: metod,
+          child: Text(hinttext,
+              style: GoogleFonts.getFont(
+                'Nunito',
+                fontWeight: FontWeight.w700,
+                fontSize: 22.5,
+                color: warnatext,
+              )),
         ),
-        onPressed: metod,
-        child: Text(hinttext,
-            style: GoogleFonts.getFont(
-              'Nunito',
-              fontWeight: FontWeight.w700,
-              fontSize: 22.5,
-              color: warnatext,
-            )),
       ),
     );
   }

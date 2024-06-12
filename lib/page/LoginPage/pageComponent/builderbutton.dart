@@ -9,12 +9,12 @@ Widget buildbutton(
     required VoidCallback metod}) {
   return button(
     hinttext: hinttext,
-    L: 0,
-    T: 20,
-    R: 0,
-    B: 0,
-    tinggi: 50,
-    lebar: 130,
+    L: 10,
+    T: 10,
+    R: 10,
+    B: 40,
+    tinggi: 0,
+    lebar: 0,
     warnatombol: warnatombol,
     warnatext: warnatext,
     metod: metod,

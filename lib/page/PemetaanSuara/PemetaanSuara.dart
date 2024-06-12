@@ -5,7 +5,6 @@ import 'model.dart';
 class PemetaanSuara extends StatefulWidget {
   const PemetaanSuara({Key? key, required this.title}) : super(key: key);
   final String title;
-
   @override
   State<PemetaanSuara> createState() => _PemetaanSuaraState();
 }
@@ -337,9 +336,3 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    title: 'Pemetaan Suara',
-    home: PemetaanSuara(title: 'Pemetaan Suara'),
-  ));
-}
