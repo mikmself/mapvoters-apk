@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-void main() {
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: RegisterSaksi(),
-    );
-  }
-}
+import 'package:mapvotersapk/component/model/SaksiModel.dart';
+import 'package:mapvotersapk/component/model/UserMode.dart';
+import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
+import 'package:mapvotersapk/component/model/KabupatenModel.dart';
+import 'package:mapvotersapk/component/model/KecamatanModel.dart';
+import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 
 class RegisterSaksi extends StatefulWidget {
-  const RegisterSaksi({super.key});
+  final SaksiModel? saksi;
+  final Function(SaksiModel)? onSave;
+  const RegisterSaksi({super.key, this.saksi, this.onSave});
 
   @override
   State<RegisterSaksi> createState() => _RegisterSaksiState();
 }
 
 class _RegisterSaksiState extends State<RegisterSaksi> {
-  TextEditingController namasaksicontroler = TextEditingController();
-  TextEditingController emailcontoroler = TextEditingController();
-  TextEditingController nohpcontroler = TextEditingController();
-  TextEditingController paswordcontorler = TextEditingController();
-  TextEditingController provcontorler = TextEditingController();
-  TextEditingController kabcontroler = TextEditingController();
-  TextEditingController keccontroler = TextEditingController();
-  TextEditingController kelcontroler = TextEditingController();
-  TextEditingController tpscontroler = TextEditingController();
+  TextEditingController namasaksicontroller = TextEditingController();
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController nohpcontroller = TextEditingController();
+  TextEditingController paswordcontorller = TextEditingController();
+  TextEditingController provcontroller = TextEditingController();
+  TextEditingController kabcontroller = TextEditingController();
+  TextEditingController keccontroller = TextEditingController();
+  TextEditingController kelcontroller = TextEditingController();
+  TextEditingController tpscontroller = TextEditingController();
+
+void initState() {
+  super.initState();
+  if(widget.saksi != null) {
+    namasaksicontroller.text = widget.saksi!.user?.name ?? '';
+    emailcontroller.text = widget.saksi!.user?.email ?? '';
+    nohpcontroller.text = widget.saksi!.user?.telephone ?? '';
+    tpscontroller.text = widget.saksi!.tps ?? '';
+    provcontroller.text = widget.saksi!.provinsi?.nama ?? '';
+    kabcontroller.text = widget.saksi!.kabupaten?.nama ?? '';
+    keccontroller.text = widget.saksi!.kecamatan?.nama ?? '';
+    kelcontroller.text = widget.saksi!.kelurahan?.nama ?? '';
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -130,15 +137,15 @@ class _RegisterSaksiState extends State<RegisterSaksi> {
                       ]),
                   child: Column(
                     children: [
-                      _buildInfoContainer("NAMA SAKSI", namasaksicontroler),
-                      _buildInfoContainer("EMAIL", emailcontoroler),
-                      _buildInfoContainer("NO TELPHONE", nohpcontroler),
-                      _buildInfoContainer("PASSWORD", paswordcontorler),
-                      _buildInfoContainer("PROVINSI", provcontorler),
-                      _buildInfoContainer("KABUPATEN", kabcontroler),
-                      _buildInfoContainer("KECAMATAN", keccontroler),
-                      _buildInfoContainer("KELURAHAN", kelcontroler),
-                      _buildInfoContainer("TPS", tpscontroler),
+                      _buildInfoContainer("NAMA SAKSI", namasaksicontroller),
+                      _buildInfoContainer("EMAIL", emailcontroller),
+                      _buildInfoContainer("NO TELPHONE", nohpcontroller),
+                      _buildInfoContainer("PASSWORD", paswordcontorller),
+                      _buildInfoContainer("PROVINSI", provcontroller),
+                      _buildInfoContainer("KABUPATEN", kabcontroller),
+                      _buildInfoContainer("KECAMATAN", keccontroller),
+                      _buildInfoContainer("KELURAHAN", kelcontroller),
+                      _buildInfoContainer("TPS", tpscontroller),
                     ],
                   ),
                 ),
@@ -149,7 +156,21 @@ class _RegisterSaksiState extends State<RegisterSaksi> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 30, 50, 0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        SaksiModel newSaksi = SaksiModel(
+                          user: UserModel(
+                            name: namasaksicontroller.text,
+                            email: emailcontroller.text,
+                            telephone: nohpcontroller.text,
+                          ),
+                          tps: tpscontroller.text,
+                          provinsi: ProvinsiModel(nama: provcontroller.text), //ini bener nama kan yah?
+                          kabupaten: KabupatenModel(nama: kabcontroller.text), //atau harusnya 
+                          kecamatan: KecamatanModel(nama: keccontroller.text),
+                          kelurahan: KelurahanModel(nama: kelcontroller.text),
+                        );
+                        Navigator.pop(context, newSaksi);
+                      },
                       child: Text(
                         'Tambah',
                         style: TextStyle(
