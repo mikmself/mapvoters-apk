@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 import 'package:mapvotersapk/component/service/KoordinatorService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
@@ -43,6 +44,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Image.network(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
                 Text('Nama: ${koordinator.user!.name}'),
                 SizedBox(height: 8),
                 Text('NIK: ${koordinator.nik}'),
@@ -122,12 +124,6 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
             ),
             TextButton(
               onPressed: () {
-                print(koordinator.id);
-                print(nameController.text);
-                print(NIKController.text);
-                print(emailController.text);
-                print(phoneController.text);
-                print(passwordController.text);
                 service.EditKoordinator(
                   koordinator.id!,
                   nameController.text,
@@ -137,12 +133,6 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                   passwordController.text,
                   imageFile ?? File(''),
                 );
-                setState(() {
-                  koordinator.user!.name = nameController.text;
-                  koordinator.nik = NIKController.text;
-                  koordinator.user!.email = emailController.text;
-                  koordinator.user!.telephone = phoneController.text;
-                });
                 Navigator.of(context).pop();
               },
               child: Text('Simpan'),

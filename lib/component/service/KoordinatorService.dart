@@ -94,18 +94,17 @@ class KoordinatorService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print('Koordinator berhasil diedit');
-        // Perbarui data koordinator di daftar koorList
-        KoordinatorModel editedKoordinator = koorList.firstWhere(
-              (koordinator) => koordinator.id == id,
-        );
-        editedKoordinator.nik = NIK;
-        editedKoordinator.foto = foto.path;
-        editedKoordinator.user!.name = nama;
-        editedKoordinator.user!.email = Email;
-        editedKoordinator.user!.telephone = telp;
+        String responseBody = await response.stream.bytesToString();
+        Map<String, dynamic> responseDecode =
+        jsonDecode(responseBody) as Map<String, dynamic>;
+
+        print(id.toString());
+        print(request.fields.toString());
+        print(responseDecode.toString());
       } else {
         print('Gagal mengedit koordinator: ${response.reasonPhrase}');
+        String responseBody = await response.stream.bytesToString();
+        print('Response body: $responseBody');
       }
     } catch (e) {
       print('Terjadi kesalahan saat mengedit koordinator: $e');

@@ -1,4 +1,4 @@
-const String BASE_URL = "https://6300-112-78-156-225.ngrok-free.app/api";
+const String BASE_URL = "https://bef9-112-78-156-233.ngrok-free.app/api";
 String? token = "";
 
 Map<String, String> loginData = {
