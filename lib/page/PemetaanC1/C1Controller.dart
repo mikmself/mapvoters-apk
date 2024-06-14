@@ -1,30 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/PemetaanC1/PemetaanSuaraservice.dart';
-
 import 'package:mapvotersapk/page/Saksi/RegisterSaksi.dart';
 
-Service service1 = Service();
-
-void main(List<String> args) {
-  runApp(MyAp());
-}
-
-class MyAp extends StatelessWidget {
-  const MyAp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: PemetaanSuaraC1(
-        labeltext: 'Cari',
-        judul: 'Provinsi',
-        title: 'Pemetaan C1',
-      ),
-    );
-  }
-}
+Service service = Service();
 
 class PemetaanSuaraC1 extends StatefulWidget {
   final String judul;
@@ -44,8 +25,9 @@ class PemetaanSuaraC1 extends StatefulWidget {
 }
 
 class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
-  bool showKabupaten = false;
-  bool ShowKecamatan = false;
+  String currentlevel = 'provinsi';
+
+  var role = 'paslon';
 
   @override
   void initState() {
@@ -53,28 +35,46 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
   }
 
   void fetchProvinsi() async {
-    var result = await service1.showProvinsi();
+    var result = await service.showProvinsi();
     setState(() {
-      showKabupaten = false;
-      showKabupaten = false;
-      ShowKecamatan = false;
+      // showKabupaten = false;
+      currentlevel = 'provinsi';
     });
   }
 
   void fetchKabupaten(String provinsiId) async {
-    var result = await service1.showKab(
+    var result = await service.showKab(
         provinsiId); // Assuming you have a similar method to fetch kabupaten
     setState(() {
-      showKabupaten = true;
-      ShowKecamatan = false;
+      // showKabupaten = true;
+      currentlevel = 'kabupaten';
     });
   }
 
   void fetchKecamatan(String kabupatenId) async {
-    var result = await service1
+    var result = await service
         .showKec(kabupatenId); // Assuming you have a method to fetch kelurahan
     setState(() {
-      ShowKecamatan = true;
+      // ShowKecamatan = true;
+      currentlevel = 'kecamatan';
+    });
+  }
+
+  void fetchKelurahan(String kecamatanId) async {
+    var result = await service
+        .showKel(kecamatanId); // Assuming you have a method to fetch kelurahan
+    setState(() {
+      // ShowKelurahan = true;
+      currentlevel = 'kelurahan';
+    });
+  }
+
+  void fetchTPS(id, String kelurahanId) async {
+    var result = await service.showTPS(
+        id, kelurahanId); // Assuming you have a method to fetch kelurahan
+    setState(() {
+      // ShowTPS = true;
+      currentlevel = 'TPS';
     });
   }
 
@@ -99,14 +99,30 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                       IconButton(
                         icon: Icon(Icons.arrow_back),
                         onPressed: () {
-                          if (showKabupaten) {
-                          } else {}
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SidebarApp(),
-                            ),
-                          );
+                          if (currentlevel == 'TPS') {
+                            setState(() {
+                              currentlevel = 'kelurahan';
+                            });
+                          } else if (currentlevel == 'kelurahan') {
+                            setState(() {
+                              currentlevel = 'kecamatan';
+                            });
+                          } else if (currentlevel == 'kecamatan') {
+                            setState(() {
+                              currentlevel = 'kabupaten';
+                            });
+                          } else if (currentlevel == 'kabupaten') {
+                            setState(() {
+                              currentlevel = 'provinsi';
+                            });
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SidebarApp(),
+                              ),
+                            );
+                          }
                         },
                       ),
                     ],
@@ -124,7 +140,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder(
-                    future: service1.showProvinsi(),
+                    future: service.showProvinsi(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -138,14 +154,69 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                         }
                       }
                       return ListView.builder(
-                        itemCount: ShowKecamatan
-                            ? kecamatanList.length
-                            : showKabupaten
-                                ? kabupatenList.length
-                                : provinsiList.length,
+                        itemCount: currentlevel == 'TPS'
+                            ? TPSlist.length
+                            : currentlevel == 'kelurahan'
+                                ? kelurahanList.length
+                                : currentlevel == 'kecamatan'
+                                    ? kecamatanList.length
+                                    : currentlevel == 'kabupaten'
+                                        ? kabupatenList.length
+                                        : provinsiList.length,
                         itemBuilder: (context, index) {
-                          if (ShowKecamatan) {
+                          if (currentlevel == 'TPS') {
                             return GestureDetector(
+                              onTap: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Detail Suara'),
+                                      content: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Image.network(BASE_URL.replaceFirst(
+                                                  '/api', '/c1/') +
+                                              TPSlist[index].fotoKertasSuara!),
+                                          SizedBox(height: 8),
+                                          Text('TPS : ${TPSlist[index].tps}'),
+                                          SizedBox(height: 8),
+                                          Text(
+                                              'Jumlah Suara : ${TPSlist[index].jumlahSuara}')
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Card(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: ListTile(
+                                  title: Text(TPSlist[index].tps!),
+                                ),
+                              ),
+                            );
+                          } else if (currentlevel == 'kelurahan') {
+                            return GestureDetector(
+                              onTap: () {
+                                fetchTPS(1, kelurahanList[index].id!);
+                              },
+                              child: Card(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: ListTile(
+                                  title: Text(kelurahanList[index].nama!),
+                                ),
+                              ),
+                            );
+                          } else if (currentlevel == 'kecamatan') {
+                            return GestureDetector(
+                              onTap: () {
+                                fetchKelurahan(kecamatanList[index].id!);
+                              },
                               child: Card(
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 8.0),
@@ -154,7 +225,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                                 ),
                               ),
                             );
-                          } else if (showKabupaten) {
+                          } else if (currentlevel == 'kabupaten') {
                             return GestureDetector(
                               onTap: () {
                                 fetchKecamatan(kabupatenList[index].id!);
@@ -188,20 +259,24 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                 ),
               ],
             ),
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: FloatingActionButton(
-                onPressed: () => {
-                  Navigator.push(
+            Visibility(
+              visible: role != role,
+              child: Positioned(
+                bottom: 16,
+                right: 16,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => RegisterSaksi(),
-                      ))
-                },
-                child: Icon(Icons.add),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.add),
+                ),
               ),
-            ),
+            )
           ],
         ),
       ),
