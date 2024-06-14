@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,241 +36,254 @@ class _CreatePemilihState extends State<CreatePemilih> {
   final TextEditingController _villageController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
 
+  File _imageFile = File('');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(17.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 243, 237, 237),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      resizeToAvoidBottomInset: false,
+      body: Column(
+        children: [
+          _buildHeader(context),
+          const SizedBox(height: 15),
+          _buildImagePicker(context),
+          const SizedBox(height: 15),
+          _buildTextField(_nameController, 'Nama'),
+          const SizedBox(height: 15),
+          _buildTextField(_nikController, 'NIK'),
+          const SizedBox(height: 15),
+          _buildTextField(_telephoneController, 'Telephone'),
+          const SizedBox(height: 15),
+          _buildTextField(_provinceController, 'Provinsi'),
+          const SizedBox(height: 15),
+          _buildTextField(_districtController, 'Kabupaten'),
+          const SizedBox(height: 15),
+          _buildTextField(_subdistrictController, 'Kecamatan'),
+          const SizedBox(height: 15),
+          _buildTextField(_villageController, 'Kelurahan'),
+          const SizedBox(height: 15),
+          _buildTextField(_tpsController, 'TPS'),
+          const SizedBox(height: 5),
+          _buildSubmitButton(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Flexible(
+      flex: 4,
+      child: Container(
+        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
+        width: 350,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [textSpan(text: "CalonPemilih", warna: Colors.black)],
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePicker(BuildContext context) {
+    return Flexible(
+      flex: 8,
+      child: Container(
+        width: 340,
+        child: Row(
+          children: [
+            Flexible(
+              flex: 1,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
+            Flexible(
+              flex: 35,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _pickAnyFile();
+                  });
+                },
+                onLongPress: () {
+                  _showImageDialog(context, _imageFile);
+                },
+                child: Stack(
                   children: [
-                    Text(
-                      'Detail Data',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 2,
-                    ),
-                    SizedBox(height: 8), // Mengurangi jarak di sini
-                    Container(
-                      width: double.infinity,
-                      height: 160,
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle KTP upload
-                          },
-                          child: const Text('PILIH FOTO KTP'),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: _imageFile.path.isEmpty
+                                ? AssetImage('assets/placeholder.png')
+                                : FileImage(_imageFile) as ImageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          border: Border.all(),
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                     ),
-                    SizedBox(height: 8), // Mengurangi jarak di sini
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'NAMA',
-                      controllerUse: _nameController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'NIK',
-                      controllerUse: _nikController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'TELEPHONE',
-                      controllerUse: _telephoneController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'PROVINSI',
-                      controllerUse: _provinceController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KABUPATEN',
-                      controllerUse: _districtController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KECAMATAN',
-                      controllerUse: _subdistrictController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KELURAHAN',
-                      controllerUse: _villageController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'TPS',
-                      controllerUse: _tpsController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
+                    Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        _imageFile.path.isEmpty ? 'Foto KTP' : '',
+                        style: GoogleFonts.getFont(
+                          'Nunito',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
+                          color: Colors.black54,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Kembali'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Handle the form submission
-                        print('Form submitted');
-                      }
-                    },
-                    child: Text('Tambah'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return Flexible(
+      flex: 2,
+      child: textfield(controller: controller, obscure: false, label: label),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Flexible(
+      flex: 5,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: Container(
+          margin: EdgeInsets.only(right: 15),
+          width: 150,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black12,
+              fixedSize: Size(MediaQuery.of(context).size.width, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
-            ],
+            ),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                // Handle the form submission
+                print('Form submitted');
+              }
+            },
+            child: Text(
+              "TAMBAH",
+              style: GoogleFonts.getFont(
+                'Nunito',
+                fontWeight: FontWeight.w900,
+                fontSize: 17,
+                letterSpacing: 1,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
-}
 
-class PaddingwithTextFieldWidget extends StatelessWidget {
-  final String hinttext;
-  final TextEditingController controllerUse;
-  final double L, R, T, B, tinggi, lebar;
-  final Color warna;
-  const PaddingwithTextFieldWidget({
-    Key? key,
-    required this.hinttext,
-    required this.controllerUse,
-    required this.warna,
-    required this.L,
-    required this.R,
-    required this.T,
-    required this.B,
-    required this.tinggi,
-    required this.lebar,
-  }) : super(key: key);
+  Future<void> _pickAnyFile() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(L, T, R, B),
-      child: SizedBox(
-        width: lebar,
-        height: tinggi,
-        child: Container(
-          decoration: BoxDecoration(
-            color: warna,
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: TextField(
-              obscureText: hinttext == "Password",
-              style: GoogleFonts.getFont(
-                'Nunito',
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                color: Color.fromARGB(255, 31, 30, 30),
-              ),
-              controller: controllerUse,
-              decoration: InputDecoration(
-                focusColor: Color(0xFFFFFFFF),
-                contentPadding: EdgeInsets.only(),
-                border: InputBorder.none,
-                hintText: hinttext,
-                hintStyle: GoogleFonts.getFont(
-                  'Nunito',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 17,
-                  color: Color(0xFFFFFFFF),
-                ),
+    if (result != null) {
+      File file = File(result.files.first.path!);
+      setState(() {
+        _imageFile = file;
+      });
+    } else {
+      setState(() {
+        _imageFile;
+      });
+    }
+  }
+
+  TextSpan textSpan({required String text, required Color warna}) {
+    return TextSpan(
+      text: text,
+      style: GoogleFonts.getFont(
+        'Nunito',
+        fontWeight: FontWeight.w900,
+        fontSize: 30,
+        letterSpacing: 2.6,
+        color: warna,
+      ),
+    );
+  }
+
+  void _showImageDialog(BuildContext context, File imageFile) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Container(
+              child: Image.file(
+                imageFile,
+                fit: BoxFit.cover,
               ),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget textfield(
+      {required TextEditingController controller,
+      required bool obscure,
+      required String label}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscure,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: GoogleFonts.getFont(
+            'Nunito',
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            color: Color.fromARGB(255, 31, 30, 30),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          filled: true,
+          fillColor: Color.fromARGB(50, 74, 86, 70),
+        ),
+        style: GoogleFonts.getFont(
+          'Nunito',
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
+          color: Color.fromARGB(255, 31, 30, 30),
         ),
       ),
     );
