@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/Controller.dart';
@@ -32,11 +33,8 @@ class _loginpageState extends State<loginpage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                //padding: EdgeInsets.only(right: 30, left: 30),
-                width: MediaQuery.of(context).size.width *
-                    0.8, // 80% dari lebar layar
-                height: MediaQuery.of(context).size.height *
-                    0.425, // 50% dari tinggi layar
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.425,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: const Color(0xFFF2F0F0),
@@ -84,24 +82,36 @@ class _loginpageState extends State<loginpage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           buildbutton(
-                              context: context,
-                              hinttext: "Sign In",
-                              warnatombol: const Color(0x75005E73),
-                              warnatext: Colors.white,
-                              metod: () {
-                                LoginController().auth(_emailcontroller.text,
-                                    _paswwordcontroller.text);
-                              }),
+                            context: context,
+                            hinttext: "Sign In",
+                            warnatombol: const Color(0x75005E73),
+                            warnatext: Colors.white,
+                            metod: () async {
+                              LoginController login = LoginController();
+                              bool loginsukses = await login.auth(
+                                  _emailcontroller.text,
+                                  _paswwordcontroller.text,
+                                  context);
+                              if (loginsukses) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SidebarApp()));
+                              }
+                            },
+                          ),
                           buildbutton(
-                              context: context,
-                              hinttext: "Sign Up",
-                              warnatombol: Colors.white,
-                              warnatext: const Color(0x75005E73),
-                              metod: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Register(),
-                                  )))
+                            context: context,
+                            hinttext: "Sign Up",
+                            warnatombol: Colors.white,
+                            warnatext: const Color(0x75005E73),
+                            metod: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Register(),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),
