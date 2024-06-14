@@ -142,11 +142,11 @@ class _CreatePemilihState extends State<CreatePemilih> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        _imageFile.path.isEmpty ? 'Foto KTP' : '',
+                        _imageFile.path.isEmpty ? 'Pilih Foto KTP' : '',
                         style: GoogleFonts.getFont(
                           'Nunito',
                           fontWeight: FontWeight.w900,
-                          fontSize: 20,
+                          fontSize: 18,
                           color: Colors.black54,
                         ),
                       ),
