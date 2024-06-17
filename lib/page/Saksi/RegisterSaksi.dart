@@ -4,6 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/component/service/KoordinatorService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:mapvotersapk/component/service/SaksiService.dart';
+
+List<String> prov = ["Jawa Tengah", "Jawa Timur", "Jawa Barat"];
+List<String> kab = ["Banyumas", "Purbalingga", "Banjarnegara"];
+List<String> kec = ["Purwokerto Timur", "Sokaraja", "Purwokerto Barat"];
+List<String> kel = ["Sumampir", "Kranji", "Sokanegara"];
+
+String? provselect;
+String? kabselect;
+String? kecselect;
+String? kelselect;
 
 class Registersaksi extends StatefulWidget {
   final VoidCallback onBack;
@@ -75,43 +86,55 @@ class _RegisterState extends State<Registersaksi> {
                 label: 'Telephone'),
           ),
           const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+          dropdown(
                 controller: _provcontroller,
-                obscure: true,
-                label: 'Provinsi'),
-          ),
+                label: 'Provinsi',
+                list: prov,
+                onSelected: (value) {
+                  setState(() {
+                    provselect = value;
+                  });
+                },
+              ),
           const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+          dropdown(
                 controller: _kabcontroller,
-                obscure: true,
-                label: 'Kabupaten'),
-          ),
+                label: 'Kabupaten',
+                list: kab,
+                onSelected: (value) {
+                  setState(() {
+                    kabselect = value;
+                  });
+                },
+              ),
           const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+          dropdown(
                 controller: _keccontroller,
-                obscure: true,
-                label: 'Kecmatan'),
-          ),
+                label: 'Kecamatan',
+                list: kec,
+                onSelected: (value) {
+                  setState(() {
+                    kecselect = value;
+                  });
+                },
+              ),
           const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+          dropdown(
                 controller: _kelcontroller,
-                obscure: true,
-                label: 'Kelurahan'),
-          ),
+                label: 'Kelurahan',
+                list: kel,
+                onSelected: (value) {
+                  setState(() {
+                    kelselect = value;
+                  });
+                },
+              ),
           const SizedBox(height: 15),
           Flexible(
             flex: 2,
             child: textfield(
                 controller: _tpscontroller,
-                obscure: true,
+                obscure: false,
                 label: 'TPS'),
           ),
           const SizedBox(height: 15),
@@ -122,35 +145,6 @@ class _RegisterState extends State<Registersaksi> {
               height: MediaQuery.of(context).size.height,
               child: Row(
                 children: [
-                  // Flexible(
-                  //   flex: 3,
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       setState(() {
-                  //         _pickAnyFile();
-                  //       });
-                  //     },
-                  //     onLongPress: () {
-                  //       _showImageDialog(context, _imageFile);
-                  //     },
-                  //     child: SizedBox(
-                  //       height: MediaQuery.of(context).size.height,
-                  //       width: MediaQuery.of(context).size.width,
-                  //       child: DecoratedBox(
-                  //         decoration: BoxDecoration(
-                  //           image: DecorationImage(
-                  //               image: FileImage(
-                  //                 _imageFile,
-                  //               ),
-                  //               fit: BoxFit.cover),
-                  //           border: Border.all(),
-                  //           color: Colors.black12,
-                  //           borderRadius: BorderRadius.circular(5),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                   Flexible(
                     flex: 2,
                     child: Container(
@@ -170,7 +164,7 @@ class _RegisterState extends State<Registersaksi> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           onPressed: () {
-                            KoordinatorService service = KoordinatorService();
+                            SaksiService service = SaksiService();
                             
                           },
                           child: Text(
