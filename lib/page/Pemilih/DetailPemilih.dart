@@ -201,9 +201,7 @@ class _UpdatePemilihState extends State<UpdatePemilih> {
   String? _selectedSubdistrict;
   String? _selectedVillage;
   late TextEditingController _tpsController;
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();

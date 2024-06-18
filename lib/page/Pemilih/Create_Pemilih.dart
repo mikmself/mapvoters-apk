@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:file_picker/file_picker.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -28,249 +31,262 @@ class _CreatePemilihState extends State<CreatePemilih> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _telephoneController = TextEditingController();
-  final TextEditingController _provinceController = TextEditingController();
-  final TextEditingController _districtController = TextEditingController();
-  final TextEditingController _subdistrictController = TextEditingController();
-  final TextEditingController _villageController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
+
+  File? _imageFile;
+
+  String? _selectedProvinsi;
+  String? _selectedKabupaten;
+  String? _selectedKecamatan;
+  String? _selectedKelurahan;
+
+  final List<String> _provinsiList = ['Jawa Tengah', 'Jawa Barat', 'Jawa Timur'];
+  final Map<String, List<String>> _kabupatenMap = {
+    'Jawa Tengah': ['Banyumas', 'Cilacap', 'Purbalingga'],
+    'Jawa Barat': ['Bandung', 'Bekasi', 'Bogor'],
+    'Jawa Timur': ['Surabaya', 'Malang', 'Jember'],
+  };
+  final Map<String, List<String>> _kecamatanMap = {
+    'Banyumas': ['Purwokerto Barat', 'Purwokerto Timur', 'Purwokerto Utara'],
+    'Cilacap': ['Cilacap Selatan', 'Cilacap Tengah', 'Cilacap Utara'],
+    'Purbalingga': ['Purbalingga Barat', 'Purbalingga Selatan', 'Purbalingga Timur'],
+  };
+  final Map<String, List<String>> _kelurahanMap = {
+    'Purwokerto Barat': ['Pasir Kidul', 'Pasir Kulon', 'Pasir Lor'],
+    'Purwokerto Timur': ['Purwokerto Kidul', 'Purwokerto Tengah', 'Purwokerto Lor'],
+    'Purwokerto Utara': ['Purwokerto Wetan', 'Purwokerto Dalem', 'Purwokerto Girang'],
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(17.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 243, 237, 237),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Detail Data',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Divider(
-                      color: Colors.black,
-                      thickness: 2,
-                    ),
-                    SizedBox(height: 8), // Mengurangi jarak di sini
-                    Container(
-                      width: double.infinity,
-                      height: 160,
-                      color: Colors.grey[300],
-                      child: Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle KTP upload
-                          },
-                          child: const Text('PILIH FOTO KTP'),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8), // Mengurangi jarak di sini
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'NAMA',
-                      controllerUse: _nameController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'NIK',
-                      controllerUse: _nikController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'TELEPHONE',
-                      controllerUse: _telephoneController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'PROVINSI',
-                      controllerUse: _provinceController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KABUPATEN',
-                      controllerUse: _districtController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KECAMATAN',
-                      controllerUse: _subdistrictController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'KELURAHAN',
-                      controllerUse: _villageController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                    PaddingwithTextFieldWidget(
-                      hinttext: 'TPS',
-                      controllerUse: _tpsController,
-                      warna: Color.fromARGB(50, 74, 86, 70),
-                      L: 5,
-                      R: 5,
-                      T: 5, // Jarak antar kotak lebih kecil
-                      B: 5, // Jarak antar kotak lebih kecil
-                      tinggi: 40, // Ukuran lebih kecil
-                      lebar: 300, // Ukuran lebih kecil
-                    ),
-                  ],
-                ),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 15),
+              _buildImagePicker(context),
+              const SizedBox(height: 15),
+              _buildTextField(_nameController, 'Nama'),
+              const SizedBox(height: 15),
+              _buildTextField(_nikController, 'NIK'),
+              const SizedBox(height: 15),
+              _buildTextField(_telephoneController, 'Telepon'),
+              const SizedBox(height: 15),
+              _buildDropdownField(
+                label: 'Provinsi',
+                value: _selectedProvinsi,
+                items: _provinsiList,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedProvinsi = value;
+                    _selectedKabupaten = null;
+                    _selectedKecamatan = null;
+                    _selectedKelurahan = null;
+                  });
+                },
               ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Kembali'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Handle the form submission
-                        print('Form submitted');
-                      }
-                    },
-                    child: Text('Tambah'),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 15),
+              if (_selectedProvinsi != null)
+                _buildDropdownField(
+                  label: 'Kabupaten',
+                  value: _selectedKabupaten,
+                  items: _kabupatenMap[_selectedProvinsi!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKabupaten = value;
+                      _selectedKecamatan = null;
+                      _selectedKelurahan = null;
+                    });
+                  },
+                ),
+              const SizedBox(height: 15),
+              if (_selectedKabupaten != null)
+                _buildDropdownField(
+                  label: 'Kecamatan',
+                  value: _selectedKecamatan,
+                  items: _kecamatanMap[_selectedKabupaten!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKecamatan = value;
+                      _selectedKelurahan = null;
+                    });
+                  },
+                ),
+              const SizedBox(height: 15),
+              if (_selectedKecamatan != null)
+                _buildDropdownField(
+                  label: 'Kelurahan',
+                  value: _selectedKelurahan,
+                  items: _kelurahanMap[_selectedKecamatan!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKelurahan = value;
+                    });
+                  },
+                ),
+              const SizedBox(height: 15),
+              _buildTextField(_tpsController, 'TPS'),
+              const SizedBox(height: 15),
+              _buildSubmitButton(context),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
+      width: 350,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [textSpan(text: "CalonPemilih", warna: Colors.black)],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+ Widget _buildImagePicker(BuildContext context) {
+  return Container(
+    width: 340,
+    padding: EdgeInsets.only(left: 15), // Tambahkan padding kiri
+    child: GestureDetector(
+      onTap: () {
+        _pickImage();
+      },
+      child:Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: _imageFile != null
+                ? Image.file(
+                    _imageFile!,
+                    fit: BoxFit.cover,
+                  )
+                : Center(
+                    child: Text(
+                      'Pilih Foto KTP',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+          ),
+        
+      ),
+    );
 }
 
-class PaddingwithTextFieldWidget extends StatelessWidget {
-  final String hinttext;
-  final TextEditingController controllerUse;
-  final double L, R, T, B, tinggi, lebar;
-  final Color warna;
-  const PaddingwithTextFieldWidget({
-    Key? key,
-    required this.hinttext,
-    required this.controllerUse,
-    required this.warna,
-    required this.L,
-    required this.R,
-    required this.T,
-    required this.B,
-    required this.tinggi,
-    required this.lebar,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(L, T, R, B),
-      child: SizedBox(
-        width: lebar,
-        height: tinggi,
-        child: Container(
-          decoration: BoxDecoration(
-            color: warna,
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: TextField(
-              obscureText: hinttext == "Password",
-              style: GoogleFonts.getFont(
-                'Nunito',
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                color: Color.fromARGB(255, 31, 30, 30),
-              ),
-              controller: controllerUse,
-              decoration: InputDecoration(
-                focusColor: Color(0xFFFFFFFF),
-                contentPadding: EdgeInsets.only(),
-                border: InputBorder.none,
-                hintText: hinttext,
-                hintStyle: GoogleFonts.getFont(
-                  'Nunito',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 17,
-                  color: Color(0xFFFFFFFF),
-                ),
-              ),
-            ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '$label tidak boleh kosong';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildDropdownField({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
+        ),
+        value: value,
+        onChanged: onChanged,
+        items: items.map((item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(item),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: EdgeInsets.only(right: 15),
+        width: 150,
+        child: ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              // Handle form submission
+              print('Form submitted');
+            }
+          },
+          child: Text('TAMBAH'),
         ),
       ),
     );
   }
+
+  Future<void> _pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result != null) {
+      setState(() {
+        _imageFile = File(result.files.first.path!);
+      });
+    }
+  }
+
+  TextSpan textSpan({required String text, required Color warna}) {
+    return TextSpan(
+      text: text,
+      style: GoogleFonts.getFont(
+        'Nunito',
+        fontWeight: FontWeight.w900,
+                fontSize: 30,
+        letterSpacing: 2.6,
+        color: warna,
+      ),
+    );
+  }
 }
+

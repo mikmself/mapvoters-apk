@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/page/PemetaanC1/C1Controller.dart';
 import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
+import 'package:mapvotersapk/page/Profile.dart';
 import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:mapvotersapk/page/Setting.dart';
 import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
@@ -28,18 +29,11 @@ class _SidebarAppState extends State<SidebarApp> {
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator'),
-    Saksi(
-        labeltext: "Search by nama",
-        judul: "Saksi",
-        list: saksiList,
-        title: "Saksi"),
-    Pemilih(
-        labeltext: "Search by nama",
-        judul: "Pemilih",
-        list: pemilihlist,
-        title: "Pemilih"),
+    Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
+    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
     PemetaanSuaraC1(labeltext: 'cari', judul: 'Provinsi', title: 'Pemetaan C1'),
+    ProfilePage(title: "Profile Paslon"),
     SettingPage(title: 'Pengaturan'),
   ];
 
@@ -70,10 +64,11 @@ class _SidebarAppState extends State<SidebarApp> {
                     title: Text(
                       _widgetOptions[_selectedIndex] is Dashboard ||
                               _widgetOptions[_selectedIndex] is Koordinator ||
-                              _widgetOptions[_selectedIndex] is PemetaanSuara ||
-                              _widgetOptions[_selectedIndex]
-                                  is PemetaanSuaraC1 ||
                               _widgetOptions[_selectedIndex] is Saksi ||
+                              _widgetOptions[_selectedIndex] is Pemilih ||
+                              _widgetOptions[_selectedIndex] is PemetaanSuara ||
+                              _widgetOptions[_selectedIndex] is PemetaanSuaraC1 ||
+                              _widgetOptions[_selectedIndex] is ProfilePage ||
                               _widgetOptions[_selectedIndex] is SettingPage
                           ? (_widgetOptions[_selectedIndex] as dynamic).title
                           : 'Map Voters',
@@ -220,10 +215,17 @@ class Sidebar extends StatelessWidget {
           },
         ),
         SidebarXItem(
+          icon: Icons.people_alt_sharp,
+          label: 'PROFILE',
+          onTap: () {
+            onItemTapped(6);
+          },
+        ),
+        SidebarXItem(
           icon: Icons.settings,
           label: 'PENGATURAN',
           onTap: () {
-            onItemTapped(6);
+            onItemTapped(7);
           },
         ),
       ],
