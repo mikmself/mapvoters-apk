@@ -6,6 +6,7 @@ import 'package:mapvotersapk/component/model/KabupatenModel.dart';
 import 'package:mapvotersapk/component/model/KecamatanModel.dart';
 import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
+import 'package:mapvotersapk/component/model/TPSModel.dart';
 
 class Service {
   Future<void> showProvinsi() async {
@@ -18,6 +19,7 @@ class Service {
 
       Map<String, dynamic> responseData = jsonDecode(responseString);
       List<dynamic> data = responseData['data'];
+
       provinsiList.clear();
       for (var element in data) {
         provinsiList
@@ -71,7 +73,6 @@ class Service {
           nama: element['nama'],
         ));
       }
-      print(responseData['data']);
       print(responseData['message']);
     } else {
       print(response.reasonPhrase);
@@ -93,7 +94,29 @@ class Service {
           nama: element['nama'],
         ));
       }
-      print(responseData['data']);
+      print(responseData['message']);
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future<void> showTPS(id, kelurahanId) async {
+    var request = http.Request(
+        'GET', Uri.parse(BASE_URL + '/get-suarabytps/$id/$kelurahanId'));
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var responseString = await response.stream.bytesToString();
+      Map<String, dynamic> responseData = jsonDecode(responseString);
+      List<dynamic> data = responseData['data'];
+      TPSlist.clear();
+      for (var element in data) {
+        TPSlist.add(TPSModel(
+          tps: element['tps'],
+          jumlahSuara: element['jumlah_suara'],
+          fotoKertasSuara: element['foto_kertas_suara'],
+        ));
+      }
+      print(data);
       print(responseData['message']);
     } else {
       print(response.reasonPhrase);

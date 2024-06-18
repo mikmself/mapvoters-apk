@@ -1,7 +1,7 @@
 import 'package:mapvotersapk/component/model/KecamatanModel.dart';
 
 class KelurahanModel {
-  int? id;
+  String? id;
   String? nama;
   KecamatanModel? kecamatan;
 
@@ -10,8 +10,8 @@ class KelurahanModel {
   KelurahanModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nama = json['nama'];
-    kecamatan = json['kecamatan'] != null
-        ? new KecamatanModel.fromJson(json['kecamatan'])
+    kecamatan = json['kecamatan_id'] != null
+        ? new KecamatanModel.fromJson(json['kecamatan_id'])
         : null;
   }
 
@@ -20,7 +20,7 @@ class KelurahanModel {
     data['id'] = this.id;
     data['nama'] = this.nama;
     if (this.kecamatan != null) {
-      data['kecamatan'] = this.kecamatan!.toJson();
+      data['kecamatan_id'] = this.kecamatan!.toJson();
     }
     return data;
   }
