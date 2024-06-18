@@ -26,12 +26,23 @@ class GetAllDataKoordinator extends StatefulWidget {
 }
 
 class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
+  TextEditingController searchController = TextEditingController();
+  List<dynamic> searchResults = [];
+
+  @override
+  void initState() {
+    super.initState();
+    searchResults = widget.list;
+  }
+
   void _deleteKoordinator(int id) {
     service.DeleteKoordinator(id);
     setState(() {
       widget.list.removeWhere((koordinator) => koordinator.id == id);
+      searchResults.removeWhere((koordinator) => koordinator.id == id);
     });
   }
+
   void _showKoordinatorDetailDialog(int id) async {
     KoordinatorModel? koordinator = await service.GetKoordinatorDetail(id);
     if (koordinator != null) {
@@ -67,6 +78,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
       );
     }
   }
+
   void _editKoordinator(KoordinatorModel koordinator) {
     final nameController = TextEditingController(text: koordinator.user!.name);
     final NIKController = TextEditingController(text: koordinator.nik);
@@ -143,6 +155,15 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
     );
   }
 
+  void searchList(String query) {
+    List<dynamic> results = [];
+    results = widget.list
+        .where((item) => item.user!.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    setState(() {
+      searchResults = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +197,8 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                 ),
               ),
               TextField(
+                controller: searchController,
+                onChanged: searchList,
                 decoration: InputDecoration(
                   labelText: "Pencarian By Nama",
                   prefixIcon: const Icon(Icons.search),
@@ -194,38 +217,38 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      if (widget.list.length == 0) {
+                      if (searchResults.isEmpty) {
                         return const Center(
-                          child: Text("data tidak ditemukaxn"),
+                          child: Text("data tidak ditemukan"),
                         );
                       }
                     }
                     return ListView.builder(
-                      itemCount: widget.list.length,
+                      itemCount: searchResults.length,
                       itemBuilder: (context, index) {
                         return Card(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
-                            title: Text(widget.list[index].user!.name),
+                            title: Text(searchResults[index].user!.name),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.info),
                                   onPressed: () {
-                                    _showKoordinatorDetailDialog(widget.list[index].id!);
+                                    _showKoordinatorDetailDialog(searchResults[index].id!);
                                   },
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.edit),
                                   onPressed: () {
-                                    _editKoordinator(widget.list[index]);
+                                    _editKoordinator(searchResults[index]);
                                   },
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () {
-                                    _deleteKoordinator(widget.list[index].id!);
+                                    _deleteKoordinator(searchResults[index].id!);
                                   },
                                 ),
                               ],

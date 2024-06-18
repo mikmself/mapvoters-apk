@@ -27,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
         loginData.containsKey('paslonID') &&
         loginData['paslonID'] is int) {
       DashboardModel? fetchedDashboard =
-          await service.GetDashboardDetail(loginData['paslonID'] as int);
+          await service.GetDashboardDetail(loginData['paslonID']);
 
       if (fetchedDashboard != null) {
         setState(() {
