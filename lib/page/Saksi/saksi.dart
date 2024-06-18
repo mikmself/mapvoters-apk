@@ -187,11 +187,13 @@ class _SaksiState extends State<Saksi> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => RegisterSaksi(
-                        onSave: (newSaksi) {
-                          addSaksi(newSaksi);
-                          Navigator.pop(context);
-                        },
+                      builder: (context) => Registersaksi(onBack: () {
+                        
+                      },
+                        // onSave: (newSaksi) {
+                        //   addSaksi(newSaksi);
+                        //   Navigator.pop(context);
+                        // },
                       ),
                     ),
                 ),
