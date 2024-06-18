@@ -48,18 +48,18 @@ class DetailSaksi extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RegisterSaksi(
-                        saksi: saksi,
-                        onSave: (updatedSaksi) {
-                          onSave(updatedSaksi);
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => RegisterSaksi(
+                  //       saksi: saksi,
+                  //       onSave: (updatedSaksi) {
+                  //         onSave(updatedSaksi);
+                  //         Navigator.pop(context);
+                  //       },
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: Text('Edit'),
               ),
