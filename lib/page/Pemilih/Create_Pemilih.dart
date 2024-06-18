@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -30,194 +31,247 @@ class _CreatePemilihState extends State<CreatePemilih> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _telephoneController = TextEditingController();
-  final TextEditingController _provinceController = TextEditingController();
-  final TextEditingController _districtController = TextEditingController();
-  final TextEditingController _subdistrictController = TextEditingController();
-  final TextEditingController _villageController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
 
-  File _imageFile = File('');
+  File? _imageFile;
+
+  String? _selectedProvinsi;
+  String? _selectedKabupaten;
+  String? _selectedKecamatan;
+  String? _selectedKelurahan;
+
+  final List<String> _provinsiList = ['Jawa Tengah', 'Jawa Barat', 'Jawa Timur'];
+  final Map<String, List<String>> _kabupatenMap = {
+    'Jawa Tengah': ['Banyumas', 'Cilacap', 'Purbalingga'],
+    'Jawa Barat': ['Bandung', 'Bekasi', 'Bogor'],
+    'Jawa Timur': ['Surabaya', 'Malang', 'Jember'],
+  };
+  final Map<String, List<String>> _kecamatanMap = {
+    'Banyumas': ['Purwokerto Barat', 'Purwokerto Timur', 'Purwokerto Utara'],
+    'Cilacap': ['Cilacap Selatan', 'Cilacap Tengah', 'Cilacap Utara'],
+    'Purbalingga': ['Purbalingga Barat', 'Purbalingga Selatan', 'Purbalingga Timur'],
+  };
+  final Map<String, List<String>> _kelurahanMap = {
+    'Purwokerto Barat': ['Pasir Kidul', 'Pasir Kulon', 'Pasir Lor'],
+    'Purwokerto Timur': ['Purwokerto Kidul', 'Purwokerto Tengah', 'Purwokerto Lor'],
+    'Purwokerto Utara': ['Purwokerto Wetan', 'Purwokerto Dalem', 'Purwokerto Girang'],
+  };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 15),
-          _buildImagePicker(context),
-          const SizedBox(height: 15),
-          _buildTextField(_nameController, 'Nama'),
-          const SizedBox(height: 15),
-          _buildTextField(_nikController, 'NIK'),
-          const SizedBox(height: 15),
-          _buildTextField(_telephoneController, 'Telephone'),
-          const SizedBox(height: 15),
-          _buildTextField(_provinceController, 'Provinsi'),
-          const SizedBox(height: 15),
-          _buildTextField(_districtController, 'Kabupaten'),
-          const SizedBox(height: 15),
-          _buildTextField(_subdistrictController, 'Kecamatan'),
-          const SizedBox(height: 15),
-          _buildTextField(_villageController, 'Kelurahan'),
-          const SizedBox(height: 15),
-          _buildTextField(_tpsController, 'TPS'),
-          const SizedBox(height: 5),
-          _buildSubmitButton(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    return Flexible(
-      flex: 4,
-      child: Container(
-        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
-        width: 350,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RichText(
-              text: TextSpan(
-                children: [textSpan(text: "CalonPemilih", warna: Colors.black)],
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImagePicker(BuildContext context) {
-    return Flexible(
-      flex: 8,
-      child: Container(
-        width: 340,
-        child: Row(
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-              ),
-            ),
-            Flexible(
-              flex: 35,
-              child: GestureDetector(
-                onTap: () {
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 15),
+              _buildImagePicker(context),
+              const SizedBox(height: 15),
+              _buildTextField(_nameController, 'Nama'),
+              const SizedBox(height: 15),
+              _buildTextField(_nikController, 'NIK'),
+              const SizedBox(height: 15),
+              _buildTextField(_telephoneController, 'Telepon'),
+              const SizedBox(height: 15),
+              _buildDropdownField(
+                label: 'Provinsi',
+                value: _selectedProvinsi,
+                items: _provinsiList,
+                onChanged: (value) {
                   setState(() {
-                    _pickAnyFile();
+                    _selectedProvinsi = value;
+                    _selectedKabupaten = null;
+                    _selectedKecamatan = null;
+                    _selectedKelurahan = null;
                   });
                 },
-                onLongPress: () {
-                  _showImageDialog(context, _imageFile);
-                },
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: _imageFile.path.isEmpty
-                                ? AssetImage('assets/placeholder.png')
-                                : FileImage(_imageFile) as ImageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          border: Border.all(),
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        _imageFile.path.isEmpty ? 'Pilih Foto KTP' : '',
-                        style: GoogleFonts.getFont(
-                          'Nunito',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 18,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                  ],
+              ),
+              const SizedBox(height: 15),
+              if (_selectedProvinsi != null)
+                _buildDropdownField(
+                  label: 'Kabupaten',
+                  value: _selectedKabupaten,
+                  items: _kabupatenMap[_selectedProvinsi!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKabupaten = value;
+                      _selectedKecamatan = null;
+                      _selectedKelurahan = null;
+                    });
+                  },
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String label) {
-    return Flexible(
-      flex: 2,
-      child: textfield(controller: controller, obscure: false, label: label),
-    );
-  }
-
-  Widget _buildSubmitButton(BuildContext context) {
-    return Flexible(
-      flex: 5,
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Container(
-          margin: EdgeInsets.only(right: 15),
-          width: 150,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black12,
-              fixedSize: Size(MediaQuery.of(context).size.width, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Handle the form submission
-                print('Form submitted');
-              }
-            },
-            child: Text(
-              "TAMBAH",
-              style: GoogleFonts.getFont(
-                'Nunito',
-                fontWeight: FontWeight.w900,
-                fontSize: 17,
-                letterSpacing: 1,
-                color: Colors.white,
-              ),
-            ),
+              const SizedBox(height: 15),
+              if (_selectedKabupaten != null)
+                _buildDropdownField(
+                  label: 'Kecamatan',
+                  value: _selectedKecamatan,
+                  items: _kecamatanMap[_selectedKabupaten!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKecamatan = value;
+                      _selectedKelurahan = null;
+                    });
+                  },
+                ),
+              const SizedBox(height: 15),
+              if (_selectedKecamatan != null)
+                _buildDropdownField(
+                  label: 'Kelurahan',
+                  value: _selectedKelurahan,
+                  items: _kelurahanMap[_selectedKecamatan!]!,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedKelurahan = value;
+                    });
+                  },
+                ),
+              const SizedBox(height: 15),
+              _buildTextField(_tpsController, 'TPS'),
+              const SizedBox(height: 15),
+              _buildSubmitButton(context),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Future<void> _pickAnyFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+  Widget _buildHeader(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
+      width: 350,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RichText(
+            text: TextSpan(
+              children: [textSpan(text: "CalonPemilih", warna: Colors.black)],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
+ Widget _buildImagePicker(BuildContext context) {
+  return Container(
+    width: 340,
+    padding: EdgeInsets.only(left: 15), // Tambahkan padding kiri
+    child: GestureDetector(
+      onTap: () {
+        _pickImage();
+      },
+      child:Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: _imageFile != null
+                ? Image.file(
+                    _imageFile!,
+                    fit: BoxFit.cover,
+                  )
+                : Center(
+                    child: Text(
+                      'Pilih Foto KTP',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
+          ),
+        
+      ),
+    );
+}
+
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '$label tidak boleh kosong';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildDropdownField({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.0),
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        value: value,
+        onChanged: onChanged,
+        items: items.map((item) {
+          return DropdownMenuItem<String>(
+            value: item,
+            child: Text(item),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: EdgeInsets.only(right: 15),
+        width: 150,
+        child: ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              // Handle form submission
+              print('Form submitted');
+            }
+          },
+          child: Text('TAMBAH'),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      File file = File(result.files.first.path!);
       setState(() {
-        _imageFile = file;
-      });
-    } else {
-      setState(() {
-        _imageFile;
+        _imageFile = File(result.files.first.path!);
       });
     }
   }
@@ -228,64 +282,11 @@ class _CreatePemilihState extends State<CreatePemilih> {
       style: GoogleFonts.getFont(
         'Nunito',
         fontWeight: FontWeight.w900,
-        fontSize: 30,
+                fontSize: 30,
         letterSpacing: 2.6,
         color: warna,
       ),
     );
   }
-
-  void _showImageDialog(BuildContext context, File imageFile) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              child: Image.file(
-                imageFile,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget textfield(
-      {required TextEditingController controller,
-      required bool obscure,
-      required String label}) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.0),
-      child: TextFormField(
-        controller: controller,
-        obscureText: obscure,
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: GoogleFonts.getFont(
-            'Nunito',
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-            color: Color.fromARGB(255, 31, 30, 30),
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          filled: true,
-          fillColor: Color.fromARGB(50, 74, 86, 70),
-        ),
-        style: GoogleFonts.getFont(
-          'Nunito',
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-          color: Color.fromARGB(255, 31, 30, 30),
-        ),
-      ),
-    );
-  }
 }
+
