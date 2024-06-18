@@ -49,10 +49,10 @@ class DetailPemilih extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.arrow_back), // Mengubah ikon menjadi panah kembali
-                         onPressed: () {
-                      Navigator.pop(context); // Kembali ke halaman sebelumnya
-                      },
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   ),
@@ -65,14 +65,18 @@ class DetailPemilih extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 160,
-                    color: Colors.grey[300],
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     child: Center(
                       child: Text('FOTO KTP'),
                     ),
                   ),
                   SizedBox(height: 16),
                   _buildContainerWithText('NAMA', 'YUSUF NUR ALAM'),
-                   _buildContainerWithText('NIK', '3302298738928392'),
+                  _buildContainerWithText('NIK', '3302298738928392'),
                   _buildContainerWithText('TELEPHONE', '082782324829'),
                   _buildContainerWithText('PROVINSI', 'Jawa TENGAH'),
                   _buildContainerWithText('KABUPATEN', 'BANYUMAS'),
@@ -88,11 +92,12 @@ class DetailPemilih extends StatelessWidget {
                           // Handle delete action
                         },
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF00A6A6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        child: Text('Hapus'),
+                        child: Text('Hapus',style: TextStyle(color: Colors.black)),
                       ),
                       SizedBox(width: 10), // Tambah jarak antara tombol
                       ElevatedButton(
@@ -116,11 +121,12 @@ class DetailPemilih extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF00A6A6),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
-                        child: Text('Edit'),
+                        child: Text('Edit', style: TextStyle(color: Colors.black)),
                       ),
                     ],
                   ),
@@ -137,8 +143,8 @@ class DetailPemilih extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Colors.grey[300], // Ubah warna sesuai dengan warna foto KTP
         borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(color: Colors.black), // Menambahkan garis hitam di sekeliling kotak
       ),
       margin: const EdgeInsets.only(bottom: 10.0),
       child: Row(
@@ -185,17 +191,17 @@ class UpdatePemilih extends StatefulWidget {
 }
 
 class _UpdatePemilihState extends State<UpdatePemilih> {
-  late File _fotoKtp; 
+  late File _fotoKtp;
   bool _isFotoKtpSelected = false;
   late TextEditingController _nameController;
   late TextEditingController _nikController;
   late TextEditingController _telephoneController;
-  late TextEditingController _provinceController;
-  late TextEditingController _districtController;
-  late TextEditingController _subdistrictController;
-  late TextEditingController _villageController;
+  String? _selectedProvince;
+  String? _selectedDistrict;
+  String? _selectedSubdistrict;
+  String? _selectedVillage;
   late TextEditingController _tpsController;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -204,10 +210,10 @@ class _UpdatePemilihState extends State<UpdatePemilih> {
     _nameController = TextEditingController(text: widget.nama);
     _nikController = TextEditingController(text: widget.nik);
     _telephoneController = TextEditingController(text: widget.telephone);
-    _provinceController = TextEditingController(text: widget.provinsi);
-    _districtController = TextEditingController(text: widget.kabupaten);
-    _subdistrictController = TextEditingController(text: widget.kecamatan);
-    _villageController = TextEditingController(text: widget.kelurahan);
+    _selectedProvince = widget.provinsi;
+    _selectedDistrict = widget.kabupaten;
+    _selectedSubdistrict = widget.kecamatan;
+    _selectedVillage = widget.kelurahan;
     _tpsController = TextEditingController(text: widget.tps);
   }
 
@@ -216,10 +222,6 @@ class _UpdatePemilihState extends State<UpdatePemilih> {
     _nameController.dispose();
     _nikController.dispose();
     _telephoneController.dispose();
-    _provinceController.dispose();
-    _districtController.dispose();
-    _subdistrictController.dispose();
-    _villageController.dispose();
     _tpsController.dispose();
     super.dispose();
   }
@@ -227,89 +229,226 @@ class _UpdatePemilihState extends State<UpdatePemilih> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Data'),
-      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Stack(
-              children: [
-                Container(
-                  width: double.infinity,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: _fotoKtp.path.isEmpty
-                          ? AssetImage('assets/placeholder.png')
-                          : FileImage(_fotoKtp) as ImageProvider,
-                      fit: BoxFit.cover,
-                    ),
-                    border: Border.all(),
-                    color: Colors.black12,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                if (_isFotoKtpSelected)
-                  Positioned(
-                    top: 8.0,
-                    right: 8.0,
-                    child: IconButton(
-                      icon: Icon(Icons.cancel),
-                      onPressed: () {
-                        setState(() {
-                          _isFotoKtpSelected = false;
-                           _fotoKtp = File('');
-                        });
-                      },   
-                    ),
-                  ),
-                Positioned.fill(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () async {
-                        FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
-                        if (result != null) {
-                          setState(() {
-                            _fotoKtp = File(result.files.first.path!);
-                            _isFotoKtpSelected = true;
-                          });
-                        }
-                      },
-                      child: Center(
-                        child: Text(
-                          _isFotoKtpSelected ? 'Ganti Foto KTP' : 'Pilih Foto KTP Baru',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+        padding: const EdgeInsets.all(17.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Detail Data',
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            _buildTextField(_nameController, 'Nama'),
-            _buildTextField(_nikController, 'NIK'),
-            _buildTextField(_telephoneController, 'Telephone'),
-            _buildTextField(_provinceController, 'Provinsi'),
-            _buildTextField(_districtController, 'Kabupaten'),
-            _buildTextField(_subdistrictController, 'Kecamatan'),
-            _buildTextField(_villageController, 'Kelurahan'),
-            _buildTextField(_tpsController, 'TPS'),
-            ElevatedButton(
-              onPressed: () {
-                // Implement update logic here
-                Navigator.pop(context);
-              },
-              child: Text('  Edit  '),
-            ),
-          ],
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 8),
+              Divider(
+                color: Colors.black,
+                thickness: 2,
+              ),
+              SizedBox(height: 16),
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: _fotoKtp.path.isEmpty
+                            ? AssetImage('assets/placeholder.png')
+                            : FileImage(_fotoKtp) as ImageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                      border: Border.all(),
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+                          if (result != null) {
+                            setState(() {
+                              _fotoKtp = File(result.files.first.path!);
+                              _isFotoKtpSelected = true;
+                            });
+                          }
+                        },
+                        child: Center(
+                          child: Text(
+                            _isFotoKtpSelected ? 'Ganti Foto KTP' : 'Pilih Foto KTP Baru',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                                        ),
+                  ),
+                ],
+              ),
+              _buildTextField(_nameController, 'Nama'),
+              _buildTextField(_nikController, 'NIK'),
+              _buildTextField(_telephoneController, 'Telephone'),
+              _buildProvinceDropdown(),
+              _buildDistrictDropdown(),
+              _buildSubdistrictDropdown(),
+              _buildVillageDropdown(),
+              _buildTextField(_tpsController, 'TPS'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Implement update logic here
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF00A6A6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text('Batal  ', style: TextStyle(color: Colors.black)),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Implement cancel logic here
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF00A6A6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text('Simpan', style: TextStyle(color: Colors.black)),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildProvinceDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          labelText: 'Provinsi',
+          border: OutlineInputBorder(),
+        ),
+        value: _selectedProvince,
+        onChanged: (newValue) {
+          setState(() {
+            _selectedProvince = newValue.toString();
+          });
+        },
+        items: <String>['Jawa TENGAH', 'Jawa BARAT', 'Jawa TIMUR', 'DKI Jakarta'] // Isi dengan daftar provinsi yang diinginkan
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildDistrictDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          labelText: 'Kabupaten',
+          border: OutlineInputBorder(),
+        ),
+        value: _selectedDistrict,
+        onChanged: (newValue) {
+          setState(() {
+            _selectedDistrict = newValue.toString();
+          });
+        },
+        items: <String>['BANYUMAS', 'PURWOKERTO', 'BANJARNEGARA', 'CILACAP'] // Isi dengan daftar kabupaten yang diinginkan
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSubdistrictDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          labelText: 'Kecamatan',
+          border: OutlineInputBorder(),
+        ),
+        value: _selectedSubdistrict,
+        onChanged: (newValue) {
+          setState(() {
+            _selectedSubdistrict = newValue.toString();
+          });
+        },
+        items: <String>['PURWOKERTO BARAT', 'PURWOKERTO TIMUR', 'PURWOKERTO SELATAN', 'PURWOKERTO UTARA'] // Isi dengan daftar kecamatan yang diinginkan
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildVillageDropdown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: DropdownButtonFormField(
+        decoration: InputDecoration(
+          labelText: 'Kelurahan',
+          border: OutlineInputBorder(),
+        ),
+        value: _selectedVillage,
+        onChanged: (newValue) {
+          setState(() {
+            _selectedVillage = newValue.toString();
+          });
+        },
+        items: <String>['PASIR KIDUL', 'PASIR WETAN', 'PASIR LOR', 'PASIR KECIL'] // Isi dengan daftar kelurahan yang diinginkan
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
       ),
     );
   }
@@ -317,12 +456,18 @@ class _UpdatePemilihState extends State<UpdatePemilih> {
   Widget _buildTextField(TextEditingController controller, String label) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(),
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Harap isi $label';
+          }
+          return null;
+        },
       ),
     );
   }
