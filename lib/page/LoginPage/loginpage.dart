@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
-import 'package:mapvotersapk/page/LoginPage/pageComponent/Controller.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/LoginService.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/page/Register/register.dart';
 
@@ -87,7 +87,7 @@ class _loginpageState extends State<loginpage> {
                             warnatombol: const Color(0x75005E73),
                             warnatext: Colors.white,
                             metod: () async {
-                              LoginController login = LoginController();
+                              LoginService login = LoginService();
                               bool loginsukses = await login.auth(
                                   _emailcontroller.text,
                                   _paswwordcontroller.text,
