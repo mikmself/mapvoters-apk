@@ -32,8 +32,6 @@ class _RegisterState extends State<Registersaksi> {
   TextEditingController _kelcontroller = TextEditingController();
   TextEditingController _tpscontroller = TextEditingController();
 
-  File _imageFile = File('');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,22 +198,6 @@ class _RegisterState extends State<Registersaksi> {
         ],
       ),
     );
-  }
-
-  Future<void> _pickAnyFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
-
-    if (result != null) {
-      File file = File(result.files.first.path!);
-      setState(() {
-        _imageFile = file;
-      });
-    } else {
-      setState(() {
-        _imageFile;
-      });
-    }
   }
 
   TextSpan textSpan({
