@@ -130,44 +130,44 @@ class _PemetaanSuaraState extends State<PemetaanSuara> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 48, 48, 48),
-                    ),
-                  ),
-                  margin: EdgeInsets.fromLTRB(2, 10, 2, 0),
-                  padding: EdgeInsets.fromLTRB(10, 0, 12, 0),
-                  child: DropdownButton<String>(
-                    value: selectedRegion,
-                    icon: Icon(Icons.ads_click_rounded),
-                    iconSize: 20,
-                    elevation: 16,
-                    style: GoogleFonts.getFont(
-                      'Nunito',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 20,
-                      color: Color(0xFF3E3E3E),
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedRegion = newValue!;
-                        filteredData = dataMap[selectedRegion]!;
-                        selectedParent = null;
-                        cariprov.clear();
-                      });
-                    },
-                    items:
-                        regions.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(8),
+                //     border: Border.all(
+                //       color: const Color.fromARGB(255, 48, 48, 48),
+                //     ),
+                //   ),
+                //   margin: EdgeInsets.fromLTRB(2, 10, 2, 0),
+                //   padding: EdgeInsets.fromLTRB(10, 0, 12, 0),
+                //   child: DropdownButton<String>(
+                //     value: selectedRegion,
+                //     icon: Icon(Icons.ads_click_rounded),
+                //     iconSize: 20,
+                //     elevation: 16,
+                //     style: GoogleFonts.getFont(
+                //       'Nunito',
+                //       fontWeight: FontWeight.w900,
+                //       fontSize: 20,
+                //       color: Color(0xFF3E3E3E),
+                //     ),
+                //     borderRadius: BorderRadius.circular(8),
+                //     onChanged: (String? newValue) {
+                //       setState(() {
+                //         selectedRegion = newValue!;
+                //         filteredData = dataMap[selectedRegion]!;
+                //         selectedParent = null;
+                //         cariprov.clear();
+                //       });
+                //     },
+                //     items:
+                //         regions.map<DropdownMenuItem<String>>((String value) {
+                //       return DropdownMenuItem<String>(
+                //         value: value,
+                //         child: Text(value),
+                //       );
+                //     }).toList(),
+                //   ),
+                // ),
               ],
             ),
           ),
