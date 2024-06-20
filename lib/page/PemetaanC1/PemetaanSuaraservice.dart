@@ -9,8 +9,9 @@ import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:mapvotersapk/component/model/TPSModel.dart';
 
 class Service {
-  Future<void> showProvinsi() async {
-    var request = http.Request('GET', Uri.parse(BASE_URL + '/get-provinsi'));
+  Future<void> showProvinsi(id) async {
+    var request =
+        http.Request('GET', Uri.parse(BASE_URL + '/pemetaan-c1-provinsi/$id'));
 
     http.StreamedResponse response = await request.send();
 
@@ -31,9 +32,9 @@ class Service {
     }
   }
 
-  Future<void> showKab(id) async {
+  Future<void> showKab(idprov, id) async {
     var request = http.Request(
-        'GET', Uri.parse(BASE_URL + '/get-kabupaten-provinsi/$id'));
+        'GET', Uri.parse(BASE_URL + '/pemetaan-c1-kabupaten/$idprov/$id'));
 
     http.StreamedResponse response = await request.send();
 
@@ -55,9 +56,9 @@ class Service {
     }
   }
 
-  Future<void> showKec(id) async {
+  Future<void> showKec(idkab, id) async {
     var request = http.Request(
-        'GET', Uri.parse(BASE_URL + '/get-kecamatan-kabupaten/$id'));
+        'GET', Uri.parse(BASE_URL + '/pemetaan-c1-kecamatan/$idkab/$id'));
 
     http.StreamedResponse response = await request.send();
 
@@ -79,9 +80,9 @@ class Service {
     }
   }
 
-  Future<void> showKel(id) async {
+  Future<void> showKel(idkec, id) async {
     var request = http.Request(
-        'GET', Uri.parse(BASE_URL + '/get-kelurahan-kecamatan/$id'));
+        'GET', Uri.parse(BASE_URL + '/pemetaan-c1-kelurahan/$idkec/$id'));
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var responseString = await response.stream.bytesToString();
