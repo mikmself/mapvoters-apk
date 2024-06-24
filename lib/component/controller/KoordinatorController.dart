@@ -49,27 +49,91 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
 
   void _showKoordinatorDetailDialog(int id) async {
     KoordinatorModel? koordinator = await service.GetKoordinatorDetail(id);
+
     if (koordinator != null) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            elevation: 8.0,
+            backgroundColor: Colors.transparent,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+                color: Colors.white,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16.0),
+                      topRight: Radius.circular(16.0),
+                    ),
+                    child: Image.network(
+                      BASE_URL.replaceFirst('/api', '/') + (koordinator.foto ?? ''),
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Detail Koordinator',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        _buildDetailRow('Nama', koordinator.user!.name ?? ''),
+                        _buildDetailRow('NIK', koordinator.nik ?? ''),
+                        _buildDetailRow('Email', koordinator.user!.email ?? ''),
+                        _buildDetailRow('Telephone', koordinator.user!.telephone ?? ''),
+                        SizedBox(height: 16),
+                        Align(
+                          alignment: Alignment.center,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: Text(
+                              'Tutup',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      // Handle case when koordinator is null (optional)
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Detail Koordinator'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Image.network(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
-                Text('Nama: ${koordinator.user!.name}'),
-                SizedBox(height: 8),
-                Text('NIK: ${koordinator.nik}'),
-                SizedBox(height: 8),
-                Text('Email: ${koordinator.user!.email}'),
-                SizedBox(height: 8),
-                Text('Telephone: ${koordinator.user!.telephone}'),
-              ],
-            ),
-            actions: [
+            content: Text('Koordinator dengan ID $id tidak ditemukan.'),
+            actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -81,6 +145,31 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
         },
       );
     }
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14.0,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 8),
+      ],
+    );
   }
 
   void _editKoordinator(KoordinatorModel koordinator) {
