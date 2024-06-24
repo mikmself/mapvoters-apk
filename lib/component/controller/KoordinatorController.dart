@@ -177,7 +177,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
     TextEditingController _emailcontroller = TextEditingController(text: koordinator.user!.email);
     TextEditingController _noHPcontroller = TextEditingController(text: koordinator.user!.telephone);
     TextEditingController _passwordcontroller = TextEditingController(text: '');
-    File? _imageFile = koordinator.foto != null ? File(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!) : File('');
+    File? _imageFile = koordinator.foto != null ? File(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!) : null;
     String? _imageUrl = koordinator.foto != null ? BASE_URL.replaceFirst('/api', '/') + koordinator.foto! : null;
 
     showDialog(
@@ -185,149 +185,121 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Edit Koordinator'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: 2,
-                child: textfield(
-                  controller: _namacontroller,
-                  obscure: false,
-                  label: 'Nama',
-                ),
-              ),
-              const SizedBox(height: 15),
-              Flexible(
-                flex: 2,
-                child: textfield(
-                  controller: _NIKcontroller,
-                  obscure: false,
-                  label: 'NIK',
-                ),
-              ),
-              const SizedBox(height: 15),
-              Flexible(
-                flex: 2,
-                child: textfield(
-                  controller: _emailcontroller,
-                  obscure: false,
-                  label: 'Email',
-                ),
-              ),
-              const SizedBox(height: 15),
-              Flexible(
-                flex: 2,
-                child: textfield(
-                  controller: _noHPcontroller,
-                  obscure: false,
-                  label: 'Telephone',
-                ),
-              ),
-              const SizedBox(height: 15),
-              Flexible(
-                flex: 2,
-                child: textfield(
-                  controller: _passwordcontroller,
-                  obscure: true,
-                  label: 'Password',
-                ),
-              ),
-              const SizedBox(height: 15),
-              Flexible(
-                flex: 5,
-                child: Container(
-                  width: 350,
-                  height: MediaQuery.of(context).size.height,
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 3,
-                        child: GestureDetector(
-                          onTap: () {
-                            _pickAnyFile(context).then((file) {
-                              setState(() {
-                                _imageFile = file;
-                              });
-                            });
-                          },
-                          onLongPress: () {
-                            _showImageDialog(context, _imageFile!);
-                          },
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height,
-                            width: MediaQuery.of(context).size.width,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: _imageUrl != null
-                                      ? NetworkImage(_imageUrl)
-                                      : NetworkImage(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
-                                  fit: BoxFit.cover,
-                                ),
-                                border: Border.all(),
-                                color: Colors.black12,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _pickAnyFile(context).then((file) {
+                      setState(() {
+                        _imageFile = file;
+                      });
+                    });
+                  },
+                  onLongPress: () {
+                    _showImageDialog(context, _imageFile!);
+                  },
+                  child: SizedBox(
+                    width: 270,
+                    height: 250,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: _imageUrl != null
+                              ? NetworkImage(_imageUrl)
+                              : NetworkImage(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
+                          fit: BoxFit.cover,
                         ),
+                        border: Border.all(),
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(5),
                       ),
-                      Flexible(
-                        flex: 1,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                        ),
-                      ),
-                      Flexible(
-                        flex: 4,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black12,
-                                fixedSize: Size(MediaQuery.of(context).size.width, 50),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              onPressed: () {
-                                service.EditKoordinator(
-                                  koordinator.id!,
-                                  _namacontroller.text,
-                                  _NIKcontroller.text,
-                                  _emailcontroller.text,
-                                  _noHPcontroller.text,
-                                  _passwordcontroller.text,
-                                );
-                                widget.refresh();
-                                Navigator.of(context).pop(); // Tutup dialog setelah simpan
-                              },
-                              child: Text(
-                                "SIMPAN",
-                                style: GoogleFonts.getFont(
-                                  'Nunito',
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 15,
-                                  letterSpacing: 1,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: 20),
+                TextField(
+                  controller: _namacontroller,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Nama',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _NIKcontroller,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'NIK',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _emailcontroller,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _noHPcontroller,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Telephone',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: _passwordcontroller,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                ElevatedButton(
+                  onPressed: () {
+                    service.EditKoordinator(
+                      koordinator.id!,
+                      _namacontroller.text,
+                      _NIKcontroller.text,
+                      _emailcontroller.text,
+                      _noHPcontroller.text,
+                      _passwordcontroller.text,
+                    );
+                    widget.refresh();
+                    Navigator.of(context).pop(); // Tutup dialog setelah simpan
+                  },
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    'SIMPAN',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 
   Future<File?> _pickAnyFile(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
