@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/model/SettingModel.dart';
 import 'package:mapvotersapk/component/service/SettingService.dart';
-import 'package:mapvotersapk/page/Register/nextRegister.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key, required this.title}) : super(key: key);

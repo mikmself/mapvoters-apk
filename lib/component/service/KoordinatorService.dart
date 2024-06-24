@@ -71,7 +71,7 @@ class KoordinatorService {
       print(e);
     }
   }
-  Future<void> EditKoordinator(int id, String nama, String NIK, String Email, String telp, String Password) async {
+  Future<void> EditKoordinator(int id, String nama, String NIK, String Email, String telp, String Password, [File? foto]) async {
     try {
       String url = '$BASE_URL/koordinator/$id';
       Map<String, dynamic> requestBody = {
@@ -94,10 +94,9 @@ class KoordinatorService {
         Map<String, dynamic> responseDecode =
         jsonDecode(response.body) as Map<String, dynamic>;
 
-        print(responseDecode);
+        print("Sukses Mengedit Koordinator");
       } else {
-        print('Gagal mengedit koordinator: ${response.reasonPhrase}');
-        print('Response body: ${response.body}');
+        print('Gagal mengedit koordinator');
       }
     } catch (e) {
       print('Terjadi kesalahan saat mengedit koordinator: $e');

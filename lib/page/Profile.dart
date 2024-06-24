@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
+import 'package:mapvotersapk/component/model/PaslonModel.dart';
+import 'package:mapvotersapk/component/service/PaslonService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 
 
-List<String> type = ["PRESIDEN", "DPR RI", "DPRD PROVINSI"];
+List<String> type = ['gubernur','bupati/walikota','dprri','dprdprov','dprdkab','dpd'];
 List<String> partai = [];
 String? typeselect;
 String? partaiselect;
@@ -23,19 +25,17 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _namaController =
-  TextEditingController(text: loginData['nama']);
-  final TextEditingController _emailController =
-  TextEditingController(text: loginData['email']);
-  final TextEditingController _telephoneController =
-  TextEditingController(text: loginData['telephone']);
+  final PaslonService service = PaslonService();
+  PaslonModel? paslon;
+
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _telephoneController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _partaiController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
-  final TextEditingController _nomorUrutController =
-  TextEditingController(text: loginData['nomor_urut']);
-  final TextEditingController _dapilController =
-  TextEditingController(text: loginData['dapil']);
+  final TextEditingController _nomorUrutController = TextEditingController();
+  final TextEditingController _dapilController = TextEditingController();
 
   File? _imageFile;
 
@@ -43,8 +43,32 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     fetchData();
+    getPaslon();
   }
+  Future<void> getPaslon() async {
+    final PaslonModel? fetchedPaslon =
+    await service.GetPaslonDetail();
+    if (fetchedPaslon != null) {
+      setState(() {
+        paslon = fetchedPaslon;
+        _namaController.text = fetchedPaslon.user!.name!;
+        _emailController.text = fetchedPaslon.user!.email!;
+        _telephoneController.text = fetchedPaslon.user!.telephone!;
+        _typeController.text = fetchedPaslon.type!;
+        _nomorUrutController.text = fetchedPaslon.nomorUrut!;
+        _dapilController.text = fetchedPaslon.dapil!;
 
+        if (fetchedPaslon.partai!.nama != null) {
+          int index = partai.indexOf(fetchedPaslon.partai!.nama!);
+          if (index != -1) {
+            partaiselect = partai[index];
+            _partaiController.text = partaiselect!;
+          }
+        }
+        print(_partaiController.text);
+      });
+    }
+  }
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse('$BASE_URL/partai'));
     if (response.statusCode == 200) {
@@ -56,6 +80,54 @@ class _ProfilePageState extends State<ProfilePage> {
       throw Exception('Failed to load data');
     }
   }
+  Future<void> updatePaslon() async {
+    if (paslon == null) {
+      return;
+    }
+
+    String url = BASE_URL + '/paslon/${loginData['paslonID']}';
+
+    Map<String, dynamic> requestBody = {
+      'name': _namaController.text,
+      'email': _emailController.text,
+      'telephone': _telephoneController.text,
+      'type': _typeController.text,
+      'nomor_urut': _nomorUrutController.text,
+      'dapil': _dapilController.text,
+    };
+
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          paslon!.user!.name = _namaController.text;
+          paslon!.user!.email = _emailController.text;
+          paslon!.user!.telephone = _telephoneController.text;
+          paslon!.type = _typeController.text;
+          paslon!.nomorUrut = _nomorUrutController.text;
+          paslon!.dapil = _dapilController.text;
+          paslon!.partai!.nama = partaiselect;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Paslon updated successfully'),
+          ),
+        );
+      } else {
+        print('Failed to update paslon. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating paslon: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +170,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onSelected: (value) {
                   setState(() {
                     partaiselect = value;
+                    _partaiController.text = value!;
                   });
                 },
               ),
@@ -161,14 +234,21 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: 140,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(''),
+                            image: paslon != null && paslon!.foto != null
+                                ? DecorationImage(
+                              image: NetworkImage(
+                                BASE_URL.replaceFirst('/api', '/') + paslon!.foto!,
+                              ),
                               fit: BoxFit.cover,
-                            ),
+                            )
+                                : null, // Handle the case where paslon or paslon.foto is null
                             border: Border.all(),
                             color: Colors.black12,
                             borderRadius: BorderRadius.circular(5),
                           ),
+                          child: paslon != null && paslon!.foto == null
+                              ? Center(child: Text('No Image Available')) // Optional: Placeholder text or widget
+                              : null,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -184,6 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onSelected: (value) {
                   setState(() {
                     typeselect = value;
+                    _typeController.text = value!;
                   });
                 },
               ),
@@ -205,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Implementasi logika untuk tombol Update Profile
+                  updatePaslon();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black12,
