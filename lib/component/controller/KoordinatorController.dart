@@ -126,7 +126,6 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
         },
       );
     } else {
-      // Handle case when koordinator is null (optional)
       showDialog(
         context: context,
         builder: (BuildContext context) {
