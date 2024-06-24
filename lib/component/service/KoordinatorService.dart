@@ -8,10 +8,9 @@ import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 class KoordinatorService {
   GetAllDataKoordinator() async {
     var request =
-    http.Request('GET', Uri.parse(BASE_URL + '/koordinator'),);
+    http.Request('GET', Uri.parse(BASE_URL + '/koordinator?paslon_id=${loginData['paslonID']}'),);
 
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
       var responseString = await response.stream.bytesToString();
       print(responseString);
