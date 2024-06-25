@@ -4,24 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CreatePemilih(),
-    );
-  }
-}
 
 class CreatePemilih extends StatefulWidget {
+  final VoidCallback onBack;
+  const CreatePemilih({super.key, required this.onBack});
   @override
+
   _CreatePemilihState createState() => _CreatePemilihState();
 }
 
@@ -156,6 +145,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
+              widget.onBack(); 
             },
           ),
         ],
