@@ -1,18 +1,11 @@
-const String BASE_URL = "https://0577-112-78-156-235.ngrok-free.app/api";
+const String BASE_URL = "https://d395-182-2-52-139.ngrok-free.app/api";
 String? token = "";
 
 Map<String, dynamic> loginData = {
-  "paslonID": 1,
-  "userID": "2",
-  "partaiID": "1",
-  "nama": "Subani Irga Angelina Alam Sinurat",
-  "email": "siaas@gmail.com",
-  "telephone": "081233033303",
-  "role": "paslon",
-  "foto": "siaas.jpg",
-  "type": "dprri",
-  "nomor_urut": "1",
-  "dapil": "Jawa Tengah VIII",
+  "token": "",
+  "userID": "",
+  "nama": "",
+  "role": "",
 };
 
 List<LoginModel> login = [];
