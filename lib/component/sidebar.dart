@@ -8,7 +8,7 @@ import 'package:mapvotersapk/page/Setting.dart';
 import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
 import 'package:sidebarx/sidebarx.dart';
-
+GlobalKey<_SidebarAppState> sidebarKey = GlobalKey<_SidebarAppState>();
 void main() {
   runApp(const SidebarApp());
 }
@@ -18,16 +18,20 @@ class SidebarApp extends StatefulWidget {
 
   @override
   _SidebarAppState createState() => _SidebarAppState();
+
+  void onItemTapped(int i) {
+    sidebarKey.currentState?.onItemTapped(i);
+  }
 }
 
 class _SidebarAppState extends State<SidebarApp> {
   int _selectedIndex = 0;
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
-  final _key = GlobalKey<ScaffoldState>();
+  final SidebarXController _controller = SidebarXController(selectedIndex: 0, extended: true);
+  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
 
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
-    Koordinator(title: 'Koordinator'),
+    Koordinator(title: 'Koordinator', refresh: () { sidebarKey.currentState?.refreshKoordinatorPage(); },),
     Saksi(title: "Saksi"),
     Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
@@ -36,7 +40,7 @@ class _SidebarAppState extends State<SidebarApp> {
     SettingPage(title: 'Pengaturan'),
   ];
 
-  void _onItemTapped(int index) {
+  void onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
       _controller.selectIndex(index);
@@ -46,7 +50,14 @@ class _SidebarAppState extends State<SidebarApp> {
       Navigator.of(_key.currentContext!).pop();
     }
   }
-
+  void refreshKoordinatorPage() {
+    setState(() {
+      _widgetOptions[1] = Koordinator(
+        title: 'Koordinator',
+        refresh: refreshKoordinatorPage,
+      );
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -59,37 +70,38 @@ class _SidebarAppState extends State<SidebarApp> {
             key: _key,
             appBar: isSmallScreen
                 ? AppBar(
-                    backgroundColor: canvasColor,
-                    title: Text(
-                      _widgetOptions[_selectedIndex] is Dashboard ||
-                              _widgetOptions[_selectedIndex] is Koordinator ||
-                              _widgetOptions[_selectedIndex] is Saksi ||
-                              _widgetOptions[_selectedIndex] is Pemilih ||
-                              _widgetOptions[_selectedIndex] is PemetaanSuaraC1 ||
-                              _widgetOptions[_selectedIndex] is ProfilePage ||
-                              _widgetOptions[_selectedIndex] is SettingPage
-                          ? (_widgetOptions[_selectedIndex] as dynamic).title
-                          : 'Map Voters',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    leading: IconButton(
-                      onPressed: () {
-                        _key.currentState?.openDrawer();
-                      },
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                      ),
-                    ),
-                  )
+              backgroundColor: canvasColor,
+              title: Text(
+                _widgetOptions[_selectedIndex] is Dashboard ||
+                    _widgetOptions[_selectedIndex] is Koordinator ||
+                    _widgetOptions[_selectedIndex] is Saksi ||
+                    _widgetOptions[_selectedIndex] is Pemilih ||
+                    _widgetOptions[_selectedIndex] is PemetaanSuara ||
+                    _widgetOptions[_selectedIndex] is PemetaanSuaraC1 ||
+                    _widgetOptions[_selectedIndex] is ProfilePage ||
+                    _widgetOptions[_selectedIndex] is SettingPage
+                    ? (_widgetOptions[_selectedIndex] as dynamic).title
+                    : 'Map Voters',
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                onPressed: () {
+                  _key.currentState?.openDrawer();
+                },
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
+              ),
+            )
                 : null,
             drawer: isSmallScreen
-                ? Sidebar(controller: _controller, onItemTapped: _onItemTapped)
+                ? Sidebar(controller: _controller, onItemTapped: onItemTapped)
                 : null,
             body: Row(
               children: [
                 if (!isSmallScreen)
-                  Sidebar(controller: _controller, onItemTapped: _onItemTapped),
+                  Sidebar(controller: _controller, onItemTapped: onItemTapped),
                 Expanded(
                   child: _widgetOptions[_selectedIndex],
                 ),

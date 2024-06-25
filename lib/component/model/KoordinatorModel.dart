@@ -2,7 +2,7 @@ import 'package:mapvotersapk/component/model/PaslonModel.dart';
 import 'package:mapvotersapk/component/model/UserMode.dart';
 
 class KoordinatorModel {
-  int? id;
+  dynamic id;
   String? nik;
   String? foto;
   PaslonModel? paslon;
