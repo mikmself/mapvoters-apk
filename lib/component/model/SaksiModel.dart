@@ -20,22 +20,24 @@ class SaksiModel {
 
   SaksiModel(
       {this.id,
-        this.tps,
-        this.jumlahSuara,
-        this.fotoKertasSuara,
-        this.userId,
-        this.provinsi,
-        this.kabupaten,
-        this.kecamatan,
-        this.kelurahan,
-        this.user,
-        this.koordinator});
+      this.tps,
+      this.jumlahSuara,
+      this.fotoKertasSuara,
+      this.userId,
+      this.provinsi,
+      this.kabupaten,
+      this.kecamatan,
+      this.kelurahan,
+      this.user,
+      this.koordinator});
 
   SaksiModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     tps = json['tps'];
     jumlahSuara = json['jumlah_suara'];
     fotoKertasSuara = json['foto_kertas_suara'];
+    userId = json['user_id'];
+
     provinsi = json['provinsi'] != null
         ? new ProvinsiModel.fromJson(json['provinsi'])
         : null;
@@ -62,6 +64,9 @@ class SaksiModel {
     data['id'] = this.id;
     data['tps'] = this.tps;
     data['jumlah_suara'] = this.jumlahSuara;
+    data['foto_kertas_suara'] = this.fotoKertasSuara;
+    data['user_id'] = this.userId;
+
     if (this.provinsi != null) {
       data['provinsi'] = this.provinsi!.toJson();
     }

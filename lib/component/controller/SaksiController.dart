@@ -44,7 +44,7 @@ class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Image.network(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
+                
                 Text('Nama: ${saksi.user!.name}'),
                 SizedBox(height: 8),                
                 Text('Email: ${saksi.user!.email}'),

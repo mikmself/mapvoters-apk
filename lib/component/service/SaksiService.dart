@@ -7,8 +7,10 @@ import 'package:mapvotersapk/component/model/SaksiModel.dart';
 
 class SaksiService {
   GetAllDataSaksi() async {
-    var request =
-    http.Request('GET', Uri.parse(BASE_URL + '/saksi'),);
+    var request = http.Request(
+      'GET',
+      Uri.parse(BASE_URL + '/saksi'),
+    );
 
     http.StreamedResponse response = await request.send();
 
@@ -16,12 +18,15 @@ class SaksiService {
       var responseString = await response.stream.bytesToString();
       print(responseString);
       Map<String, dynamic> responsDecode = jsonDecode(responseString);
+      print(responsDecode);
       List<dynamic> data = responsDecode['data'];
-      pemilihlist.clear();
+      print(data);
+      saksiListan.clear();
       for (var element in data) {
-        saksiList.add(SaksiModel.fromJson(element));
+        saksiListan.add(SaksiModel.fromJson(element));
+        print(element);
       }
-      print(pemilihlist.toString());
+      print(saksiListan);
     } else {
       print(response.reasonPhrase);
     }
@@ -122,7 +127,7 @@ class SaksiService {
       if (response.statusCode == 200) {
         print('Saksi berhasil dihapus');
         // Hapus saksi dari daftar saksiList
-        saksiList.removeWhere((saksi) => saksi.id == id);
+        saksiListan.removeWhere((saksi) => saksi.id == id);
       } else {
         print('Gagal menghapus Saksi: ${response.reasonPhrase}');
       }

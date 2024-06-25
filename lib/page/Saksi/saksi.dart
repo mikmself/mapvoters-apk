@@ -32,7 +32,7 @@ class _SaksiState extends State<Saksi> {
           GetAllDataSaksi(
             onItemSelected: _changeIndex,
             judul: 'Saksi',
-            list: saksiList,
+            list: saksiListan,
           ),
           Registersaksi(
             onBack: () => _changeIndex(0),
