@@ -45,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
     String url = BASE_URL + '/pengaturan/${loginData['paslonID']}';
 
     Map<String, dynamic> requestBody = {
-      'targetSuara': int.parse(_targetSuaraController.text),
+      'target_suara': int.parse(_targetSuaraController.text),
     };
 
     try {
@@ -56,6 +56,7 @@ class _SettingPageState extends State<SettingPage> {
         },
         body: jsonEncode(requestBody),
       );
+      print(response.body);
       if (response.statusCode == 200) {
         setState(() {
           setting!.targetSuara = int.parse(_targetSuaraController.text);

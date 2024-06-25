@@ -7,7 +7,6 @@ import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:mapvotersapk/page/Setting.dart';
 import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
-import 'package:mapvotersapk/page/PemetaanSuara/pemetaansuara.dart';
 import 'package:sidebarx/sidebarx.dart';
 GlobalKey<_SidebarAppState> sidebarKey = GlobalKey<_SidebarAppState>();
 void main() {
@@ -33,7 +32,7 @@ class _SidebarAppState extends State<SidebarApp> {
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator', refresh: () { sidebarKey.currentState?.refreshKoordinatorPage(); },),
-    Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
+    Saksi(title: "Saksi"),
     Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
     PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
