@@ -19,7 +19,6 @@ class GetAllDataPemilih extends StatefulWidget {
   required this.list,
   required this.onItemSelected,
 }) : super(key: key);
-
   @override
   _GetAllDataPemilihState createState() => _GetAllDataPemilihState();
 }

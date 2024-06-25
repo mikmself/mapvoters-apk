@@ -6,8 +6,8 @@ import 'package:file_picker/file_picker.dart';
 class CreatePemilih extends StatefulWidget {
   final VoidCallback onBack;
   const CreatePemilih({super.key, required this.onBack});
-
   @override
+
   _CreatePemilihState createState() => _CreatePemilihState();
 }
 
@@ -139,7 +139,6 @@ class _CreatePemilihState extends State<CreatePemilih> {
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: widget.onBack,
-              
           ),
         ],
       ),

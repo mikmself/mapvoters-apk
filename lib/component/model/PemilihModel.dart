@@ -52,4 +52,6 @@ class PemilihModel {
         ? new KoordinatorModel.fromJson(json['koordinator'])
         : null;
   }
+
+  get imageFile => null;
 }
