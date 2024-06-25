@@ -61,6 +61,11 @@ class _SettingPageState extends State<SettingPage> {
         setState(() {
           setting!.targetSuara = int.parse(_targetSuaraController.text);
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Setting updated successfully'),
+          ),
+        );
       } else {
         print('Failed to update setting. Status code: ${response.statusCode}');
       }

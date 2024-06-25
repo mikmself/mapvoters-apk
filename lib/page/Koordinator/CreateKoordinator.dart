@@ -7,10 +7,13 @@ import 'package:file_picker/file_picker.dart';
 
 class CreateKoordinator extends StatefulWidget {
   final VoidCallback onBack;
+
   const CreateKoordinator({super.key, required this.onBack});
+
   @override
   State<CreateKoordinator> createState() => _RegisterState();
 }
+
 class _RegisterState extends State<CreateKoordinator> {
   TextEditingController _namacontroller = TextEditingController();
   TextEditingController _NIKcontroller = TextEditingController();
@@ -149,6 +152,13 @@ class _RegisterState extends State<CreateKoordinator> {
                                 _noHPcontroller.text,
                                 _passwordcontroller.text,
                                 _imageFile);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Berhasil menambahkan koordinator'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
                           },
                           child: Text(
                             "TAMBAH",
@@ -238,6 +248,7 @@ void _showImageDialog(BuildContext context, File imageFile) {
 
 class FotoContainer extends StatelessWidget {
   final File foto;
+
   const FotoContainer({
     super.key,
     required this.foto,

@@ -33,8 +33,8 @@ class _SidebarAppState extends State<SidebarApp> {
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator', refresh: () { sidebarKey.currentState?.refreshKoordinatorPage(); },),
     Saksi(title: "Saksi"),
-    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
-    PemetaanSuara(title: 'Pemetaan Suara'),
+    Pemilih(title: "Pemilih"),
+    Center(child: Text("Peta Suara"),),
     PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
     ProfilePage(title: "Profile Paslon"),
     SettingPage(title: 'Pengaturan'),
@@ -76,7 +76,6 @@ class _SidebarAppState extends State<SidebarApp> {
                     _widgetOptions[_selectedIndex] is Koordinator ||
                     _widgetOptions[_selectedIndex] is Saksi ||
                     _widgetOptions[_selectedIndex] is Pemilih ||
-                    _widgetOptions[_selectedIndex] is PemetaanSuara ||
                     _widgetOptions[_selectedIndex] is PemetaanSuaraC1 ||
                     _widgetOptions[_selectedIndex] is ProfilePage ||
                     _widgetOptions[_selectedIndex] is SettingPage

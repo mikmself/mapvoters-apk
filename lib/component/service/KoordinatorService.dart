@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
@@ -56,7 +57,7 @@ class KoordinatorService {
         'telephone': telp,
         'password': Password,
         'nik': NIK,
-        'paslon_id': loginData['paslonID']!,
+        'paslon_id': loginData['paslonID']!.toString(),
       });
       request.files.add(await http.MultipartFile.fromPath('foto', foto.path));
 

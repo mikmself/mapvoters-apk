@@ -100,7 +100,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                         _buildDetailRow('Telephone', koordinator.user!.telephone ?? ''),
                         SizedBox(height: 16),
                         Align(
-                          alignment: Alignment.center,
+                          alignment: Alignment.centerLeft,
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop();
