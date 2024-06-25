@@ -28,8 +28,8 @@ class _SidebarAppState extends State<SidebarApp> {
   final List<Widget> _widgetOptions = <Widget>[
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator'),
-    Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
-    Pemilih(title: 'Pemilih',),
+    Saksi(title: "Saksi"),
+    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
     PemetaanSuara(title: 'Pemetaan Suara'),
     PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
     ProfilePage(title: "Profile Paslon"),
