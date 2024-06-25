@@ -9,7 +9,7 @@ import 'package:mapvotersapk/component/model/KoordinatorModel.dart';
 class KoordinatorService {
   GetAllDataKoordinator() async {
     var request =
-    http.Request('GET', Uri.parse(BASE_URL + '/koordinator?paslon_id=${loginData['paslonID']}'),);
+    http.Request('GET', Uri.parse(BASE_URL + '/koordinator?paslon_id=${loginData['userID']}'),);
 
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -57,7 +57,7 @@ class KoordinatorService {
         'telephone': telp,
         'password': Password,
         'nik': NIK,
-        'paslon_id': loginData['paslonID']!.toString(),
+        'paslon_id': loginData['userID']!.toString(),
       });
       request.files.add(await http.MultipartFile.fromPath('foto', foto.path));
 

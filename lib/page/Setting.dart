@@ -28,7 +28,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Future<void> getSetting() async {
     final SettingModel? fetchedSetting =
-    await service.GetSettingDetail(loginData['paslonID'] as int);
+    await service.GetSettingDetail(loginData['userID'] as int);
     if (fetchedSetting != null) {
       setState(() {
         setting = fetchedSetting;
@@ -42,7 +42,7 @@ class _SettingPageState extends State<SettingPage> {
       return;
     }
 
-    String url = BASE_URL + '/pengaturan/${loginData['paslonID']}';
+    String url = BASE_URL + '/pengaturan/${loginData['userID']}';
 
     Map<String, dynamic> requestBody = {
       'target_suara': int.parse(_targetSuaraController.text),

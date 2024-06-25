@@ -2,7 +2,7 @@ const String BASE_URL = "https://1b9e-182-2-84-32.ngrok-free.app/api";
 String? token = "";
 
 Map<String, dynamic> loginData = {
-  "paslonID" : 1,
+
   "token": "",
   "userID": "",
   "nama": "",

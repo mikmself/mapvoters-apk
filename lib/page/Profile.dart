@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
 
-    String url = BASE_URL + '/paslon/${loginData['paslonID']}';
+    String url = BASE_URL + '/paslon/${loginData['userID']}';
 
     Map<String, dynamic> requestBody = {
       'name': _namaController.text,

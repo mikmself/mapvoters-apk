@@ -23,11 +23,9 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<void> showKoordinatorDetailDialog() async {
-    if (loginData != null &&
-        loginData.containsKey('paslonID') &&
-        loginData['paslonID'] is int) {
+    if (loginData != null ) {
       DashboardModel? fetchedDashboard =
-          await service.GetDashboardDetail(loginData['paslonID']);
+          await service.GetDashboardDetail(loginData['userID']);
 
       if (fetchedDashboard != null) {
         setState(() {
