@@ -17,11 +17,11 @@ class SaksiService {
       print(responseString);
       Map<String, dynamic> responsDecode = jsonDecode(responseString);
       List<dynamic> data = responsDecode['data'];
-      koorList.clear();
+      pemilihlist.clear();
       for (var element in data) {
         saksiList.add(SaksiModel.fromJson(element));
       }
-      print(koorList.toString());
+      print(pemilihlist.toString());
     } else {
       print(response.reasonPhrase);
     }

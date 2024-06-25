@@ -7,7 +7,6 @@ import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:mapvotersapk/page/Setting.dart';
 import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
-import 'package:mapvotersapk/page/PemetaanSuara/pemetaansuara.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 void main() {
@@ -66,7 +65,6 @@ class _SidebarAppState extends State<SidebarApp> {
                               _widgetOptions[_selectedIndex] is Koordinator ||
                               _widgetOptions[_selectedIndex] is Saksi ||
                               _widgetOptions[_selectedIndex] is Pemilih ||
-                              _widgetOptions[_selectedIndex] is PemetaanSuara ||
                               _widgetOptions[_selectedIndex] is PemetaanSuaraC1 ||
                               _widgetOptions[_selectedIndex] is ProfilePage ||
                               _widgetOptions[_selectedIndex] is SettingPage
