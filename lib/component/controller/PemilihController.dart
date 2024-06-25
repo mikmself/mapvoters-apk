@@ -14,12 +14,11 @@ class GetAllDataPemilih extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
 
   const GetAllDataPemilih({
-    super.key,
-    required this.judul,
-    required this.list,
-    required this.onItemSelected,
-  });
-
+    Key? key,
+  required this.judul,
+  required this.list,
+  required this.onItemSelected,
+}) : super(key: key);
   @override
   _GetAllDataPemilihState createState() => _GetAllDataPemilihState();
 }
@@ -95,7 +94,7 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
     final kecamatanController = TextEditingController(text: pemilih.kecamatan?.nama ?? '');
     final kelurahanController = TextEditingController(text: pemilih.kelurahan?.nama ?? '');
     final tpsController = TextEditingController(text: pemilih.tps);
-    File? imageFile;
+    File? foto_ktp;
 
     showDialog(
       context: context,
@@ -166,20 +165,18 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
             ),
             TextButton(
               onPressed: () {
-                service.updatePemilih(
-                  PemilihModel(
-                     pemilih.id!,
-                    nameController.text,
-                    NIKController.text,
-                    phoneController.text,
-                    provinsiController.text,
-                    kabupatenController.text,
-                    kecamatanController.text,
-                    kelurahanController.text,
-                    tpsController.text,
-                    imageFile ?? pemilih.imageFile,
-                  ),
-                );
+                service.editPemilih(
+                pemilih.id!,
+                nameController.text,
+                NIKController.text,
+                foto_ktp ?? File(''),
+                tpsController.text,
+                phoneController.text,
+                int.parse(provinsiController.text),
+                int.parse(kabupatenController.text),
+                int.parse(kecamatanController.text),
+                int.parse(kelurahanController.text), 
+              );
                 Navigator.of(context).pop();
               },
               child: Text('Simpan'),

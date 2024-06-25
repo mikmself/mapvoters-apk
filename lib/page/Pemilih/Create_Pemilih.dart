@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
 
-
-
-
 class CreatePemilih extends StatefulWidget {
   final VoidCallback onBack;
   const CreatePemilih({super.key, required this.onBack});
@@ -16,14 +13,12 @@ class CreatePemilih extends StatefulWidget {
 
 class _CreatePemilihState extends State<CreatePemilih> {
   final _formKey = GlobalKey<FormState>();
-
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _telephoneController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
 
   File? _imageFile;
-
   String? _selectedProvinsi;
   String? _selectedKabupaten;
   String? _selectedKecamatan;
@@ -143,10 +138,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
           ),
           IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-              widget.onBack(); 
-            },
+            onPressed: widget.onBack,
           ),
         ],
       ),
@@ -188,7 +180,6 @@ class _CreatePemilihState extends State<CreatePemilih> {
       ),
     );
 }
-
 
   Widget _buildTextField(TextEditingController controller, String label) {
     return Container(
