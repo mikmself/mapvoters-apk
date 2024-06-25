@@ -36,16 +36,13 @@ class _RegisterState extends State<Registersaksi> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 5,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.04,
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              
               width: 350,
-              height: MediaQuery.of(context).size.height,
+              height: 50,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -63,139 +60,95 @@ class _RegisterState extends State<Registersaksi> {
                 ],
               ),
             ),
-          ),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            textfield(
                 controller: _namacontroller, obscure: false, label: 'Nama'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            textfield(
                 controller: _emailcontroller, obscure: false, label: 'Email'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            textfield(
                 controller: _noHPcontroller,
                 obscure: false,
                 label: 'Telephone'),
-          ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _provcontroller,
-                label: 'Provinsi',
-                list: prov,
-                onSelected: (value) {
-                  setState(() {
-                    provselect = value;
-                  });
-                },
-              ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _kabcontroller,
-                label: 'Kabupaten',
-                list: kab,
-                onSelected: (value) {
-                  setState(() {
-                    kabselect = value;
-                  });
-                },
-              ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _keccontroller,
-                label: 'Kecamatan',
-                list: kec,
-                onSelected: (value) {
-                  setState(() {
-                    kecselect = value;
-                  });
-                },
-              ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _kelcontroller,
-                label: 'Kelurahan',
-                list: kel,
-                onSelected: (value) {
-                  setState(() {
-                    kelselect = value;
-                  });
-                },
-              ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            dropdown(
+                  controller: _provcontroller,
+                  label: 'Provinsi',
+                  list: prov,
+                  onSelected: (value) {
+                    setState(() {
+                      provselect = value;
+                    });
+                  },
+                ),
+            const SizedBox(height: 15),
+            dropdown(
+                  controller: _kabcontroller,
+                  label: 'Kabupaten',
+                  list: kab,
+                  onSelected: (value) {
+                    setState(() {
+                      kabselect = value;
+                    });
+                  },
+                ),
+            const SizedBox(height: 15),
+            dropdown(
+                  controller: _keccontroller,
+                  label: 'Kecamatan',
+                  list: kec,
+                  onSelected: (value) {
+                    setState(() {
+                      kecselect = value;
+                    });
+                  },
+                ),
+            const SizedBox(height: 15),
+            dropdown(
+                  controller: _kelcontroller,
+                  label: 'Kelurahan',
+                  list: kel,
+                  onSelected: (value) {
+                    setState(() {
+                      kelselect = value;
+                    });
+                  },
+                ),
+            const SizedBox(height: 15),
+            textfield(
                 controller: _tpscontroller,
                 obscure: false,
                 label: 'TPS'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 5,
-            child: Container(
-              width: 350,
-              height: MediaQuery.of(context).size.height,
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                        // color: Colors.amber,
-                        width: MediaQuery.of(context).size.width),
+            const SizedBox(height: 15),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black12,
+                    fixedSize:
+                        Size(MediaQuery.of(context).size.width, 50),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () {
+                  SaksiService service = SaksiService();
+                  
+                },
+                child: Text(
+                  "TAMBAH",
+                  style: GoogleFonts.getFont(
+                    'Nunito',
+                    fontWeight: FontWeight.w900,
+                    fontSize: 17,
+                    letterSpacing: 1,
+                    color: Colors.white,
                   ),
-                  Flexible(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black12,
-                              fixedSize:
-                                  Size(MediaQuery.of(context).size.width, 50),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                          onPressed: () {
-                            SaksiService service = SaksiService();
-                            
-                          },
-                          child: Text(
-                            "TAMBAH",
-                            style: GoogleFonts.getFont(
-                              'Nunito',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 17,
-                              letterSpacing: 1,
-                              color: Colors.white,
-                            ),
-                          ),
-                          // onPressed: () {
-                          //   KoordinatorService service = KoordinatorService();          
-                          // },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+                // onPressed: () {
+                //   KoordinatorService service = KoordinatorService();          
+                // },
               ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Flexible(
-            flex: 2,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-            ),
-          )
-        ],
+            
+            
+          ],
+        ),
       ),
     );
   }

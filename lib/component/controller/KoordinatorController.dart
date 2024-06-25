@@ -22,7 +22,8 @@ class GetAllDataKoordinator extends StatefulWidget {
     super.key,
     required this.judul,
     required this.list,
-    required this.onItemSelected, required this.refresh,
+    required this.onItemSelected, 
+    required this.refresh,
   });
 
   @override
