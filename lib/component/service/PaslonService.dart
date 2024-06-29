@@ -5,7 +5,7 @@ import 'package:mapvotersapk/component/model/PaslonModel.dart';
 class PaslonService{
   GetPaslonDetail() async {
     try {
-      var request = http.Request('GET', Uri.parse('$BASE_URL/paslon/${loginData['paslonID']}'));
+      var request = http.Request('GET', Uri.parse('$BASE_URL/paslon/${loginData['userID']}'));
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
