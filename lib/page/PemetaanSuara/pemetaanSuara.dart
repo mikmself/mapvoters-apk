@@ -21,9 +21,9 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
           padding: EdgeInsets.fromLTRB(20, 20, 20, 5),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Text(judul,
+            child: Text("Pemetaan Suara" + judul,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,16 +37,17 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                 )
         ),
         ),
-        Center(
-          child: buildInfoContainer("Jawa Tengah",1900),
-        )
+        _buildInfoContainer("Jawa Tengah", 300)
         ],
       ),
     );
   }
 
-  Container buildInfoContainer(String text, int Suara) {
-    return Container(
+  Widget _buildInfoContainer(String Wilayah, int Pemili_Potensial) {
+    return Center(
+        child: Container(
+          margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
           decoration: BoxDecoration(
           color: Color.fromARGB(255, 219, 255, 255),
           border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
@@ -58,7 +59,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
             children: [
               Flexible(
                 child: Text(
-                  "Jawa TEngah",
+                  Wilayah,
                   style: GoogleFonts.getFont(
                     'Nunito',
                     fontSize: 16,
@@ -76,7 +77,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                 ),
                 child: Center(
                   child: Text(
-                    "2333",
+                    Pemili_Potensial.toString(),
                     style: GoogleFonts.getFont(
                       'Nunito',
                       fontSize: 16,
@@ -89,7 +90,8 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
             ],
           ),
         ),
-        );
+        ),
+      );
   }
 }
 
