@@ -13,10 +13,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:mapvotersapk/component/service/SaksiService.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-List<String> prov = ["Jawa Tengah", "Jawa Timur", "Jawa Barat"];
-List<String> kab = ["Banyumas", "Purbalingga", "Banjarnegara"];
-List<String> kec = ["Purwokerto Timur", "Sokaraja", "Purwokerto Barat"];
-List<String> kel = ["Sumampir", "Kranji", "Sokanegara"];
+// List<String> prov = ["Jawa Tengah", "Jawa Timur", "Jawa Barat"];
+// List<String> kab = ["Banyumas", "Purbalingga", "Banjarnegara"];
+// List<String> kec = ["Purwokerto Timur", "Sokaraja", "Purwokerto Barat"];
+// List<String> kel = ["Sumampir", "Kranji", "Sokanegara"];
 
 String? provselect;
 String? kabselect;
@@ -311,11 +311,59 @@ class _RegisterState extends State<Registersaksi> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     if (_formKey.currentState!.validate()) {
+                  //       // Handle the form submission
+                  //       print('Form submitted');
+                  //     }
+                  //   },
+                  //   child: Text('Tambah'),
+                  //   style: ElevatedButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(8.0),
+                  //     ),
+                  //   ),
+                  // ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         // Handle the form submission
-                        print('Form submitted');
+                        String nama = _namacontroller.text;
+                        String email = _emailcontroller.text;
+                        String telephone = _noHPcontroller.text;
+                        String tps = _tpscontroller.text;
+
+                        // Buat user baru
+                        int? userId = await service.createUser(nama, email, telephone);
+                        
+                        if (userId != null) {
+                          // Buat saksi dengan user_id yang baru dibuat
+                          await service.createSaksi(
+                            userId,
+                            provselect!,
+                            kabselect!,
+                            kecselect!,
+                            kelselect!,
+                            tps,
+                          );
+                          // Reset form setelah berhasil menambahkan
+                          _namacontroller.clear();
+                          _emailcontroller.clear();
+                          _noHPcontroller.clear();
+                          _tpscontroller.clear();
+                          setState(() {
+                            provselect = null;
+                            kabselect = null;
+                            kecselect = null;
+                            kelselect = null;
+                          });
+                        } else {
+                          // Jika gagal membuat user
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Gagal membuat user')),
+                          );
+                        }
                       }
                     },
                     child: Text('Tambah'),
@@ -325,6 +373,7 @@ class _RegisterState extends State<Registersaksi> {
                       ),
                     ),
                   ),
+
                  ],
                 )                      
           ],
@@ -349,52 +398,3 @@ class _RegisterState extends State<Registersaksi> {
     );
   }
 }
-
-// void _showImageDialog(BuildContext context, File imageFile) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Dialog(
-//         child: GestureDetector(
-//           onTap: () {
-//             Navigator.pop(context);
-//           },
-//           child: Container(
-//             child: Image.file(
-//               imageFile,
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
-
-// class FotoContainer extends StatelessWidget {
-//   final File foto;
-//   const FotoContainer({
-//     super.key,
-//     required this.foto,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         _showImageDialog(context, foto);
-//       },
-//       child: SizedBox(
-//         height: MediaQuery.of(context).size.height,
-//         width: 140,
-//         child: DecoratedBox(
-//           decoration: BoxDecoration(
-//             image: DecorationImage(image: FileImage(foto), fit: BoxFit.cover),
-//             border: Border.all(),
-//             borderRadius: BorderRadius.circular(5),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

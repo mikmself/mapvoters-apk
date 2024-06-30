@@ -55,35 +55,91 @@ class SaksiService {
     }
   }
 
-  CreateSaksi(String nama, String email, String telephone,
-      String provinsi, String kabupaten, String kecamatan,
-      String kelurahan, String tps) async {
-    try {
-      var request = http.MultipartRequest(
-          'POST', Uri.parse(BASE_URL+'/saksi'),);
-      request.fields.addAll({
-        'name': nama,
-        'email': email,
-        'telephone': telephone,
-        'provinsi': provinsi,
-        'kabupatebn': kabupaten,
-        'kecamatan': kecamatan,
-        'kelurahan': kelurahan,
-        'tps': tps,
+  // CreateSaksi(String nama, String email, String telephone,
+  //     String provinsi, String kabupaten, String kecamatan,
+  //     String kelurahan, String tps) async {
+  //   try {
+  //     var request = http.MultipartRequest(
+  //         'POST', Uri.parse(BASE_URL+'/saksi'),);
+  //     request.fields.addAll({
+  //       'name': nama,
+  //       'email': email,
+  //       'telephone': telephone,
+  //       'provinsi': provinsi,
+  //       'kabupatebn': kabupaten,
+  //       'kecamatan': kecamatan,
+  //       'kelurahan': kelurahan,
+  //       'tps': tps,
         
-      });
+  //     });
     
-      http.StreamedResponse response = await request.send();
+  //     http.StreamedResponse response = await request.send();
+
+  //     if (response.statusCode == 200) {
+  //       print(await response.stream.bytesToString());
+  //     } else {
+  //       print(response.reasonPhrase);
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+   Future<int?> createUser(String name, String email, String telephone) async {
+    try {
+      var response = await http.post(
+        Uri.parse(BASE_URL + '/user'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'telephone': telephone,
+        }),
+      );
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        var responseData = jsonDecode(response.body);
+        return responseData['data']['id'];
       } else {
-        print(response.reasonPhrase);
+        print('Gagal membuat User: ${response.reasonPhrase}');
+        return null;
       }
     } catch (e) {
-      print(e);
+      print('Terjadi kesalahan saat membuat User: $e');
+      return null;
     }
   }
+
+  Future<void> createSaksi(int userId, String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps) async {
+    try {
+      var response = await http.post(
+        Uri.parse(BASE_URL + '/saksi'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'user_id': userId,
+          'provinsi': provinsi,
+          'kabupaten': kabupaten,
+          'kecamatan': kecamatan,
+          'kelurahan': kelurahan,
+          'tps': tps,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Saksi berhasil dibuat');
+      } else {
+        print('Gagal membuat Saksi: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('Terjadi kesalahan saat membuat Saksi: $e');
+    }
+  }
+
+
   EditSaksi(int id, String nama, String email, String telephone,
       String provinsi, String kabupaten, String kecamatan,
       String kelurahan, String tps) async {
@@ -228,4 +284,7 @@ class SaksiService {
       print(response.reasonPhrase);
     }
   }
+
+  
+  
 }
