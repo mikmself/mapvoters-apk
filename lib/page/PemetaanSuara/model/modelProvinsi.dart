@@ -1,11 +1,11 @@
-class ModelProvinsi {
+class modelProvinsi {
   String? id;
   String? nama;
   int? pemilihPotensialCount;
 
-  ModelProvinsi({this.id, this.nama, this.pemilihPotensialCount});
+  modelProvinsi({this.id, this.nama, this.pemilihPotensialCount});
 
-  ModelProvinsi.fromJson(Map<String, dynamic> json) {
+  modelProvinsi.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nama = json['nama'];
     pemilihPotensialCount = json['pemilih_potensial_count'];

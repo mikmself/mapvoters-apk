@@ -1,5 +1,3 @@
-
-
 class modelKelurahan {
   String? id;
   String? nama;

@@ -37,9 +37,16 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                 )
         ),
         ),
-        Container(
-          margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+        Center(
+          child: buildInfoContainer("Jawa Tengah",1900),
+        )
+        ],
+      ),
+    );
+  }
+
+  Container buildInfoContainer(String text, int Suara) {
+    return Container(
           decoration: BoxDecoration(
           color: Color.fromARGB(255, 219, 255, 255),
           border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
@@ -82,10 +89,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
             ],
           ),
         ),
-        )
-        ],
-      ),
-    );
+        );
   }
 }
 

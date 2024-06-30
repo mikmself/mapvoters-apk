@@ -1,4 +1,4 @@
-// lib/page/PemetaanSuara/model/modelKecamatan.dart
+
 class modelKecamatan {
   String? id;
   String? nama;
