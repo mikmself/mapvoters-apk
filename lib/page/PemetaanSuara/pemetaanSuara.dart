@@ -21,21 +21,24 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
           padding: EdgeInsets.fromLTRB(20, 20, 20, 5),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Text("Pemetaan Suara" + judul,
+            child: Text("Pemetaan Suara $judul",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-        ), TextField(controller: cariWilayah,
-        decoration: 
-        InputDecoration(
-           labelText: 'Cari $judul',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                )
-        ),
+        ), Padding(
+          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+          child: TextField(controller: cariWilayah,
+          decoration: 
+          InputDecoration(
+             labelText: 'Cari $judul',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  )
+          ),
+          ),
         ),
         _buildInfoContainer("Jawa Tengah", 300)
         ],
