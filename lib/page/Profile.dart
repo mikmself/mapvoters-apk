@@ -10,7 +10,6 @@ import 'package:mapvotersapk/component/model/PaslonModel.dart';
 import 'package:mapvotersapk/component/service/PaslonService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 
-
 List<String> type = ['gubernur','bupati/walikota','dprri','dprdprov','dprdkab','dpd'];
 List<String> partai = [];
 String? typeselect;
@@ -45,9 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
     fetchData();
     getPaslon();
   }
+
   Future<void> getPaslon() async {
-    final PaslonModel? fetchedPaslon =
-    await service.GetPaslonDetail();
+    final PaslonModel? fetchedPaslon = await service.GetPaslonDetail();
     if (fetchedPaslon != null) {
       setState(() {
         paslon = fetchedPaslon;
@@ -69,6 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     }
   }
+
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse('$BASE_URL/partai'));
     if (response.statusCode == 200) {
@@ -80,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
       throw Exception('Failed to load data');
     }
   }
+
   Future<void> updatePaslon() async {
     if (paslon == null) {
       return;
@@ -87,23 +88,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
     String url = BASE_URL + '/paslon/${loginData['userID']}';
 
-    Map<String, dynamic> requestBody = {
-      'name': _namaController.text,
-      'email': _emailController.text,
-      'telephone': _telephoneController.text,
-      'type': _typeController.text,
-      'nomor_urut': _nomorUrutController.text,
-      'dapil': _dapilController.text,
-    };
+    var request = http.MultipartRequest('POST', Uri.parse(url))
+      ..fields['name'] = _namaController.text
+      ..fields['email'] = _emailController.text
+      ..fields['telephone'] = _telephoneController.text
+      ..fields['type'] = _typeController.text
+      ..fields['nomor_urut'] = _nomorUrutController.text
+      ..fields['dapil'] = _dapilController.text;
+
+    if (_imageFile != null) {
+      request.files.add(await http.MultipartFile.fromPath('foto', _imageFile!.path));
+    }
 
     try {
-      final response = await http.put(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
-      );
+      final response = await request.send();
 
       if (response.statusCode == 200) {
         setState(() {
@@ -114,6 +112,9 @@ class _ProfilePageState extends State<ProfilePage> {
           paslon!.nomorUrut = _nomorUrutController.text;
           paslon!.dapil = _dapilController.text;
           paslon!.partai!.nama = partaiselect;
+          if (_imageFile != null) {
+            paslon!.foto = _imageFile!.path.split('/').last;
+          }
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -127,7 +128,6 @@ class _ProfilePageState extends State<ProfilePage> {
       print('Error updating paslon: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +237,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             image: paslon != null && paslon!.foto != null
                                 ? DecorationImage(
                               image: NetworkImage(
-                                BASE_URL.replaceFirst('/api', '/') + paslon!.foto!,
+                                BASE_URL.replaceFirst('/api', '/') +
+                                    paslon!.foto!,
                               ),
                               fit: BoxFit.cover,
                             )
@@ -247,7 +248,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: paslon != null && paslon!.foto == null
-                              ? Center(child: Text('No Image Available')) // Optional: Placeholder text or widget
+                              ? Center(
+                              child: Text('No Image Available')) // Optional: Placeholder text or widget
                               : null,
                         ),
                       ),
@@ -314,8 +316,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _pickAnyFile() async {
-    FilePickerResult? result =
-    await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       File file = File(result.files.first.path!);
