@@ -23,3 +23,4 @@ class modelKabupaten {
     return data;
   }
 }
+
