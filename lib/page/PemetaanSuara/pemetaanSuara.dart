@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
+import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/PemetaanSuara/model/ListModel.dart';
 import 'package:mapvotersapk/page/PemetaanSuara/pemetaan_suara_service.dart';
 
@@ -62,70 +63,95 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 5),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Pemetaan Suara $judul",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async {
+        if (Pageaktifasaatini != 'Provinsi') {
+          if (Pageaktifasaatini == 'Kelurahan') {
+            setState(() {
+              Pageaktifasaatini = 'Kecamatan';
+              ListDataPage = kecamatanList;
+              judul = 'Kecamatan';
+            });
+          } else if (Pageaktifasaatini == 'Kecamatan') {
+            setState(() {
+              Pageaktifasaatini = 'Kabupaten';
+              ListDataPage = kabupatenList;
+              judul = 'Kabupaten';
+            });
+          } else if (Pageaktifasaatini == 'Kabupaten') {
+            setState(() {
+              Pageaktifasaatini = 'Provinsi';
+              ListDataPage = provinsiList;
+              judul = 'Provinsi';
+            });
+          }
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Pemetaan Suara $judul",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+              child: TextField(
+                controller: cariWilayah,
+                decoration: InputDecoration(
+                  labelText: 'Cari $judul',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                onChanged: (value) {
+                  searchList(value);
+                },
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-            child: TextField(
-              controller: cariWilayah,
-              decoration: InputDecoration(
-                labelText: 'Cari $judul',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+            Expanded(
+              child: FutureBuilder(
+                future: service.showProvinsi(loginData['userID']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    return ListView.builder(
+                      itemCount: ListDataPage.length,
+                      itemBuilder: (context, index) {
+                        var item = ListDataPage[index];
+                        print('Building container for: ${item.nama}');
+                        return GestureDetector(
+                          onTap: () {
+                            if (Pageaktifasaatini == 'Provinsi') {
+                              pageKabupaten(item.id, loginData['userID']);
+                            } else if (Pageaktifasaatini == 'Kabupaten') {
+                              pageKecamatan(item.id, loginData['userID']);
+                            } else if (Pageaktifasaatini == 'Kecamatan') {
+                              pageKelurahan(item.id, loginData['userID']);
+                            }
+                          },
+                          child: _buildInfoContainer(
+                              item.nama!, item.pemilihPotensialCount!),
+                        );
+                      },
+                    );
+                  }
+                },
               ),
-              onChanged: (value) {
-                searchList(value);
-              },
             ),
-          ),
-          Expanded(
-            child: FutureBuilder(
-              future: service.showProvinsi(loginData['userID']),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  return ListView.builder(
-                    itemCount: ListDataPage.length,
-                    itemBuilder: (context, index) {
-                      var item = ListDataPage[index];
-                      print('Building container for: ${item.nama}');
-                      return GestureDetector(
-                        onTap: () {
-                          if (Pageaktifasaatini == 'Provinsi') {
-                            pageKabupaten(item.id, loginData['userID']);
-                          } else if (Pageaktifasaatini == 'Kabupaten') {
-                            pageKecamatan(item.id, loginData['userID']);
-                          } else if (Pageaktifasaatini == 'Kecamatan') {
-                            pageKelurahan(item.id, loginData['userID']);
-                          }
-                        },
-                        child: _buildInfoContainer(item.nama!, item.pemilihPotensialCount!),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -134,19 +160,23 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     List<dynamic> results = [];
     if (Pageaktifasaatini == 'Provinsi') {
       results = provinsiList
-          .where((item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else if (Pageaktifasaatini == 'Kabupaten') {
       results = kabupatenList
-          .where((item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else if (Pageaktifasaatini == 'Kecamatan') {
       results = kecamatanList
-          .where((item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else if (Pageaktifasaatini == 'Kelurahan') {
       results = kelurahanList
-          .where((item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.nama!.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
     setState(() {
@@ -155,41 +185,24 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
   }
 
   Widget _buildInfoContainer(String Wilayah, int Pemili_Potensial) {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-        padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 219, 255, 255),
-          border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: SizedBox(
-          height: 25,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  Wilayah,
-                  style: GoogleFonts.getFont(
-                    'Nunito',
-                    fontSize: 16,
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ),
-              Container(
-                width: 80,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 113, 255, 220),
-                  borderRadius: BorderRadiusDirectional.circular(5),
-                ),
-                child: Center(
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+          padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 219, 255, 255),
+            border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SizedBox(
+            height: 25,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
                   child: Text(
-                    Pemili_Potensial.toString(),
+                    Wilayah,
                     style: GoogleFonts.getFont(
                       'Nunito',
                       fontSize: 16,
@@ -198,8 +211,27 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                     ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: 80,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 113, 255, 220),
+                    borderRadius: BorderRadiusDirectional.circular(5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      Pemili_Potensial.toString(),
+                      style: GoogleFonts.getFont(
+                        'Nunito',
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
