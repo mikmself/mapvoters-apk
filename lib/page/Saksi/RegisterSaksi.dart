@@ -1,15 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/component/controller/SaksiController.dart';
+import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
+import 'package:mapvotersapk/component/model/KabupatenModel.dart';
+import 'package:mapvotersapk/component/model/KecamatanModel.dart';
+import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/service/KoordinatorService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mapvotersapk/component/service/SaksiService.dart';
-
-List<String> prov = ["Jawa Tengah", "Jawa Timur", "Jawa Barat"];
-List<String> kab = ["Banyumas", "Purbalingga", "Banjarnegara"];
-List<String> kec = ["Purwokerto Timur", "Sokaraja", "Purwokerto Barat"];
-List<String> kel = ["Sumampir", "Kranji", "Sokanegara"];
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 String? provselect;
 String? kabselect;
@@ -23,6 +25,8 @@ class Registersaksi extends StatefulWidget {
   State<Registersaksi> createState() => _RegisterState();
 }
 class _RegisterState extends State<Registersaksi> {
+  final _formKey = GlobalKey<FormState>();
+
   TextEditingController _namacontroller = TextEditingController();
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _noHPcontroller = TextEditingController();
@@ -36,16 +40,13 @@ class _RegisterState extends State<Registersaksi> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 5,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.04,
-              ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              
               width: 350,
-              height: MediaQuery.of(context).size.height,
+              height: 50,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -63,139 +64,315 @@ class _RegisterState extends State<Registersaksi> {
                 ],
               ),
             ),
-          ),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            textfield(
                 controller: _namacontroller, obscure: false, label: 'Nama'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            textfield(
                 controller: _emailcontroller, obscure: false, label: 'Email'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            textfield(
                 controller: _noHPcontroller,
                 obscure: false,
                 label: 'Telephone'),
-          ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _provcontroller,
-                label: 'Provinsi',
-                list: prov,
-                onSelected: (value) {
-                  setState(() {
-                    provselect = value;
-                  });
-                },
+            const SizedBox(height: 15),
+            Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 60,
+                width: 350,
+                child: FutureBuilder(
+                  future: service.showProvinsi(),
+                  builder: (context, snapshot) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Text(
+                          'Provinsi',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: provinsiList
+                            .map((ProvinsiModel provinsi) => DropdownMenuItem(
+                                  value: provinsi.id.toString(),
+                                  enabled: true,
+                                  child: Text(
+                                    provinsi.nama.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: provselect,
+                        onChanged: (value) {
+                          setState(() {
+                            provselect = value;
+                          });
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 40,
+                          width: 200,
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _kabcontroller,
-                label: 'Kabupaten',
-                list: kab,
-                onSelected: (value) {
-                  setState(() {
-                    kabselect = value;
-                  });
-                },
+            const SizedBox(height: 15),
+                Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 60,
+                width: 350,
+                child: FutureBuilder(
+                  future: service.showKab(provselect),
+                  builder: (context, snapshot) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Text(
+                          'Kabupaten',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: kabupatenList
+                            .map((KabupatenModel kabupaten) => DropdownMenuItem(
+                                  value: kabupaten.id.toString(),
+                                  enabled: true,
+                                  child: Text(
+                                  kabupaten.nama.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: kabselect,
+                        onChanged: (value) {
+                          setState(() {
+                            kabselect = value;
+                            print(kabselect);
+                          });
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 40,
+                          width: 200,
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _keccontroller,
-                label: 'Kecamatan',
-                list: kec,
-                onSelected: (value) {
-                  setState(() {
-                    kecselect = value;
-                  });
-                },
+            const SizedBox(height: 15),
+                Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 60,
+                width: 350,
+                child: FutureBuilder(
+                  future: service.showkecamatan(kabselect),
+                  builder: (context, snapshot) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Text(
+                          'kecamatan',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: kecamatanList
+                            .map((KecamatanModel kecamatan) => DropdownMenuItem(
+                                  value: kecamatan.id.toString(),
+                                  enabled: true,
+                                  child: Text(
+                                  kecamatan.nama.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: kecselect,
+                        onChanged: (value) {
+                          setState(() {
+                            kecselect = value;
+                            print(kecselect);
+                          });
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 40,
+                          width: 200,
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-          const SizedBox(height: 15),
-          dropdown(
-                controller: _kelcontroller,
-                label: 'Kelurahan',
-                list: kel,
-                onSelected: (value) {
-                  setState(() {
-                    kelselect = value;
-                  });
-                },
+            const SizedBox(height: 15),
+                Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 60,
+                width: 350,
+                child: FutureBuilder(
+                  future: service.showkelurahan(kecselect),
+                  builder: (context, snapshot) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Text(
+                          'Kelurahan',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: kelurahanList
+                            .map((KelurahanModel kelurahan) => DropdownMenuItem(
+                                  value: kelurahan.id.toString(),
+                                  enabled: true,
+                                  child: Text(
+                                  kelurahan.nama.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: kelselect,
+                        onChanged: (value) {
+                          setState(() {
+                            kelselect = value;
+                            print(kelselect);
+                          });
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 40,
+                          width: 200,
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
+            const SizedBox(height: 15),
+            textfield(
                 controller: _tpscontroller,
                 obscure: false,
                 label: 'TPS'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 5,
-            child: Container(
-              width: 350,
-              height: MediaQuery.of(context).size.height,
-              child: Row(
+            const SizedBox(height: 15),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                        // color: Colors.amber,
-                        width: MediaQuery.of(context).size.width),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black12,
-                              fixedSize:
-                                  Size(MediaQuery.of(context).size.width, 50),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
-                          onPressed: () {
-                            SaksiService service = SaksiService();
-                            
-                          },
-                          child: Text(
-                            "TAMBAH",
-                            style: GoogleFonts.getFont(
-                              'Nunito',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 17,
-                              letterSpacing: 1,
-                              color: Colors.white,
-                            ),
-                          ),
-                          // onPressed: () {
-                          //   KoordinatorService service = KoordinatorService();          
-                          // },
-                        ),
-                      ],
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     if (_formKey.currentState!.validate()) {
+                  //       // Handle the form submission
+                  //       print('Form submitted');
+                  //     }
+                  //   },
+                  //   child: Text('Tambah'),
+                  //   style: ElevatedButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(8.0),
+                  //     ),
+                  //   ),
+                  // ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // Handle the form submission
+                        String nama = _namacontroller.text;
+                        String email = _emailcontroller.text;
+                        String telephone = _noHPcontroller.text;
+                        String tps = _tpscontroller.text;
+
+                        // Buat user baru
+                        int? userId = await service.createUser(nama, email, telephone);
+                        
+                        if (userId != null) {
+                          // Buat saksi dengan user_id yang baru dibuat
+                          await service.createSaksi(
+                            userId,
+                            provselect!,
+                            kabselect!,
+                            kecselect!,
+                            kelselect!,
+                            tps,
+                          );
+                          // Reset form setelah berhasil menambahkan
+                          _namacontroller.clear();
+                          _emailcontroller.clear();
+                          _noHPcontroller.clear();
+                          _tpscontroller.clear();
+                          setState(() {
+                            provselect = null;
+                            kabselect = null;
+                            kecselect = null;
+                            kelselect = null;
+                          });
+                        } else {
+                          // Jika gagal membuat user
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Gagal membuat user')),
+                          );
+                        }
+                      }
+                    },
+                    child: Text('Tambah'),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Flexible(
-            flex: 2,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-            ),
-          )
-        ],
+
+                 ],
+                )                      
+          ],
+        ),
       ),
     );
   }
@@ -216,52 +393,3 @@ class _RegisterState extends State<Registersaksi> {
     );
   }
 }
-
-// void _showImageDialog(BuildContext context, File imageFile) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return Dialog(
-//         child: GestureDetector(
-//           onTap: () {
-//             Navigator.pop(context);
-//           },
-//           child: Container(
-//             child: Image.file(
-//               imageFile,
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//         ),
-//       );
-//     },
-//   );
-// }
-
-// class FotoContainer extends StatelessWidget {
-//   final File foto;
-//   const FotoContainer({
-//     super.key,
-//     required this.foto,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return GestureDetector(
-//       onTap: () {
-//         _showImageDialog(context, foto);
-//       },
-//       child: SizedBox(
-//         height: MediaQuery.of(context).size.height,
-//         width: 140,
-//         child: DecoratedBox(
-//           decoration: BoxDecoration(
-//             image: DecorationImage(image: FileImage(foto), fit: BoxFit.cover),
-//             border: Border.all(),
-//             borderRadius: BorderRadius.circular(5),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

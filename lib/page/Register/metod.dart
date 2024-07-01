@@ -37,26 +37,26 @@ class methodRegister {
     }
   }
 
-  showsaksi() async {
-    var request =
-        http.Request('GET', Uri.parse('http://47.236.54.237/api/saksi'));
+  // showsaksi() async {
+  //   var request =
+  //       http.Request('GET', Uri.parse('http://47.236.54.237/api/saksi'));
 
-    http.StreamedResponse response = await request.send();
+  //   http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-      print(responseString);
-      Map<String, dynamic> responsDecode = jsonDecode(responseString);
-      List<dynamic> data = responsDecode['data'];
-      saksiList.clear();
-      for (var element in data) {
-        saksiList.add(SaksiModel.fromJson(element));
-      }
-      print(saksiList.toString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
+  //   if (response.statusCode == 200) {
+  //     var responseString = await response.stream.bytesToString();
+  //     print(responseString);
+  //     Map<String, dynamic> responsDecode = jsonDecode(responseString);
+  //     List<dynamic> data = responsDecode['data'];
+  //     saksiList.clear();
+  //     for (var element in data) {
+  //       saksiList.add(SaksiModel.fromJson(element));
+  //     }
+  //     print(saksiList.toString());
+  //   } else {
+  //     print(response.reasonPhrase);
+  //   }
+  // }
 
 
 

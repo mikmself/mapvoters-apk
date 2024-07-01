@@ -1,27 +1,21 @@
-import 'package:mapvotersapk/component/model/KabupatenModel.dart';
-
 class KecamatanModel {
   String? id;
   String? nama;
-  KabupatenModel? kabupaten;
+  String? kabupatenId;
 
-  KecamatanModel({this.id, this.nama, this.kabupaten});
+  KecamatanModel({this.id, this.nama, this.kabupatenId});
 
   KecamatanModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nama = json['nama'];
-    kabupaten = json['kabupaten_id'] != null
-        ? new KabupatenModel.fromJson(json['kabupaten_id'])
-        : null;
+    kabupatenId = json['kabupaten_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['nama'] = this.nama;
-    if (this.kabupaten != null) {
-      data['kabupaten_id'] = this.kabupaten!.toJson();
-    }
+    data['kabupaten_id'] = this.kabupatenId;
     return data;
   }
 }
