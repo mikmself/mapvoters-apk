@@ -6,7 +6,6 @@ import 'package:mapvotersapk/component/model/PemilihModel.dart';
 import 'package:mapvotersapk/component/service/PemilihService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 
-
 PemilihService service = PemilihService();
 
 class GetAllDataPemilih extends StatefulWidget {
@@ -15,12 +14,12 @@ class GetAllDataPemilih extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
 
   const GetAllDataPemilih({
+
   super.key,
   required this.judul,
   required this.list,
   required this.onItemSelected,
 }) ;
-
 
   @override
   _GetAllDataPemilihState createState() => _GetAllDataPemilihState();
@@ -88,111 +87,107 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
     }
   }
 
-void _editPemilih(PemilihModel pemilih) {
-  final nameController = TextEditingController(text: pemilih.nama);
-  final NIKController = TextEditingController(text: pemilih.nik);
-  final phoneController = TextEditingController(text: pemilih.telephone);
-  final provinsiIdController = TextEditingController(text: pemilih.provinsi!.id.toString());
-  final kabupatenIdController = TextEditingController(text: pemilih.kabupaten!.id.toString());
-  final kecamatanIdController = TextEditingController(text: pemilih.kecamatan!.id.toString());
-  final kelurahanIdController = TextEditingController(text: pemilih.kelurahan!.id.toString());
-  final tpsController = TextEditingController(text: pemilih.tps);
-  File? foto_ktp;
+  void _editPemilih(PemilihModel pemilih) {
+    final nameController = TextEditingController(text: pemilih.nama);
+    final NIKController = TextEditingController(text: pemilih.nik);
+    final phoneController = TextEditingController(text: pemilih.telephone);
+    final provinsiController = TextEditingController(text: pemilih.provinsi?.nama ?? '');
+    final kabupatenController = TextEditingController(text: pemilih.kabupaten?.nama ?? '');
+    final kecamatanController = TextEditingController(text: pemilih.kecamatan?.nama ?? '');
+    final kelurahanController = TextEditingController(text: pemilih.kelurahan?.nama ?? '');
+    final tpsController = TextEditingController(text: pemilih.tps);
+    File? foto_ktp;
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Edit Pemilih'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Nama',
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Pemilih'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nama',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: NIKController,
-                decoration: InputDecoration(
-                  labelText: 'NIK',
+                TextField(
+                  controller: NIKController,
+                  decoration: InputDecoration(
+                    labelText: 'NIK',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: phoneController,
-                decoration: InputDecoration(
-                  labelText: 'Telephone',
+                TextField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                    labelText: 'Telephone',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: provinsiIdController,
-                decoration: InputDecoration(
-                  labelText: 'Provinsi',
+                TextField(
+                  controller: provinsiController,
+                  decoration: InputDecoration(
+                    labelText: 'Provinsi',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: kabupatenIdController,
-                decoration: InputDecoration(
-                  labelText: 'Kabupaten',
+                TextField(
+                  controller: kabupatenController,
+                  decoration: InputDecoration(
+                    labelText: 'Kabupaten',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: kecamatanIdController,
-                decoration: InputDecoration(
-                  labelText: 'Kecamatan',
+                TextField(
+                  controller: kecamatanController,
+                  decoration: InputDecoration(
+                    labelText: 'Kecamatan',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: kelurahanIdController,
-                decoration: InputDecoration(
-                  labelText: 'Kelurahan',
+                TextField(
+                  controller: kelurahanController,
+                  decoration: InputDecoration(
+                    labelText: 'Kelurahan',
+                  ),
                 ),
-              ),
-              TextField(
-                controller: tpsController,
-                decoration: InputDecoration(
-                  labelText: 'TPS',
+                TextField(
+                  controller: tpsController,
+                  decoration: InputDecoration(
+                    labelText: 'TPS',
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Batal'),
-          ),
-          TextButton(
-            
-            onPressed: () {
-              service.EditPemilih(
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                service.editPemilih(
                 pemilih.id!,
                 nameController.text,
                 NIKController.text,
                 foto_ktp ?? File(''),
                 tpsController.text,
                 phoneController.text,
-                int.parse(provinsiIdController.text),
-                int.parse(kabupatenIdController.text),
-                int.parse(kecamatanIdController.text),
-                int.parse(kelurahanIdController.text),
-                
+                int.parse(provinsiController.text),
+                int.parse(kabupatenController.text),
+                int.parse(kecamatanController.text),
+                int.parse(kelurahanController.text), 
               );
-              Navigator.of(context).pop();
-            },
-            child: Text('Simpan'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
+                Navigator.of(context).pop();
+              },
+              child: Text('Simpan'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void searchList(String query) {
     List<PemilihModel> results = widget.list

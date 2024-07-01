@@ -10,9 +10,9 @@ import 'package:mapvotersapk/component/model/PemilihModel.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 
 
-
 class PemilihService {
   
+
   GetAllDataPemilih() async {
     var request =
     http.Request('GET', Uri.parse(BASE_URL +'/pemilih-potensial'));
@@ -44,6 +44,26 @@ GetPemilihDetail(int id) async {
       if (response.statusCode == 200) {
         var responseString = await response.stream.bytesToString();
         Map<String, dynamic> responsDecode = jsonDecode(responseString);
+        List<dynamic> data = responsDecode['data'];
+        pemilihlist.clear();
+        for (var element in data) {
+          pemilihlist.add(PemilihModel.fromJson(element));
+        }
+        print(pemilihlist.toString());
+      } else {
+        print(response.reasonPhrase);
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<PemilihModel?> getPemilihDetail(int id) async {
+    try {
+      var response = await http.get(Uri.parse('$BASE_URL/pemilih/$id'));
+      if (response.statusCode == 200) {
+        var responseString = response.body;
+        Map<String, dynamic> responsDecode = jsonDecode(responseString);
         PemilihModel pemilih = PemilihModel.fromJson(responsDecode['data']);
         return pemilih;
       } else {
@@ -56,10 +76,12 @@ GetPemilihDetail(int id) async {
     }
   }
 
+
   CreatePemilih(String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
     try {
       var request = http.MultipartRequest(
         'POST', Uri.parse(BASE_URL+'/pemilih-potensial'),);
+
       request.fields.addAll({
         'nama': nama,
         'nik': nik,
@@ -85,11 +107,13 @@ GetPemilihDetail(int id) async {
     }
   }
 
+
   EditPemilih(int id, String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
     try {
       var request = http.MultipartRequest(
         'PUT',
         Uri.parse('$BASE_URL/pemilih-potensial/$id'),
+
       );
       request.fields.addAll({
         'nama': nama,
@@ -127,6 +151,7 @@ GetPemilihDetail(int id) async {
   DeletePemilih(int id) async {
     try {
       var request = http.Request('DELETE', Uri.parse('$BASE_URL/pemilih-potensial/$id'));
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
@@ -140,94 +165,5 @@ GetPemilihDetail(int id) async {
       print('Terjadi kesalahan saat menghapus Pemilih: $e');
     }
   }
-  Future<void> showProvinsi() async {
-    var request = http.Request('GET', Uri.parse(BASE_URL + '/provinsi'));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-
-      Map<String, dynamic> responseData = jsonDecode(responseString);
-      List<dynamic> data = responseData['data'];
-
-      provinsiList.clear();
-      for (var element in data) {
-        provinsiList.add(ProvinsiModel(id: element['id'], nama: element['nama']));
-      }
-      print(provinsiList[0].id);
-
-
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-  Future<void> showKab(id) async {
-    var request = http.Request('GET', Uri.parse(BASE_URL + '/provinsi/$id'));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-
-      Map<String, dynamic> responseData = jsonDecode(responseString);
-      List<dynamic> data = responseData['data']['kabupaten'];
-
-      kabupatenList.clear();
-      for (var element in data) {
-        kabupatenList.add(KabupatenModel(id: element['id'], nama: element['nama']));
-      }
-      print(kabupatenList[0].id);
-
-
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-  Future<void> showkecamatan(id) async {
-    var request = http.Request('GET', Uri.parse(BASE_URL + '/kabupaten/$id'));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-
-      Map<String, dynamic> responseData = jsonDecode(responseString);
-      List<dynamic> data = responseData['data']['kecamatan'];
-
-      kecamatanList.clear();
-      for (var element in data) {
-        kecamatanList.add(KecamatanModel(id: element['id'], nama: element['nama']));
-      }
-      print(kecamatanList[0].id);
-
-
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-
-  
-  Future<void> showkelurahan(id) async {
-    var request = http.Request('GET', Uri.parse(BASE_URL + '/kecamatan/$id'));
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var responseString = await response.stream.bytesToString();
-
-      Map<String, dynamic> responseData = jsonDecode(responseString);
-      List<dynamic> data = responseData['data']['kelurahan'];
-
-      kelurahanList.clear();
-      for (var element in data) {
-        kelurahanList.add(KelurahanModel(id: element['id'], nama: element['nama']));
-      }
-      print(kelurahanList[0].id);
-
-
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
 }
+

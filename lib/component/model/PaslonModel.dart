@@ -2,8 +2,9 @@ import 'package:mapvotersapk/component/model/PartaiModel.dart';
 import 'package:mapvotersapk/component/model/UserMode.dart';
 
 class PaslonModel{
-  int? id;
+  dynamic id;
   String? foto;
+  String? type;
   String? nomorUrut;
   String? dapil;
   PartaiModel? partai;
@@ -12,6 +13,7 @@ class PaslonModel{
   PaslonModel({
     this.id,
     this.foto,
+    this.type,
     this.nomorUrut,
     this.dapil,
     this.partai,
@@ -19,6 +21,7 @@ class PaslonModel{
   });
   PaslonModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    type = json['type'];
     foto = json['foto'];
     nomorUrut = json['nomor_urut'];
     dapil = json['dapil'];
@@ -29,6 +32,7 @@ class PaslonModel{
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['foto'] = this.foto;
+    data['type'] = this.type;
     data['nomor_urut'] = this.nomorUrut;
     data['dapil'] = this.dapil;
     if (this.partai != null) {

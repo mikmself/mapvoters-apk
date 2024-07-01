@@ -1,4 +1,3 @@
-import 'package:mapvotersapk/component/model/KabupatenModel.dart';
 
 class KecamatanModel {
   String? id;

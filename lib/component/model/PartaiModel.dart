@@ -1,7 +1,7 @@
 class PartaiModel {
-  int? id;
+  dynamic id;
   String? nama;
-  String? nomorUrut;
+  dynamic nomorUrut;
   String? logo;
 
   PartaiModel({

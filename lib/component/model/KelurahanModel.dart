@@ -1,5 +1,3 @@
-import 'package:mapvotersapk/component/model/KecamatanModel.dart';
-
 class KelurahanModel {
   String? id;
   String? nama;

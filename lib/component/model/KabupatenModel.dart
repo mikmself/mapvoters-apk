@@ -1,5 +1,3 @@
-import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
-
 class KabupatenModel {
   String? id;
   String? nama;

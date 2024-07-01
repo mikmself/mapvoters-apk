@@ -10,10 +10,10 @@ import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
+
 class CreatePemilih extends StatefulWidget {
   final VoidCallback onBack;
   const CreatePemilih({super.key, required this.onBack});
-
   @override
   _CreatePemilihState createState() => _CreatePemilihState();
 }
@@ -25,7 +25,9 @@ class _CreatePemilihState extends State<CreatePemilih> {
   final TextEditingController _telephoneController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
 
+
   File foto_ktp= File('');
+
   String? _selectedProvinsi;
   String? _selectedKabupaten;
   String? _selectedKecamatan;
@@ -293,6 +295,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
 
   Widget _buildImagePicker(BuildContext context) {
     return Container(
+
       width: 340,
       padding: EdgeInsets.only(left: 15), 
       child: GestureDetector(
@@ -305,6 +308,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
             color: Colors.grey[200],
             border: Border.all(),
             borderRadius: BorderRadius.circular(10),
+
           ),
           child: foto_ktp.path.isEmpty
             ? Center(
@@ -325,6 +329,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
     ),
   );
   }
+
 
   Widget _buildTextField(TextEditingController controller, String label) {
     return TextField(

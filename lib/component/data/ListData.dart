@@ -14,6 +14,6 @@ List<KecamatanModel> kecamatanList = [];
 List<KelurahanModel> kelurahanList = [];
 List<KoordinatorModel> koorList = [];
 List<PemilihModel> pemilihlist = [];
-List<SaksiModel> saksiList = [];
+List<SaksiModel> saksiListan = [];
 List<PartaiModel> partailist = [];
 List<TPSModel> TPSlist = [];

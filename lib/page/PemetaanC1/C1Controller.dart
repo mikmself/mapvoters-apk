@@ -31,11 +31,11 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
   @override
   void initState() {
     super.initState();
-    fetchProvinsi();
+    fetchProvinsi(loginData['userID']);
   }
 
-  void fetchProvinsi() async {
-    await service.showProvinsi();
+  void fetchProvinsi(id) async {
+    await service.showProvinsi(id);
     setState(() {
       currentlevel = 'provinsi';
       searchResults = provinsiList;
@@ -43,8 +43,8 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
     });
   }
 
-  void fetchKabupaten(String provinsiId) async {
-    await service.showKab(provinsiId);
+  void fetchKabupaten(String provinsiId, id) async {
+    await service.showKab(provinsiId, id);
     setState(() {
       currentlevel = 'kabupaten';
       searchResults = kabupatenList;
@@ -52,8 +52,8 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
     });
   }
 
-  void fetchKecamatan(String kabupatenId) async {
-    await service.showKec(kabupatenId);
+  void fetchKecamatan(String kabupatenId, id) async {
+    await service.showKec(kabupatenId, id);
     setState(() {
       currentlevel = 'kecamatan';
       searchResults = kecamatanList;
@@ -61,8 +61,8 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
     });
   }
 
-  void fetchKelurahan(String kecamatanId) async {
-    await service.showKel(kecamatanId);
+  void fetchKelurahan(String kecamatanId, id) async {
+    await service.showKel(kecamatanId, id);
     setState(() {
       currentlevel = 'kelurahan';
       searchResults = kelurahanList;
@@ -183,7 +183,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder(
-                    future: service.showProvinsi(),
+                    future: service.showProvinsi(loginData['userID']),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -204,13 +204,13 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                             onTap: () {
                               searchController.clear();
                               if (currentlevel == 'provinsi') {
-                                fetchKabupaten(item.id);
+                                fetchKabupaten(item.id, loginData['userID']);
                               } else if (currentlevel == 'kabupaten') {
-                                fetchKecamatan(item.id);
+                                fetchKecamatan(item.id, loginData['userID']);
                               } else if (currentlevel == 'kecamatan') {
-                                fetchKelurahan(item.id);
+                                fetchKelurahan(item.id, loginData['userID']);
                               } else if (currentlevel == 'kelurahan') {
-                                fetchTPS(login[0].id, item.id!);
+                                fetchTPS(loginData['userID'], item.id!);
                               } else if (currentlevel == 'TPS') {
                                 showDialog(
                                   context: context,
