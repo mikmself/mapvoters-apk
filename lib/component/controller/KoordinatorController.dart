@@ -273,8 +273,8 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                     ),
                     SizedBox(height: 15),
                     ElevatedButton(
-                      onPressed: () {
-                        service.EditKoordinator(
+                      onPressed: () async {
+                        await service.EditKoordinator(
                           koordinator.id!,
                           _namacontroller.text,
                           _NIKcontroller.text,
@@ -284,7 +284,10 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                           _imageFile,
                         );
                         widget.refresh();
-                        service.GetAllDataKoordinator();
+                        await service.GetAllDataKoordinator();
+                        setState(() {
+                          searchResults = widget.list;
+                        });
                         Navigator.of(context).pop(); // Tutup dialog setelah simpan
                       },
                       style: ElevatedButton.styleFrom(
@@ -311,6 +314,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
       },
     );
   }
+
 
   Future<File?> _pickAnyFile(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
