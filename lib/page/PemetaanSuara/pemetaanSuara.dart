@@ -25,6 +25,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     pageProvinsi(loginData['userID']);
   }
 
+  //Method inisialisasi halamaan di gunkana untuk menginisialisasi halamaan
   void pageProvinsi(id) async {
     await service.showProvinsi(id);
     setState(() {
@@ -63,6 +64,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
 
   @override
   Widget build(BuildContext context) {
+    //Methode back yang di gunakan user dengan tombol back
     return WillPopScope(
       onWillPop: () async {
         if (Pageaktifasaatini != 'Provinsi') {
@@ -85,9 +87,9 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
               judul = 'Provinsi';
             });
           }
-          return false;
+          return false; // Prevent default back button behavior
         } else {
-          return true;
+          return true; // Allow default back button behavior
         }
       },
       child: Scaffold(
@@ -117,6 +119,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                 },
               ),
             ),
+            //Method pengganti halaman dengan Geturdetctor
             Expanded(
               child: FutureBuilder(
                 future: service.showProvinsi(loginData['userID']),
@@ -156,6 +159,7 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     );
   }
 
+// Methode  mencari data, mengambil data dari list dareh yamg mana akandi gunakan untuk mencari datta
   void searchList(String query) {
     List<dynamic> results = [];
     if (Pageaktifasaatini == 'Provinsi') {
@@ -184,6 +188,8 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     });
   }
 
+  //papan tampilan data yang menunjukan semua data
+  // dengan singlchilsecrol method agar data akan ada dan tidak menimbulkan eror
   Widget _buildInfoContainer(String Wilayah, int Pemili_Potensial) {
     return SingleChildScrollView(
       child: Center(
