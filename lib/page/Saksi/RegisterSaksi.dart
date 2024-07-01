@@ -305,6 +305,11 @@ class _RegisterState extends State<Registersaksi> {
                 obscure: false,
                 label: 'TPS'),
             const SizedBox(height: 15),
+            textfield(
+                controller: _passwordcontroller,
+                obscure: false,
+                label: 'Password'),
+            const SizedBox(height: 15),
             Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

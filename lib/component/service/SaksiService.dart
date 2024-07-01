@@ -93,15 +93,16 @@ class SaksiService {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'provinsi': provinsi,
-          'kabupaten': kabupaten,
-          'kecamatan': kecamatan,
-          'kelurahan': kelurahan,
+          'provinsi_id': provinsi,
+          'kabupaten_id': kabupaten,
+          'kecamatan_id': kecamatan,
+          'kelurahan_id': kelurahan,
           'tps': tps,
           'name' : name,
           'email' : email,
           'telephone' : telephone,
           'password' : password,
+          "koordinator_id": loginData['userID']
         }),
       );
        // Print the response
@@ -133,10 +134,10 @@ class SaksiService {
         'name': nama,
         'email': email,
         'telephone': telephone,
-        'provinsi': provinsi,
-        'kabupatebn': kabupaten,
-        'kecamatan': kecamatan,
-        'kelurahan': kelurahan,
+        'provinsi_id': provinsi,
+        'kabupaten_id': kabupaten,
+        'kecamatan_id': kecamatan,
+        'kelurahan_id': kelurahan,
         'tps': tps,
       });
       
