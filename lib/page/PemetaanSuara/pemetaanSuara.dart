@@ -87,9 +87,18 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
               judul = 'Provinsi';
             });
           }
+
           return false; // Prevent default back button behavior
         } else {
-          return true; // Allow default back button behavior
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SidebarApp(),
+            ),
+          );
+
+          return true;
+          // Allow default back button behavior
         }
       },
       child: Scaffold(
