@@ -30,7 +30,7 @@ class _SidebarAppState extends State<SidebarApp> {
     Dashboard(title: 'Dashboard'),
     Koordinator(title: 'Koordinator'),
     Saksi(labeltext: "Search by nama", judul: "Saksi", list: saksiList, title: "Saksi"),
-    Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
+    Pemilih(title: 'Pemilih',),
     PemetaanSuara(title: 'Pemetaan Suara'),
     PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
     ProfilePage(title: "Profile Paslon"),
