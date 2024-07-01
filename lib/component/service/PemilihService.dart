@@ -3,19 +3,46 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:mapvotersapk/component/model/KabupatenModel.dart';
+import 'package:mapvotersapk/component/model/KecamatanModel.dart';
+import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/PemilihModel.dart';
+import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 
 
 class PemilihService {
   
-  
-  Future<void> getAllDataPemilih() async {
+
+  GetAllDataPemilih() async {
+    var request =
+    http.Request('GET', Uri.parse(BASE_URL +'/pemilih-potensial'));
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseString = await response.stream.bytesToString();
+      print(responseString);
+      Map<String, dynamic> responsDecode = jsonDecode(responseString);
+      List<dynamic> data = responsDecode['data'];
+      pemilihlist.clear();
+      for (var element in data) {
+        pemilihlist.add(PemilihModel.fromJson(element));
+      }
+      print(pemilihlist.toString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+
+GetPemilihDetail(int id) async {
     try {
-      var response = await http.get(Uri.parse('$BASE_URL/pemilih'));
+      var request =
+       http.Request('GET', Uri.parse('$BASE_URL/pemilih-potensial/$id'));
+        http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        var responseString = response.body;
-        print(responseString);
+        var responseString = await response.stream.bytesToString();
         Map<String, dynamic> responsDecode = jsonDecode(responseString);
         List<dynamic> data = responsDecode['data'];
         pemilihlist.clear();
@@ -34,7 +61,6 @@ class PemilihService {
   Future<PemilihModel?> getPemilihDetail(int id) async {
     try {
       var response = await http.get(Uri.parse('$BASE_URL/pemilih/$id'));
-
       if (response.statusCode == 200) {
         var responseString = response.body;
         Map<String, dynamic> responsDecode = jsonDecode(responseString);
@@ -50,10 +76,12 @@ class PemilihService {
     }
   }
 
-  Future<void> createPemilih(String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
+
+  CreatePemilih(String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
     try {
       var request = http.MultipartRequest(
-        'POST', Uri.parse('$BASE_URL/pemilih'),);
+        'POST', Uri.parse(BASE_URL+'/pemilih-potensial'),);
+
       request.fields.addAll({
         'nama': nama,
         'nik': nik,
@@ -63,6 +91,7 @@ class PemilihService {
         'kabupaten_id': kabupatenId.toString(),
         'kecamatan_id': kecamatanId.toString(),
         'kelurahan_id': kelurahanId.toString(),
+        'kordinator_id': loginData['kordinatorID']!,
       });
       request.files.add(await http.MultipartFile.fromPath('foto_ktp', fotoKtp.path));
 
@@ -78,11 +107,13 @@ class PemilihService {
     }
   }
 
-  Future<void> editPemilih(int id, String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
+
+  EditPemilih(int id, String nama, String nik, File fotoKtp, String telephone, String tps, int provinsiId, int kabupatenId, int kecamatanId, int kelurahanId) async {
     try {
       var request = http.MultipartRequest(
         'PUT',
-        Uri.parse('$BASE_URL/pemilih/$id'),
+        Uri.parse('$BASE_URL/pemilih-potensial/$id'),
+
       );
       request.fields.addAll({
         'nama': nama,
@@ -93,6 +124,7 @@ class PemilihService {
         'kabupaten_id': kabupatenId.toString(),
         'kecamatan_id': kecamatanId.toString(),
         'kelurahan_id': kelurahanId.toString(),
+        'kordinator_id': loginData['kordinatorID']!
       });
       if (fotoKtp.path.isNotEmpty) {
         request.files.add(await http.MultipartFile.fromPath('foto_ktp', fotoKtp.path));
@@ -116,9 +148,10 @@ class PemilihService {
     }
   }
 
-  Future<void> deletePemilih(int id) async {
+  DeletePemilih(int id) async {
     try {
-      var request = http.Request('DELETE', Uri.parse('$BASE_URL/pemilih/$id'));
+      var request = http.Request('DELETE', Uri.parse('$BASE_URL/pemilih-potensial/$id'));
+
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
@@ -133,3 +166,4 @@ class PemilihService {
     }
   }
 }
+

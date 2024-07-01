@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/controller/PemilihController.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
-import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/Pemilih/Create_Pemilih.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
-
-methodRegister getdata = methodRegister();
+import 'package:mapvotersapk/component/controller/PemilihController.dart';
 
 class Pemilih extends StatefulWidget {
   const Pemilih({
@@ -14,6 +12,7 @@ class Pemilih extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
+
 
   @override
   State<Pemilih> createState() => _PemilihState();

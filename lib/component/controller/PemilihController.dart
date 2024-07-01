@@ -14,11 +14,13 @@ class GetAllDataPemilih extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
 
   const GetAllDataPemilih({
-    Key? key,
+
+  super.key,
   required this.judul,
   required this.list,
   required this.onItemSelected,
-}) : super(key: key);
+}) ;
+
   @override
   _GetAllDataPemilihState createState() => _GetAllDataPemilihState();
 }
@@ -34,7 +36,7 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
   }
 
   void _deletePemilih(int id) {
-    service.deletePemilih(id);
+    service.DeletePemilih(id);
     setState(() {
       widget.list.removeWhere((pemilih) => pemilih.id == id);
       searchResults.removeWhere((pemilih) => pemilih.id == id);
@@ -42,7 +44,7 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
   }
 
   void _showPemilihDetailDialog(int id) async {
-    PemilihModel? pemilih = await service.getPemilihDetail(id);
+    PemilihModel? pemilih = await service.GetPemilihDetail(id);
     if (pemilih != null) {
       showDialog(
         context: context,
@@ -60,13 +62,13 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                 SizedBox(height: 8),
                 Text('Telephone: ${pemilih.telephone}'),
                 SizedBox(height: 8),
-                Text('Provinsi: ${pemilih.provinsi}'),
+                Text('Provinsi: ${pemilih.provinsi!.nama}'),
                 SizedBox(height: 8),
-                Text('Kabupaten: ${pemilih.kabupaten}'),
+                Text('Kabupaten: ${pemilih.kabupaten!.nama}'),
                 SizedBox(height: 8),
-                Text('Kecamatan: ${pemilih.kecamatan}'),
+                Text('Kecamatan: ${pemilih.kecamatan!.nama}'),
                 SizedBox(height: 8),
-                Text('Kelurahan: ${pemilih.kelurahan}'),
+                Text('Kelurahan: ${pemilih.kelurahan!.nama}'),
                 SizedBox(height: 8),
                 Text('TPS: ${pemilih.tps}'),
               ],
@@ -241,20 +243,18 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
               const SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder(
-                  future: service.getAllDataPemilih(),
+                  future: service.GetAllDataPemilih(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text("Terjadi kesalahan: ${snapshot.error}"),
-                      );
-                    } else if (!snapshot.hasData || searchResults.isEmpty) {
-                      return const Center(
-                        child: Text("Data tidak ditemukan"),
-                      );
+                    } else {
+                     if (searchResults.isEmpty) {
+                        return const Center(
+                          child: Text("data tidak ditemukan"),
+                        );
+                     }
                     }
                     return ListView.builder(
                       itemCount: searchResults.length,
@@ -263,7 +263,7 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           child: ListTile(
                             title: Text(searchResults[index].nama!),
-                                                       trailing: Row(
+                            trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
