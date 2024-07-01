@@ -177,135 +177,143 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
     TextEditingController _emailcontroller = TextEditingController(text: koordinator.user!.email);
     TextEditingController _noHPcontroller = TextEditingController(text: koordinator.user!.telephone);
     TextEditingController _passwordcontroller = TextEditingController(text: '');
-    File? _imageFile = koordinator.foto != null ? File(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!) : null;
+
+    File? _imageFile;
     String? _imageUrl = koordinator.foto != null ? BASE_URL.replaceFirst('/api', '/') + koordinator.foto! : null;
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Koordinator'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    _pickAnyFile(context).then((file) {
-                      setState(() {
-                        _imageFile = file;
-                      });
-                    });
-                  },
-                  onLongPress: () {
-                    _showImageDialog(context, _imageFile!);
-                  },
-                  child: SizedBox(
-                    width: 270,
-                    height: 250,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: _imageUrl != null
-                              ? NetworkImage(_imageUrl)
-                              : NetworkImage(BASE_URL.replaceFirst('/api', '/') + koordinator.foto!),
-                          fit: BoxFit.cover,
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Edit Koordinator'),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        File? pickedFile = await _pickAnyFile(context);
+                        if (pickedFile != null) {
+                          setState(() {
+                            _imageFile = pickedFile;
+                            _imageUrl = null; // Clear the URL to show the picked file
+                          });
+                        }
+                      },
+                      onLongPress: _imageFile != null
+                          ? () {
+                        _showImageDialog(context, _imageFile!);
+                      }
+                          : null,
+                      child: SizedBox(
+                        width: 270,
+                        height: 250,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: _imageFile != null
+                                  ? FileImage(_imageFile!) as ImageProvider
+                                  : NetworkImage(_imageUrl!),
+                              fit: BoxFit.cover,
+                            ),
+                            border: Border.all(),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
-                        border: Border.all(),
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.circular(5),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  controller: _namacontroller,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'Nama',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _NIKcontroller,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'NIK',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _emailcontroller,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _noHPcontroller,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    labelText: 'Telephone',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                TextField(
-                  controller: _passwordcontroller,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: () {
-                    service.EditKoordinator(
-                      koordinator.id!,
-                      _namacontroller.text,
-                      _NIKcontroller.text,
-                      _emailcontroller.text,
-                      _noHPcontroller.text,
-                      _passwordcontroller.text,
-                    );
-                    widget.refresh();
-                    Navigator.of(context).pop(); // Tutup dialog setelah simpan
-                  },
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(120, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _namacontroller,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'Nama',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    'SIMPAN',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.black,
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: _NIKcontroller,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'NIK',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: _emailcontroller,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: _noHPcontroller,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'Telephone',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: _passwordcontroller,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        service.EditKoordinator(
+                          koordinator.id!,
+                          _namacontroller.text,
+                          _NIKcontroller.text,
+                          _emailcontroller.text,
+                          _noHPcontroller.text,
+                          _passwordcontroller.text,
+                          _imageFile,
+                        );
+                        widget.refresh();
+                        Navigator.of(context).pop(); // Tutup dialog setelah simpan
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(120, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'SIMPAN',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
-
   Future<File?> _pickAnyFile(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
-      File file = File(result.files.first.path!);
-      return file;
+      return File(result.files.first.path!);
     } else {
       return null;
     }

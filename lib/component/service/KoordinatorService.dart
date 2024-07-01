@@ -74,30 +74,28 @@ class KoordinatorService {
   }
   Future<void> EditKoordinator(int id, String nama, String NIK, String Email, String telp, String Password, [File? foto]) async {
     try {
-      String url = '$BASE_URL/koordinator/$id';
-      Map<String, dynamic> requestBody = {
+      var url = '$BASE_URL/koordinator/$id';
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+
+      request.fields.addAll({
         'name': nama,
         'email': Email,
         'telephone': telp,
         'password': Password,
         'nik': NIK,
-      };
+      });
 
-      final response = await http.put(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
-      );
+      if (foto != null) {
+        request.files.add(await http.MultipartFile.fromPath('foto', foto.path));
+      }
+
+      var response = await request.send();
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseDecode =
-        jsonDecode(response.body) as Map<String, dynamic>;
-
+        var responseString = await response.stream.bytesToString();
         print("Sukses Mengedit Koordinator");
       } else {
-        print('Gagal mengedit koordinator');
+        print('Gagal mengedit koordinator: ${response.reasonPhrase}');
       }
     } catch (e) {
       print('Terjadi kesalahan saat mengedit koordinator: $e');
