@@ -38,6 +38,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
   void initState() {
     super.initState();
     searchResults = widget.list;
+    service.GetAllDataKoordinator();
   }
 
   void _deleteKoordinator(int id) {
