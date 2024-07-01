@@ -14,12 +14,11 @@ class GetAllDataPemilih extends StatefulWidget {
   final ValueChanged<int> onItemSelected;
 
   const GetAllDataPemilih({
-
-  super.key,
-  required this.judul,
-  required this.list,
-  required this.onItemSelected,
-}) ;
+    super.key,
+    required this.judul,
+    required this.list,
+    required this.onItemSelected,
+  });
 
   @override
   _GetAllDataPemilihState createState() => _GetAllDataPemilihState();
@@ -55,7 +54,8 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                  Image.network(BASE_URL.replaceFirst('/api', '/') + pemilih.fotoKtp!),
+                Image.network(
+                    BASE_URL.replaceFirst('/api', '/') + pemilih.fotoKtp!),
                 Text('Nama: ${pemilih.nama}'),
                 SizedBox(height: 8),
                 Text('NIK: ${pemilih.nik}'),
@@ -91,10 +91,14 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
     final nameController = TextEditingController(text: pemilih.nama);
     final NIKController = TextEditingController(text: pemilih.nik);
     final phoneController = TextEditingController(text: pemilih.telephone);
-    final provinsiController = TextEditingController(text: pemilih.provinsi?.nama ?? '');
-    final kabupatenController = TextEditingController(text: pemilih.kabupaten?.nama ?? '');
-    final kecamatanController = TextEditingController(text: pemilih.kecamatan?.nama ?? '');
-    final kelurahanController = TextEditingController(text: pemilih.kelurahan?.nama ?? '');
+    final provinsiController =
+        TextEditingController(text: pemilih.provinsi?.nama ?? '');
+    final kabupatenController =
+        TextEditingController(text: pemilih.kabupaten?.nama ?? '');
+    final kecamatanController =
+        TextEditingController(text: pemilih.kecamatan?.nama ?? '');
+    final kelurahanController =
+        TextEditingController(text: pemilih.kelurahan?.nama ?? '');
     final tpsController = TextEditingController(text: pemilih.tps);
     File? foto_ktp;
 
@@ -167,18 +171,18 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
             ),
             TextButton(
               onPressed: () {
-                service.editPemilih(
-                pemilih.id!,
-                nameController.text,
-                NIKController.text,
-                foto_ktp ?? File(''),
-                tpsController.text,
-                phoneController.text,
-                int.parse(provinsiController.text),
-                int.parse(kabupatenController.text),
-                int.parse(kecamatanController.text),
-                int.parse(kelurahanController.text), 
-              );
+                service.EditPemilih(
+                  pemilih.id!,
+                  nameController.text,
+                  NIKController.text,
+                  foto_ktp ?? File(''),
+                  tpsController.text,
+                  phoneController.text,
+                  int.parse(provinsiController.text),
+                  int.parse(kabupatenController.text),
+                  int.parse(kecamatanController.text),
+                  int.parse(kelurahanController.text),
+                );
                 Navigator.of(context).pop();
               },
               child: Text('Simpan'),
@@ -250,11 +254,11 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                     if (searchResults.isEmpty) {
+                      if (searchResults.isEmpty) {
                         return const Center(
                           child: Text("data tidak ditemukan"),
                         );
-                     }
+                      }
                     }
                     return ListView.builder(
                       itemCount: searchResults.length,
@@ -269,7 +273,8 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                                 IconButton(
                                   icon: const Icon(Icons.info),
                                   onPressed: () {
-                                    _showPemilihDetailDialog(searchResults[index].id!);
+                                    _showPemilihDetailDialog(
+                                        searchResults[index].id!);
                                   },
                                 ),
                                 IconButton(
@@ -310,4 +315,3 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
     );
   }
 }
-

@@ -2,14 +2,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:mapvotersapk/component/controller/PemilihController.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/model/KabupatenModel.dart';
 import 'package:mapvotersapk/component/model/KecamatanModel.dart';
 import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mapvotersapk/component/service/WilayahService.dart';
 
+WilayahService service = WilayahService();
 
 class CreatePemilih extends StatefulWidget {
   final VoidCallback onBack;
@@ -25,18 +26,17 @@ class _CreatePemilihState extends State<CreatePemilih> {
   final TextEditingController _telephoneController = TextEditingController();
   final TextEditingController _tpsController = TextEditingController();
 
-
-  File foto_ktp= File('');
+  File foto_ktp = File('');
 
   String? _selectedProvinsi;
   String? _selectedKabupaten;
   String? _selectedKecamatan;
   String? _selectedKelurahan;
 
-
   Widget _buildHeader(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04, left: 15),
+      margin: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.04, left: 15),
       width: 350,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -49,17 +49,19 @@ class _CreatePemilihState extends State<CreatePemilih> {
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: widget.onBack,
-              
           ),
         ],
       ),
     );
   }
 
-   Widget _buildContainer(Widget child) {
+  Widget _buildContainer(Widget child) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15.0,),
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.02, left:15),
+      padding: EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height * 0.02, left: 15),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(10.0),
@@ -90,7 +92,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
               _buildContainer(_buildTextField(_telephoneController, 'Telepon')),
               _buildContainer(
                 FutureBuilder(
-                  future: service.showProvinsi(),
+                  future: service.showProv(),
                   builder: (context, snapshot) {
                     return DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
@@ -188,7 +190,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
               ),
               _buildContainer(
                 FutureBuilder(
-                  future: service.showkecamatan(_selectedKabupaten),
+                  future: service.showKec(_selectedKabupaten),
                   builder: (context, snapshot) {
                     return DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
@@ -237,7 +239,7 @@ class _CreatePemilihState extends State<CreatePemilih> {
               ),
               _buildContainer(
                 FutureBuilder(
-                  future: service.showkelurahan(_selectedKecamatan),
+                  future: service.showKel(_selectedKecamatan),
                   builder: (context, snapshot) {
                     return DropdownButtonHideUnderline(
                       child: DropdownButton2<String>(
@@ -295,9 +297,8 @@ class _CreatePemilihState extends State<CreatePemilih> {
 
   Widget _buildImagePicker(BuildContext context) {
     return Container(
-
       width: 340,
-      padding: EdgeInsets.only(left: 15), 
+      padding: EdgeInsets.only(left: 15),
       child: GestureDetector(
         onTap: () {
           _pickImage();
@@ -308,28 +309,26 @@ class _CreatePemilihState extends State<CreatePemilih> {
             color: Colors.grey[200],
             border: Border.all(),
             borderRadius: BorderRadius.circular(10),
-
           ),
           child: foto_ktp.path.isEmpty
-            ? Center(
-                child: Text(
-                  'Pilih Foto KTP',
-                  style: TextStyle(
-                    color: Colors.grey[800],
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              ? Center(
+                  child: Text(
+                    'Pilih Foto KTP',
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                )
+              : Image.file(
+                  foto_ktp,
+                  fit: BoxFit.cover,
                 ),
-              )
-            : Image.file(
-                foto_ktp,
-                fit: BoxFit.cover,
-              ),
+        ),
       ),
-    ),
-  );
+    );
   }
-
 
   Widget _buildTextField(TextEditingController controller, String label) {
     return TextField(
@@ -341,23 +340,21 @@ class _CreatePemilihState extends State<CreatePemilih> {
     );
   }
 
-void _pickImage() async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-    type: FileType.image,
-    allowMultiple: false,
-  );
+  void _pickImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
 
-  if (result != null && result.files.isNotEmpty) {
-    setState(() {
-      foto_ktp = File(result.files.single.path!);
-    });
-  } else {
-    
-    print('No image selected');
-    foto_ktp = File('');
+    if (result != null && result.files.isNotEmpty) {
+      setState(() {
+        foto_ktp = File(result.files.single.path!);
+      });
+    } else {
+      print('No image selected');
+      foto_ktp = File('');
+    }
   }
-}
-
 
   Widget _buildSubmitButton(BuildContext context) {
     return Align(
