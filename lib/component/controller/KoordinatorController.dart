@@ -38,7 +38,6 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
   void initState() {
     super.initState();
     searchResults = widget.list;
-    service.GetAllDataKoordinator();
   }
 
   void _deleteKoordinator(int id) {
@@ -285,6 +284,7 @@ class _GetAllDataKoordinatorState extends State<GetAllDataKoordinator> {
                           _imageFile,
                         );
                         widget.refresh();
+                        service.GetAllDataKoordinator();
                         Navigator.of(context).pop(); // Tutup dialog setelah simpan
                       },
                       style: ElevatedButton.styleFrom(
