@@ -27,78 +27,53 @@ class _RegisterState extends State<CreateKoordinator> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 5,
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.04,
-              ),
-              width: 350,
-              height: MediaQuery.of(context).size.height,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        textSpan(text: "Koordinator", warna: Colors.black),
-                      ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.04,
+                ),
+                width: 350,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          textSpan(text: "Koordinator", warna: Colors.black),
+                        ],
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: widget.onBack,
-                  ),
-                ],
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: widget.onBack,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-          Flexible(
-            flex: 2,
-            child: textfield(
-                controller: _namacontroller, obscure: false, label: 'Nama'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
-                controller: _NIKcontroller, obscure: false, label: 'NIK'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
-                controller: _emailcontroller, obscure: false, label: 'Email'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
-                controller: _noHPcontroller,
-                obscure: false,
-                label: 'Telephone'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 2,
-            child: textfield(
-                controller: _passwordcontroller,
-                obscure: true,
-                label: 'Password'),
-          ),
-          const SizedBox(height: 15),
-          Flexible(
-            flex: 5,
-            child: Container(
-              width: 350,
-              height: MediaQuery.of(context).size.height,
-              child: Row(
-                children: [
-                  Flexible(
-                    flex: 3,
-                    child: GestureDetector(
+              const SizedBox(height: 15),
+              textfield(
+                  controller: _namacontroller, obscure: false, label: 'Nama'),
+              const SizedBox(height: 15),
+              textfield(
+                  controller: _NIKcontroller, obscure: false, label: 'NIK'),
+              const SizedBox(height: 15),
+              textfield(
+                  controller: _emailcontroller, obscure: false, label: 'Email'),
+              const SizedBox(height: 15),
+              textfield(
+                  controller: _noHPcontroller, obscure: false, label: 'Telephone'),
+              const SizedBox(height: 15),
+              textfield(
+                  controller: _passwordcontroller, obscure: true, label: 'Password'),
+              const SizedBox(height: 15),
+              Container(
+                width: 350,
+                child: Row(
+                  children: [
+                    GestureDetector(
                       onTap: () {
                         setState(() {
                           _pickAnyFile();
@@ -108,15 +83,12 @@ class _RegisterState extends State<CreateKoordinator> {
                         _showImageDialog(context, _imageFile);
                       },
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: FileImage(
-                                  _imageFile,
-                                ),
-                                fit: BoxFit.cover),
+                                image: FileImage(_imageFile), fit: BoxFit.cover),
                             border: Border.all(),
                             color: Colors.black12,
                             borderRadius: BorderRadius.circular(5),
@@ -124,38 +96,31 @@ class _RegisterState extends State<CreateKoordinator> {
                         ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: Container(
-                        // color: Colors.amber,
-                        width: MediaQuery.of(context).size.width),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: Column(
+                    Spacer(),
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black12,
-                              fixedSize:
-                                  Size(MediaQuery.of(context).size.width, 50),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                            backgroundColor: Colors.black12,
+                            fixedSize: Size(MediaQuery.of(context).size.width * 0.32, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           onPressed: () {
                             KoordinatorService service = KoordinatorService();
                             service.CreateKoordinator(
-                                _namacontroller.text,
-                                _NIKcontroller.text,
-                                _emailcontroller.text,
-                                _noHPcontroller.text,
-                                _passwordcontroller.text,
-                                _imageFile);
+                              _namacontroller.text,
+                              _NIKcontroller.text,
+                              _emailcontroller.text,
+                              _noHPcontroller.text,
+                              _passwordcontroller.text,
+                              _imageFile,
+                            );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content:
-                                    Text('Berhasil menambahkan koordinator'),
+                                content: Text('Berhasil menambahkan koordinator'),
                                 backgroundColor: Colors.green,
                               ),
                             );
@@ -173,28 +138,19 @@ class _RegisterState extends State<CreateKoordinator> {
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              const SizedBox(height: 10),
+            ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Flexible(
-            flex: 2,
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
 
   Future<void> _pickAnyFile() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       File file = File(result.files.first.path!);
@@ -208,10 +164,7 @@ class _RegisterState extends State<CreateKoordinator> {
     }
   }
 
-  TextSpan textSpan({
-    required String text,
-    required Color warna,
-  }) {
+  TextSpan textSpan({required String text, required Color warna}) {
     return TextSpan(
       text: text,
       style: GoogleFonts.getFont(
