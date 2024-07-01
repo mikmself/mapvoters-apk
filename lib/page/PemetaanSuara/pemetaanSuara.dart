@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
+import 'package:mapvotersapk/page/PemetaanSuara/model/ListModel.dart';
+import 'package:mapvotersapk/page/PemetaanSuara/pemetaan_suara_service.dart';
 class Pemetaansuara extends StatefulWidget {
   const Pemetaansuara({super.key, required String title});
 
@@ -8,12 +11,56 @@ class Pemetaansuara extends StatefulWidget {
 }
 
 class _PemetaansuaraState extends State<Pemetaansuara> {
-  
+  String judul = "Provinsi";
+  TextEditingController cariWilayah = TextEditingController();
+  PemetaanSuaraService service = PemetaanSuaraService();
+  List<dynamic>ListDataPage = [];
+  String Pageaktifasaatini = "Provinsi";
+    
+  @override
+  void initState() {
+    super.initState();
+      (loginData['userID']);
+  }
+  void pageProvinsi(id) async {
+    await service.showProvinsi(id);
+    setState(() {
+      Pageaktifasaatini = "Provinsi";
+      ListDataPage = provinsiList;
+      judul = "Provinsi";
+    });
+  }
+
+  void pageKabupaten(String provinsiID, id) async {
+    await service.showKabupaten(provinsiID, id);
+    setState(() {
+      Pageaktifasaatini = "Kabupaten";
+      ListDataPage = kabupatenList;
+      judul = "Kabupaten";
+    });
+  }
+
+  void pageKecamatan(String kabupatenID, id) async {
+    await service.showKecamatan(kabupatenID, id);
+    setState(() {
+      Pageaktifasaatini = "Kecamatan";
+      ListDataPage = kecamatanList;
+      judul = "Kecamatan";
+    });
+  }
+
+  void pageKelurahan(String kecamatanID, id) async {
+    await service.showKelurahan(kecamatanID, id);
+    setState(() {
+      Pageaktifasaatini = "Kelurahan";
+      ListDataPage = kelurahanList;
+      judul = "Kelurahan";
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    String judul = "Provinsi";
-    TextEditingController cariWilayah = TextEditingController();
     return Scaffold(
       body: Column(
         children: [
@@ -39,8 +86,40 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                   )
           ),
           ),
+          
         ),
-        _buildInfoContainer("Jawa Tengah", 300)
+        Expanded(
+          child: FutureBuilder(
+            future: service.showProvinsi(loginData['userID']),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                return ListView.builder(
+                  itemCount: ListDataPage.length,
+                  itemBuilder: (context, index) {
+                    var item = ListDataPage[index];
+                    return GestureDetector(
+                      onTap: () {
+                        if (Pageaktifasaatini == 'Provinsi') {
+                          pageKabupaten(item.id, loginData['userID']);
+                        } else if (Pageaktifasaatini == 'Kabupaten') {
+                          pageKecamatan(item.id, loginData['userID']);
+                        } else if (Pageaktifasaatini == 'Kecamatan') {
+                          pageKelurahan(item.id, loginData['userID']);
+                        }
+                      },
+                      child: _buildInfoContainer(
+                          item.nama!, item.pemilihPotensialCount!),
+                    );
+                  },
+                );
+              }
+            },
+          ),
+        ),
         ],
       ),
     );
