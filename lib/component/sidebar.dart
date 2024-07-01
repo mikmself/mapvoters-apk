@@ -35,6 +35,7 @@ class _SidebarAppState extends State<SidebarApp> {
     Saksi(title: "Saksi"),
     // Pemilih(labeltext: "Search by nama", judul: "Pemilih", list: pemilihlist, title: "Pemilih"),
     // PemetaanSuara(title: 'Pemetaan Suara'),
+
     PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
     ProfilePage(title: "Profile Paslon"),
     SettingPage(title: 'Pengaturan'),

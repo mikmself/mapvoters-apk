@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
@@ -19,34 +18,47 @@ class LoginService {
 
       Map<String, dynamic> responseData = jsonDecode(responseString);
 
-      if (responseData['success'] == true) {
-        print(responseData);
-        login.clear();
-        var datarole = responseData['data']['user'];
-        var user = responseData['data']['logindata'];
-        login.add(LoginModel(role: datarole['role'], id: user['id']));
-        print(login);
-        print(login[0].role);
+      var _UserData = responseData['data']['user'];
+      var _RoleID = responseData['data']['logindata'];
+      var _token = responseData['data']['token'];
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successful!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        await Future.delayed(Duration(seconds: 2));
-        return true;
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Login Failed!'), backgroundColor: Colors.red),
-        );
-        return false;
-      }
+      loginData.addAll({
+        "token": _token,
+        "userID": _RoleID['id'],
+        "nama": _UserData['name'],
+        "role": _UserData['role'],
+      });
+
+      print(loginData);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login Successful!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      return true;
+    } else if (response.statusCode == 401) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email atau Password Salah, Periksa Kembali!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    } else if (response.statusCode == 422) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lengkapi Email atau Password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Check Your Internet'),
+          content: Text('Tidak terhubung ke Internet!'),
           backgroundColor: Colors.red,
         ),
       );

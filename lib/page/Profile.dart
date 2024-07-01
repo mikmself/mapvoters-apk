@@ -10,8 +10,7 @@ import 'package:mapvotersapk/component/model/PaslonModel.dart';
 import 'package:mapvotersapk/component/service/PaslonService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 
-
-List<String> type = ['gubernur','bupati/walikota','dprri','dprdprov','dprdkab','dpd'];
+List<String> type = ['gubernur', 'bupati/walikota', 'dprri', 'dprdprov', 'dprdkab', 'dpd'];
 List<String> partai = [];
 String? typeselect;
 String? partaiselect;
@@ -45,9 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
     fetchData();
     getPaslon();
   }
+
   Future<void> getPaslon() async {
-    final PaslonModel? fetchedPaslon =
-    await service.GetPaslonDetail();
+    final PaslonModel? fetchedPaslon = await service.GetPaslonDetail();
     if (fetchedPaslon != null) {
       setState(() {
         paslon = fetchedPaslon;
@@ -65,10 +64,10 @@ class _ProfilePageState extends State<ProfilePage> {
             _partaiController.text = partaiselect!;
           }
         }
-        print(_partaiController.text);
       });
     }
   }
+
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse('$BASE_URL/partai'));
     if (response.statusCode == 200) {
@@ -80,30 +79,42 @@ class _ProfilePageState extends State<ProfilePage> {
       throw Exception('Failed to load data');
     }
   }
+
   Future<void> updatePaslon() async {
     if (paslon == null) {
       return;
     }
 
-    String url = BASE_URL + '/paslon/${loginData['paslonID']}';
-
-    Map<String, dynamic> requestBody = {
-      'name': _namaController.text,
-      'email': _emailController.text,
-      'telephone': _telephoneController.text,
-      'type': _typeController.text,
-      'nomor_urut': _nomorUrutController.text,
-      'dapil': _dapilController.text,
-    };
+    String url = BASE_URL + '/paslon/${loginData['userID']}';
 
     try {
-      final response = await http.put(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBody),
-      );
+      // Prepare JSON data
+      Map<String, dynamic> requestBody = {
+        'name': _namaController.text,
+        'email': _emailController.text,
+        'telephone': _telephoneController.text,
+        'type': _typeController.text,
+        'nomor_urut': _nomorUrutController.text,
+        'dapil': _dapilController.text,
+      };
+
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers.addAll({
+        'Content-Type': 'multipart/form-data',
+      });
+
+      requestBody.forEach((key, value) {
+        request.fields[key] = value.toString();
+      });
+
+      if (_imageFile != null) {
+        var fileStream = http.ByteStream(Stream.castFrom(_imageFile!.openRead()));
+        var length = await _imageFile!.length();
+        var multipartFile = http.MultipartFile('foto', fileStream, length, filename: _imageFile!.path.split('/').last);
+        request.files.add(multipartFile);
+      }
+
+      var response = await request.send();
 
       if (response.statusCode == 200) {
         setState(() {
@@ -115,6 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
           paslon!.dapil = _dapilController.text;
           paslon!.partai!.nama = partaiselect;
         });
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Paslon updated successfully'),
@@ -127,7 +139,6 @@ class _ProfilePageState extends State<ProfilePage> {
       print('Error updating paslon: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +252,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                               fit: BoxFit.cover,
                             )
-                                : null, // Handle the case where paslon or paslon.foto is null
+                                : null,
                             border: Border.all(),
                             color: Colors.black12,
                             borderRadius: BorderRadius.circular(5),
@@ -314,8 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _pickAnyFile() async {
-    FilePickerResult? result =
-    await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       File file = File(result.files.first.path!);
@@ -353,6 +363,7 @@ void _showImageDialog(BuildContext context, File imageFile) {
 
 class wadahfoto extends StatelessWidget {
   final File foto;
+
   const wadahfoto({
     required this.foto,
   });

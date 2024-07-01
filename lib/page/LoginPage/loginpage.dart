@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/LoginService.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/page/PemetaanC1/CreateC1.dart';
 import 'package:mapvotersapk/page/Register/register.dart';
 
 class loginpage extends StatefulWidget {
@@ -66,14 +68,18 @@ class _loginpageState extends State<loginpage> {
                         ),
                       ),
                     ),
-                    buildtextfield(
-                        hinttext: "Email",
-                        controllerUse: _emailcontroller,
-                        warna: Color(0x75005E73)),
-                    buildtextfield(
-                        hinttext: "Password",
-                        controllerUse: _paswwordcontroller,
-                        warna: Color(0x7300A6A6)),
+                    BuilderTextfield(
+                      controller: _emailcontroller,
+                      color: Color(0x75005E73),
+                      hinttext: 'Email',
+                      secure: false,
+                    ),
+                    BuilderTextfield(
+                      controller: _paswwordcontroller,
+                      color: Color(0x7300A6A6),
+                      hinttext: 'Password',
+                      secure: true,
+                    ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 27),
                       width: 350,
@@ -93,10 +99,18 @@ class _loginpageState extends State<loginpage> {
                                   _paswwordcontroller.text,
                                   context);
                               if (loginsukses) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SidebarApp()));
+                                _emailcontroller.text = '';
+                                _paswwordcontroller.text = '';
+                                loginData.containsValue('saksi')
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CreateC1()))
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SidebarApp()));
                               }
                             },
                           ),

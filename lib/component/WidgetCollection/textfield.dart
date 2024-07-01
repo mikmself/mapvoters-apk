@@ -1,63 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class textfield extends StatelessWidget {
-  final String hinttext;
-  final TextEditingController controllerUse;
-  final double L, R, T, B, tinggi, lebar, fontsize;
-  final Color warna;
-  const textfield({
+class TextFieldWidget extends StatefulWidget {
+  final String hintText;
+  final TextEditingController controller;
+  final double leftMargin,
+      rightMargin,
+      topMargin,
+      bottomMargin,
+      height,
+      width,
+      fontSize;
+  final Color color;
+  final bool isSecure;
+
+  TextFieldWidget({
     Key? key,
-    required this.hinttext,
-    required this.controllerUse,
-    required this.warna,
-    required this.L,
-    required this.R,
-    required this.T,
-    required this.B,
-    required this.tinggi,
-    required this.lebar,
-    required this.fontsize,
+    required this.hintText,
+    required this.controller,
+    required this.color,
+    required this.leftMargin,
+    required this.rightMargin,
+    required this.topMargin,
+    required this.bottomMargin,
+    required this.height,
+    required this.width,
+    required this.fontSize,
+    this.isSecure = false,
   }) : super(key: key);
+
+  @override
+  _TextFieldWidgetState createState() => _TextFieldWidgetState();
+}
+
+class _TextFieldWidgetState extends State<TextFieldWidget> {
+  late bool secure;
+
+  @override
+  void initState() {
+    super.initState();
+    secure = widget.isSecure;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
+      width: widget.width,
+      height: widget.height,
       decoration: BoxDecoration(
-        color: warna,
+        color: widget.color,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: EdgeInsets.symmetric(horizontal: 15),
-      margin: EdgeInsets.fromLTRB(L, T, R, B),
-      child: TextField(
-        obscureText: obscure(),
-        style: GoogleFonts.nunito(
-          fontWeight: FontWeight.w700,
-          fontSize: fontsize,
-          color: Color(0xFF3E3E3E),
-        ),
-        controller: controllerUse,
-        decoration: InputDecoration(
-          //contentPadding: EdgeInsets.symmetric(vertical: 10),
-          border: InputBorder.none,
-          hintText: hinttext,
-          hintStyle: GoogleFonts.nunito(
-            fontWeight: FontWeight.w700,
-            fontSize: fontsize,
-            color: Colors.white,
+      margin: EdgeInsets.fromLTRB(widget.leftMargin, widget.topMargin,
+          widget.rightMargin, widget.bottomMargin),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              obscureText: secure,
+              style: GoogleFonts.nunito(
+                fontWeight: FontWeight.w700,
+                fontSize: widget.fontSize,
+                color: Color(0xFF3E3E3E),
+              ),
+              controller: widget.controller,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: widget.hintText,
+                hintStyle: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w700,
+                  fontSize: widget.fontSize,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
-        ),
+          if (widget.hintText == "Password")
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  secure = !secure;
+                });
+              },
+              icon: Icon(
+                secure ? Icons.visibility_off : Icons.visibility,
+                color: Colors.white,
+              ),
+            ),
+        ],
       ),
     );
-  }
-
-  bool obscure() {
-    if (hinttext == "Password") {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

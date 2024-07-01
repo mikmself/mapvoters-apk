@@ -31,7 +31,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
   @override
   void initState() {
     super.initState();
-    fetchProvinsi(login[0].id);
+    fetchProvinsi(loginData['userID']);
   }
 
   void fetchProvinsi(id) async {
@@ -183,7 +183,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: FutureBuilder(
-                    future: service.showProvinsi(login[0].id),
+                    future: service.showProvinsi(loginData['userID']),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -204,13 +204,13 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
                             onTap: () {
                               searchController.clear();
                               if (currentlevel == 'provinsi') {
-                                fetchKabupaten(item.id, login[0].id);
+                                fetchKabupaten(item.id, loginData['userID']);
                               } else if (currentlevel == 'kabupaten') {
-                                fetchKecamatan(item.id, login[0].id);
+                                fetchKecamatan(item.id, loginData['userID']);
                               } else if (currentlevel == 'kecamatan') {
-                                fetchKelurahan(item.id, login[0].id);
+                                fetchKelurahan(item.id, loginData['userID']);
                               } else if (currentlevel == 'kelurahan') {
-                                fetchTPS(login[0].id, item.id!);
+                                fetchTPS(loginData['userID'], item.id!);
                               } else if (currentlevel == 'TPS') {
                                 showDialog(
                                   context: context,
