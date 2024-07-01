@@ -13,11 +13,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:mapvotersapk/component/service/SaksiService.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-// List<String> prov = ["Jawa Tengah", "Jawa Timur", "Jawa Barat"];
-// List<String> kab = ["Banyumas", "Purbalingga", "Banjarnegara"];
-// List<String> kec = ["Purwokerto Timur", "Sokaraja", "Purwokerto Barat"];
-// List<String> kel = ["Sumampir", "Kranji", "Sokanegara"];
-
 String? provselect;
 String? kabselect;
 String? kecselect;

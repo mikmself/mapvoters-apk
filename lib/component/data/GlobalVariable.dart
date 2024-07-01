@@ -1,4 +1,4 @@
-const String BASE_URL = "https://db4d-182-2-44-22.ngrok-free.app/api";
+const String BASE_URL = "https://5530-149-108-20-227.ngrok-free.app/api";
 String? token = "";
 
 Map<String, dynamic> loginData = {
