@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
-import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/PemetaanSuara/model/ListModel.dart';
 import 'package:mapvotersapk/page/PemetaanSuara/pemetaan_suara_service.dart';
+import 'package:mapvotersapk/page/dashboard.dart';
 
 class Pemetaansuara extends StatefulWidget {
   const Pemetaansuara({super.key, required String title});
@@ -62,43 +62,44 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     });
   }
 
+  void navigateBack() {
+    if (Pageaktifasaatini == 'Kelurahan') {
+      setState(() {
+        Pageaktifasaatini = 'Kecamatan';
+        ListDataPage = kecamatanList;
+        judul = 'Kecamatan';
+      });
+    } else if (Pageaktifasaatini == 'Kecamatan') {
+      setState(() {
+        Pageaktifasaatini = 'Kabupaten';
+        ListDataPage = kabupatenList;
+        judul = 'Kabupaten';
+      });
+    } else if (Pageaktifasaatini == 'Kabupaten') {
+      setState(() {
+        Pageaktifasaatini = 'Provinsi';
+        ListDataPage = provinsiList;
+        judul = 'Provinsi';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //Methode back yang di gunakan user dengan tombol back
     return WillPopScope(
       onWillPop: () async {
         if (Pageaktifasaatini != 'Provinsi') {
-          if (Pageaktifasaatini == 'Kelurahan') {
-            setState(() {
-              Pageaktifasaatini = 'Kecamatan';
-              ListDataPage = kecamatanList;
-              judul = 'Kecamatan';
-            });
-          } else if (Pageaktifasaatini == 'Kecamatan') {
-            setState(() {
-              Pageaktifasaatini = 'Kabupaten';
-              ListDataPage = kabupatenList;
-              judul = 'Kabupaten';
-            });
-          } else if (Pageaktifasaatini == 'Kabupaten') {
-            setState(() {
-              Pageaktifasaatini = 'Provinsi';
-              ListDataPage = provinsiList;
-              judul = 'Provinsi';
-            });
-          }
-
-          return false; // Prevent default back button behavior
+          navigateBack();
+          return false;
         } else {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => SidebarApp(),
+              builder: (context) => Dashboard(title: 'Dashboard'),
             ),
           );
-
           return true;
-          // Allow default back button behavior
         }
       },
       child: Scaffold(
@@ -110,6 +111,13 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
               fontWeight: FontWeight.bold,
             ),
           ),
+          actions: [
+            if (Pageaktifasaatini != 'Provinsi')
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: navigateBack,
+              ),
+          ],
         ),
         body: Column(
           children: [
@@ -128,7 +136,6 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
                 },
               ),
             ),
-            //Method pengganti halaman dengan Geturdetctor
             Expanded(
               child: FutureBuilder(
                 future: service.showProvinsi(loginData['userID']),
@@ -168,7 +175,6 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     );
   }
 
-// Methode  mencari data, mengambil data dari list dareh yamg mana akandi gunakan untuk mencari datta
   void searchList(String query) {
     List<dynamic> results = [];
     if (Pageaktifasaatini == 'Provinsi') {
@@ -197,8 +203,6 @@ class _PemetaansuaraState extends State<Pemetaansuara> {
     });
   }
 
-  //papan tampilan data yang menunjukan semua data
-  // dengan singlchilsecrol method agar data akan ada dan tidak menimbulkan eror
   Widget _buildInfoContainer(String Wilayah, int Pemili_Potensial) {
     return SingleChildScrollView(
       child: Center(
