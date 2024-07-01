@@ -122,69 +122,72 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ),
                         ),
-                        Positioned(
-                          left: 201,
-                          top: 0,
-                          child: SizedBox(
-                            width: 180,
-                            height: 180,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: 0,
-                                  top: 0,
-                                  child: Container(
-                                    width: 180,
-                                    height: 180,
-                                    decoration: ShapeDecoration(
-                                      color: const Color(0xFFABB7BD),
-                                      shape: RoundedRectangleBorder(
-                                        side: const BorderSide(
-                                            width: 2, color: Color(0xFF848484)),
-                                        borderRadius: BorderRadius.circular(10),
+                        Visibility(
+                          visible: loginData['role']=='paslon',
+                          child: Positioned(
+                            left: 201,
+                            top: 0,
+                            child: SizedBox(
+                              width: 180,
+                              height: 180,
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    child: Container(
+                                      width: 180,
+                                      height: 180,
+                                      decoration: ShapeDecoration(
+                                        color: const Color(0xFFABB7BD),
+                                        shape: RoundedRectangleBorder(
+                                          side: const BorderSide(
+                                              width: 2, color: Color(0xFF848484)),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const Positioned(
-                                  left: 16,
-                                  top: 15,
-                                  child: SizedBox(
-                                    width: 149,
-                                    child: Text(
-                                      'Koordinator :',
-                                      style: TextStyle(
-                                        color: Color(0xFFF6F5F2),
-                                        fontSize: 20,
-                                        fontFamily: 'Nunito',
-                                        fontWeight: FontWeight.w900,
-                                        height: 0,
+                                  const Positioned(
+                                    left: 16,
+                                    top: 15,
+                                    child: SizedBox(
+                                      width: 149,
+                                      child: Text(
+                                        'Koordinator :',
+                                        style: TextStyle(
+                                          color: Color(0xFFF6F5F2),
+                                          fontSize: 20,
+                                          fontFamily: 'Nunito',
+                                          fontWeight: FontWeight.w900,
+                                          height: 0,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Positioned(
-                                  left: 37,
-                                  top: 62,
-                                  child: SizedBox(
-                                    width: 106,
-                                    child: Text(
-                                      dashboard != null
-                                          ? dashboard!.totalKoordinator
-                                              .toString()
-                                          : 'Loading...',
-                                      // Example placeholder text
-                                      style: TextStyle(
-                                        color: Color(0xFFF6F5F2),
-                                        fontSize: 40,
-                                        fontFamily: 'Nunito',
-                                        fontWeight: FontWeight.w900,
-                                        height: 0,
+                                  Positioned(
+                                    left: 37,
+                                    top: 62,
+                                    child: SizedBox(
+                                      width: 106,
+                                      child: Text(
+                                        dashboard != null
+                                            ? dashboard!.totalKoordinator
+                                                .toString()
+                                            : 'Loading...',
+                                        // Example placeholder text
+                                        style: TextStyle(
+                                          color: Color(0xFFF6F5F2),
+                                          fontSize: 40,
+                                          fontFamily: 'Nunito',
+                                          fontWeight: FontWeight.w900,
+                                          height: 0,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
