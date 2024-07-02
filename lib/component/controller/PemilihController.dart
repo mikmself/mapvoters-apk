@@ -2,11 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
+import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:mapvotersapk/component/model/KabupatenModel.dart';
+import 'package:mapvotersapk/component/model/KecamatanModel.dart';
+import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/PemilihModel.dart';
+import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:mapvotersapk/component/service/PemilihService.dart';
+import 'package:mapvotersapk/component/service/WilayahService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 PemilihService service = PemilihService();
+WilayahService WilService = WilayahService();
 
 class GetAllDataPemilih extends StatefulWidget {
   final String judul;
@@ -27,11 +35,30 @@ class GetAllDataPemilih extends StatefulWidget {
 class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
   TextEditingController searchController = TextEditingController();
   List<PemilihModel> searchResults = [];
+  String? provinsi_id;
 
   @override
   void initState() {
     super.initState();
     searchResults = widget.list;
+  }
+
+  Widget _buildContainer(Widget child) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
+      margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).size.height * 0.02, left: 15),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.black12,
+      ),
+      width: 330,
+      height: 60,
+      child: child,
+    );
   }
 
   void _deletePemilih(int id) {
@@ -87,18 +114,19 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
     }
   }
 
-  void _editPemilih(PemilihModel pemilih) {
-    final nameController = TextEditingController(text: pemilih.nama);
+  void _editPemilih(id) async {
+    
+    PemilihModel? pemilih = await service.GetPemilihDetail(id);
+    
+    final nameController = TextEditingController(text: pemilih!.nama);
     final NIKController = TextEditingController(text: pemilih.nik);
     final phoneController = TextEditingController(text: pemilih.telephone);
-    final provinsiController =
-        TextEditingController(text: pemilih.provinsi?.nama ?? '');
-    final kabupatenController =
-        TextEditingController(text: pemilih.kabupaten?.nama ?? '');
-    final kecamatanController =
-        TextEditingController(text: pemilih.kecamatan?.nama ?? '');
-    final kelurahanController =
-        TextEditingController(text: pemilih.kelurahan?.nama ?? '');
+    String? _provSelected;
+    String? _kabSelected ;
+    String? _kecSelected ;
+    String? _kelSelected ;
+
+
     final tpsController = TextEditingController(text: pemilih.tps);
     File? foto_ktp;
 
@@ -129,42 +157,267 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                     labelText: 'Telephone',
                   ),
                 ),
-                TextField(
-                  controller: provinsiController,
-                  decoration: InputDecoration(
-                    labelText: 'Provinsi',
-                  ),
-                ),
-                TextField(
-                  controller: kabupatenController,
-                  decoration: InputDecoration(
-                    labelText: 'Kabupaten',
-                  ),
-                ),
-                TextField(
-                  controller: kecamatanController,
-                  decoration: InputDecoration(
-                    labelText: 'Kecamatan',
-                  ),
-                ),
-                TextField(
-                  controller: kelurahanController,
-                  decoration: InputDecoration(
-                    labelText: 'Kelurahan',
-                  ),
-                ),
-                TextField(
+                Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        height: 60,
+                        width: 350,
+                        child: FutureBuilder(
+                          future: WilService.showProv(),
+                          builder: (context, snapshot) {
+                            return DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Provinsi',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: provinsiList
+                                    .map((ProvinsiModel provinsi) =>
+                                        DropdownMenuItem(
+                                          value: provinsi.id.toString(),
+                                          enabled: true,
+                                          child: Text(
+                                            provinsi.nama.toString(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: _provSelected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _provSelected = value;
+                                    kabupatenList.clear();
+                                    kecamatanList.clear();
+                                    kelurahanList.clear();
+                                    _kabSelected = null;
+                                    _kecSelected = null;
+                                    _kelSelected = null;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        height: 60,
+                        width: 350,
+                        child: FutureBuilder(
+                          future: WilService.showKab(_provSelected),
+                          builder: (context, snapshot) {
+                            return DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Kabupaten',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: kabupatenList
+                                    .map((KabupatenModel kabupaten) =>
+                                        DropdownMenuItem(
+                                          value: kabupaten.id.toString(),
+                                          enabled: true,
+                                          child: Text(
+                                            kabupaten.nama!
+                                                .toUpperCase()
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: _kabSelected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _kabSelected = value;
+                                    kecamatanList.clear();
+                                    kelurahanList.clear();
+                                    _kecSelected = null;
+                                    _kelSelected = null;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        height: 60,
+                        width: 350,
+                        
+                        child: FutureBuilder(
+                          future: WilService.showKec(_kabSelected),
+                          builder: (context, snapshot) {
+                            return DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Kecamatan',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: kecamatanList
+                                    .map((KecamatanModel kecamatan) =>
+                                        DropdownMenuItem(
+                                          value: kecamatan.id.toString(),
+                                          enabled: true,
+                                          child: Text(
+                                            kecamatan.nama!
+                                                .toUpperCase()
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: _kecSelected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _kecSelected = value;
+                                    kelurahanList.clear();
+                                    _kelSelected = null;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        height: 60,
+                        width: 350,
+                        child: FutureBuilder(
+                          future: WilService.showKel(_kecSelected),
+                          builder: (context, snapshot) {
+                            return DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Kelurahan',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: kelurahanList
+                                    .map((KelurahanModel kelurahan) =>
+                                        DropdownMenuItem(
+                                          value: kelurahan.id.toString(),
+                                          enabled: true,
+                                          child: Text(
+                                            kelurahan.nama!
+                                                .toUpperCase()
+                                                .toString(),
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList(),
+                                value: _kelSelected,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _kelSelected = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 200,
+                                ),
+                                dropdownStyleData: const DropdownStyleData(
+                                  maxHeight: 200,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                  TextField(
                   controller: tpsController,
                   decoration: InputDecoration(
-                    labelText: 'TPS',
+                    labelText: 'tps',
                   ),
                 ),
               ],
             ),
           ),
+          
           actions: [
             TextButton(
               onPressed: () {
+                nameController.text = '';
+                NIKController.text = '';
+                foto_ktp = File('');
+                tpsController.text = '';
+                phoneController.text = '';
+                _provSelected = '';
+                _kabSelected = '';
+                _kecSelected = '';
+                _kelSelected = '';
                 Navigator.of(context).pop();
               },
               child: Text('Batal'),
@@ -178,10 +431,10 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                   foto_ktp ?? File(''),
                   tpsController.text,
                   phoneController.text,
-                  int.parse(provinsiController.text),
-                  int.parse(kabupatenController.text),
-                  int.parse(kecamatanController.text),
-                  int.parse(kelurahanController.text),
+                  int.parse(_provSelected!),
+                  int.parse(_kabSelected!),
+                  int.parse(_kecSelected!),
+                  int.parse(_kelSelected!),
                 );
                 Navigator.of(context).pop();
               },
@@ -280,7 +533,7 @@ class _GetAllDataPemilihState extends State<GetAllDataPemilih> {
                                 IconButton(
                                   icon: const Icon(Icons.edit),
                                   onPressed: () {
-                                    _editPemilih(searchResults[index]);
+                                    _editPemilih(searchResults[index].id);
                                   },
                                 ),
                                 IconButton(
