@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
+import 'package:mapvotersapk/component/sidebar.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/builderbutton.dart';
 import 'package:mapvotersapk/page/LoginPage/pageComponent/buildertextfield.dart';
-import 'package:mapvotersapk/page/LoginPage/pageComponent/Controller.dart';
+import 'package:mapvotersapk/page/LoginPage/pageComponent/LoginService.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/page/PemetaanC1/CreateC1.dart';
 import 'package:mapvotersapk/page/Register/register.dart';
 
 class loginpage extends StatefulWidget {
@@ -32,11 +35,8 @@ class _loginpageState extends State<loginpage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                //padding: EdgeInsets.only(right: 30, left: 30),
-                width: MediaQuery.of(context).size.width *
-                    0.8, // 80% dari lebar layar
-                height: MediaQuery.of(context).size.height *
-                    0.425, // 50% dari tinggi layar
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.425,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   color: const Color(0xFFF2F0F0),
@@ -68,14 +68,18 @@ class _loginpageState extends State<loginpage> {
                         ),
                       ),
                     ),
-                    buildtextfield(
-                        hinttext: "Email",
-                        controllerUse: _emailcontroller,
-                        warna: Color(0x75005E73)),
-                    buildtextfield(
-                        hinttext: "Password",
-                        controllerUse: _paswwordcontroller,
-                        warna: Color(0x7300A6A6)),
+                    BuilderTextfield(
+                      controller: _emailcontroller,
+                      color: Color(0x75005E73),
+                      hinttext: 'Email',
+                      secure: false,
+                    ),
+                    BuilderTextfield(
+                      controller: _paswwordcontroller,
+                      color: Color(0x7300A6A6),
+                      hinttext: 'Password',
+                      secure: true,
+                    ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 27),
                       width: 350,
@@ -84,24 +88,44 @@ class _loginpageState extends State<loginpage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           buildbutton(
-                              context: context,
-                              hinttext: "Sign In",
-                              warnatombol: const Color(0x75005E73),
-                              warnatext: Colors.white,
-                              metod: () {
-                                LoginController().auth(_emailcontroller.text,
-                                    _paswwordcontroller.text);
-                              }),
+                            context: context,
+                            hinttext: "Sign In",
+                            warnatombol: const Color(0x75005E73),
+                            warnatext: Colors.white,
+                            metod: () async {
+                              LoginService login = LoginService();
+                              bool loginsukses = await login.auth(
+                                  _emailcontroller.text,
+                                  _paswwordcontroller.text,
+                                  context);
+                              if (loginsukses) {
+                                _emailcontroller.text = '';
+                                _paswwordcontroller.text = '';
+                                loginData.containsValue('saksi')
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CreateC1()))
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SidebarApp()));
+                              }
+                            },
+                          ),
                           buildbutton(
-                              context: context,
-                              hinttext: "Sign Up",
-                              warnatombol: Colors.white,
-                              warnatext: const Color(0x75005E73),
-                              metod: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Register(),
-                                  )))
+                            context: context,
+                            hinttext: "Sign Up",
+                            warnatombol: Colors.white,
+                            warnatext: const Color(0x75005E73),
+                            metod: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Register(),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),

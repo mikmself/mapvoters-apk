@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mapvotersapk/page/LoginPage/loginpage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main(List<String> args) {
+  runApp(MyApps());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApps extends StatelessWidget {
+  const MyApps({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: loginpage(),
-    );
+    return MaterialApp(home: loginpage());
   }
 }
