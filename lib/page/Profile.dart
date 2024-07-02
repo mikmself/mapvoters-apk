@@ -11,7 +11,8 @@ import 'package:mapvotersapk/component/service/PaslonService.dart';
 import 'package:mapvotersapk/page/Register/nextRegister.dart';
 
 List<String> type = ['gubernur', 'bupati/walikota', 'dprri', 'dprdprov', 'dprdkab', 'dpd'];
-List<String> partai = [];
+List<Map<String, String>> partai = [];
+String? partai_id;
 String? typeselect;
 String? partaiselect;
 
@@ -42,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     fetchData();
+    print(partai);
     getPaslon();
   }
 
@@ -58,9 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
         _dapilController.text = fetchedPaslon.dapil!;
 
         if (fetchedPaslon.partai!.nama != null) {
-          int index = partai.indexOf(fetchedPaslon.partai!.nama!);
+          int index = partai.indexWhere((element) => element['nama'] == fetchedPaslon.partai!.nama);
           if (index != -1) {
-            partaiselect = partai[index];
+            partaiselect = partai[index]['nama']; // Perbaikan di sini
             _partaiController.text = partaiselect!;
           }
         }
@@ -73,7 +75,10 @@ class _ProfilePageState extends State<ProfilePage> {
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body)['data'];
       setState(() {
-        partai = data.map((item) => item['nama'] as String).toList();
+        partai = data.map((item) => {
+          'nama': item['nama'] as String,
+          'id': item['id'].toString(),
+        }).toList();
       });
     } else {
       throw Exception('Failed to load data');
@@ -96,7 +101,9 @@ class _ProfilePageState extends State<ProfilePage> {
         'type': _typeController.text,
         'nomor_urut': _nomorUrutController.text,
         'dapil': _dapilController.text,
+        'partai_id': partai_id, // Tambahkan partai_id ke requestBody
       };
+
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers.addAll({
@@ -177,14 +184,21 @@ class _ProfilePageState extends State<ProfilePage> {
               dropdown(
                 controller: _partaiController,
                 label: 'Partai',
-                list: partai,
+                list: partai.map((e) => e['nama']!).toList(), // Ensure 'nama' values are non-null
                 onSelected: (value) {
                   setState(() {
                     partaiselect = value;
                     _partaiController.text = value!;
+                    
+                    // Find the ID of the selected partai
+                    int index = partai.indexWhere((element) => element['nama'] == value);
+                    if (index != -1) {
+                      partai_id = partai[index]['id']; // Retrieve 'id' from the partai map
+                    }
                   });
                 },
               ),
+
               const SizedBox(height: 20),
               SizedBox(
                 width: 350,

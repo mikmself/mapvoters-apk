@@ -43,7 +43,7 @@ dependencies:
   http: ^1.2.1
   flutter_form_builder: ^9.2.1
   dropdown_button2: ^2.3.9
-  form_builder_validators: 10.0.1
+
 
 
 dev_dependencies:
