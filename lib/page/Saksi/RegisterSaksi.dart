@@ -35,6 +35,8 @@ class _RegisterState extends State<Registersaksi> {
   TextEditingController _keccontroller = TextEditingController();
   TextEditingController _kelcontroller = TextEditingController();
   TextEditingController _tpscontroller = TextEditingController();
+  TextEditingController _passwordcontroller = TextEditingController();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -303,6 +305,11 @@ class _RegisterState extends State<Registersaksi> {
                 obscure: false,
                 label: 'TPS'),
             const SizedBox(height: 15),
+            textfield(
+                controller: _passwordcontroller,
+                obscure: false,
+                label: 'Password'),
+            const SizedBox(height: 15),
             Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -322,44 +329,39 @@ class _RegisterState extends State<Registersaksi> {
                   // ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        // Handle the form submission
-                        String nama = _namacontroller.text;
+                        try {
+                          String nama = _namacontroller.text;
                         String email = _emailcontroller.text;
                         String telephone = _noHPcontroller.text;
                         String tps = _tpscontroller.text;
-
-                        // Buat user baru
-                        int? userId = await service.createUser(nama, email, telephone);
-                        
-                        if (userId != null) {
-                          // Buat saksi dengan user_id yang baru dibuat
-                          await service.createSaksi(
-                            userId,
-                            provselect!,
-                            kabselect!,
-                            kecselect!,
-                            kelselect!,
-                            tps,
-                          );
-                          // Reset form setelah berhasil menambahkan
-                          _namacontroller.clear();
-                          _emailcontroller.clear();
-                          _noHPcontroller.clear();
-                          _tpscontroller.clear();
-                          setState(() {
-                            provselect = null;
-                            kabselect = null;
-                            kecselect = null;
-                            kelselect = null;
-                          });
-                        } else {
-                          // Jika gagal membuat user
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Gagal membuat user')),
-                          );
+                        String password = _passwordcontroller.text;
+                        await service.createSaksi(
+                          provselect!,
+                          kabselect!,
+                          kecselect!,
+                          kelselect!,
+                          tps,
+                          nama,
+                          email,
+                          telephone,
+                          password
+                        );
+                        // Reset form setelah berhasil menambahkan
+                        _namacontroller.clear();
+                        _emailcontroller.clear();
+                        _noHPcontroller.clear();
+                        _tpscontroller.clear();
+                        _passwordcontroller.clear();
+                        setState(() {
+                          provselect = null;
+                          kabselect = null;
+                          kecselect = null;
+                          kelselect = null;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("sukses")));
+                        } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("gagal :"+e.toString())));
                         }
-                      }
                     },
                     child: Text('Tambah'),
                     style: ElevatedButton.styleFrom(

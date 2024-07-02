@@ -85,55 +85,37 @@ class SaksiService {
   //   }
   // }
 
-   Future<int?> createUser(String name, String email, String telephone) async {
+  Future<void> createSaksi(String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps, String name, String email, String telephone, String password) async {
     try {
       var response = await http.post(
-        Uri.parse(BASE_URL + '/user'),
+        Uri.parse(BASE_URL + '/v2/saksi'),
         headers: {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'name': name,
-          'email': email,
-          'telephone': telephone,
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        var responseData = jsonDecode(response.body);
-        return responseData['data']['id'];
-      } else {
-        print('Gagal membuat User: ${response.reasonPhrase}');
-        return null;
-      }
-    } catch (e) {
-      print('Terjadi kesalahan saat membuat User: $e');
-      return null;
-    }
-  }
-
-  Future<void> createSaksi(int userId, String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps) async {
-    try {
-      var response = await http.post(
-        Uri.parse(BASE_URL + '/saksi'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'user_id': userId,
-          'provinsi': provinsi,
-          'kabupaten': kabupaten,
-          'kecamatan': kecamatan,
-          'kelurahan': kelurahan,
+          'provinsi_id': provinsi,
+          'kabupaten_id': kabupaten,
+          'kecamatan_id': kecamatan,
+          'kelurahan_id': kelurahan,
           'tps': tps,
+          'name' : name,
+          'email' : email,
+          'telephone' : telephone,
+          'password' : password,
+          "koordinator_id": loginData['userID']
         }),
       );
+       // Print the response
+  print(response.body);
 
-      if (response.statusCode == 200) {
-        print('Saksi berhasil dibuat');
-      } else {
-        print('Gagal membuat Saksi: ${response.reasonPhrase}');
-      }
+  // If the response is JSON, decode it and print
+  var responseData = jsonDecode(response.body);
+  print(responseData);
+      // if (response.statusCode == 200) {
+      //   print('Saksi berhasil dibuat');
+      // } else {
+      //   print('Gagal membuat Saksi: ${response.reasonPhrase}');
+      // }
     } catch (e) {
       print('Terjadi kesalahan saat membuat Saksi: $e');
     }
@@ -152,10 +134,10 @@ class SaksiService {
         'name': nama,
         'email': email,
         'telephone': telephone,
-        'provinsi': provinsi,
-        'kabupatebn': kabupaten,
-        'kecamatan': kecamatan,
-        'kelurahan': kelurahan,
+        'provinsi_id': provinsi,
+        'kabupaten_id': kabupaten,
+        'kecamatan_id': kecamatan,
+        'kelurahan_id': kelurahan,
         'tps': tps,
       });
       
