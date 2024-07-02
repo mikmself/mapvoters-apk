@@ -55,36 +55,6 @@ class SaksiService {
     }
   }
 
-  // CreateSaksi(String nama, String email, String telephone,
-  //     String provinsi, String kabupaten, String kecamatan,
-  //     String kelurahan, String tps) async {
-  //   try {
-  //     var request = http.MultipartRequest(
-  //         'POST', Uri.parse(BASE_URL+'/saksi'),);
-  //     request.fields.addAll({
-  //       'name': nama,
-  //       'email': email,
-  //       'telephone': telephone,
-  //       'provinsi': provinsi,
-  //       'kabupatebn': kabupaten,
-  //       'kecamatan': kecamatan,
-  //       'kelurahan': kelurahan,
-  //       'tps': tps,
-        
-  //     });
-    
-  //     http.StreamedResponse response = await request.send();
-
-  //     if (response.statusCode == 200) {
-  //       print(await response.stream.bytesToString());
-  //     } else {
-  //       print(response.reasonPhrase);
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   Future<void> createSaksi(String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps, String name, String email, String telephone, String password) async {
     try {
       var response = await http.post(
@@ -111,56 +81,85 @@ class SaksiService {
   // If the response is JSON, decode it and print
   var responseData = jsonDecode(response.body);
   print(responseData);
-      // if (response.statusCode == 200) {
-      //   print('Saksi berhasil dibuat');
-      // } else {
-      //   print('Gagal membuat Saksi: ${response.reasonPhrase}');
-      // }
+      if (response.statusCode == 200) {
+        print('Saksi berhasil dibuat');
+      } 
     } catch (e) {
       print('Terjadi kesalahan saat membuat Saksi: $e');
     }
   }
-
-
-  EditSaksi(int id, String nama, String email, String telephone,
-      String provinsi, String kabupaten, String kecamatan,
-      String kelurahan, String tps) async {
+Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps, String name, String email, String telephone) async {
     try {
-      var request = http.MultipartRequest(
-        'PUT',
-        Uri.parse('$BASE_URL/saksi/$id'),
+      var response = await http.post(
+        Uri.parse(BASE_URL + '/saksi/update/$id'),
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({         
+          'name' : name,
+          'email' : email,
+          'telephone' : telephone,
+          'provinsi_id': provinsi,
+          'kabupaten_id': kabupaten,
+          'kecamatan_id': kecamatan,
+          'kelurahan_id': kelurahan,   
+          'tps': tps,      
+          "koordinator_id": loginData['userID']
+        }),
       );
-      request.fields.addAll({
-        'name': nama,
-        'email': email,
-        'telephone': telephone,
-        'provinsi_id': provinsi,
-        'kabupaten_id': kabupaten,
-        'kecamatan_id': kecamatan,
-        'kelurahan_id': kelurahan,
-        'tps': tps,
-      });
-      
+       // Print the response
+  print(response.body);
 
-      http.StreamedResponse response = await request.send();
-
+  // If the response is JSON, decode it and print
+  var responseData = jsonDecode(response.body);
+  print(responseData);
       if (response.statusCode == 200) {
-        String responseBody = await response.stream.bytesToString();
-        Map<String, dynamic> responseDecode =
-        jsonDecode(responseBody) as Map<String, dynamic>;
-
-        print(id.toString());
-        print(request.fields.toString());
-        print(responseDecode.toString());
-      } else {
-        print('Gagal mengedit Saksi: ${response.reasonPhrase}');
-        String responseBody = await response.stream.bytesToString();
-        print('Response body: $responseBody');
-      }
+        print('Saksi berhasil diedit');
+      } 
     } catch (e) {
       print('Terjadi kesalahan saat mengedit Saksi: $e');
     }
   }
+
+
+  // EditSaksi(int id, String nama, String email, String telephone,
+  //     String provinsi, String kabupaten, String kecamatan,
+  //     String kelurahan, String tps) async {
+  //   try {
+  //     var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse('$BASE_URL/saksi/update/$id'),
+  //     );
+  //     request.fields.addAll({
+  //       'name': nama,
+  //       'email': email,
+  //       'telephone': telephone,
+  //       'provinsi_id': provinsi,
+  //       'kabupaten_id': kabupaten,
+  //       'kecamatan_id': kecamatan,
+  //       'kelurahan_id': kelurahan,
+  //       'tps': tps,
+  //     });
+
+  //     http.StreamedResponse response = await request.send();
+
+  //     if (response.statusCode == 200) {
+  //       String responseBody = await response.stream.bytesToString();
+  //       Map<String, dynamic> responseDecode =
+  //       jsonDecode(responseBody) as Map<String, dynamic>;
+
+  //       print(id.toString());
+  //       print(request.fields.toString());
+  //       print(responseDecode.toString());
+  //     } else {
+  //       print('Gagal mengedit Saksi: ${response.reasonPhrase}');
+  //       String responseBody = await response.stream.bytesToString();
+  //       print('Response body: $responseBody');
+  //     }
+  //   } catch (e) {
+  //     print('Terjadi kesalahan saat mengedit Saksi: $e');
+  //   }
+  // }
   DeleteSaksi(int id) async {
     try {
       var request = http.Request('DELETE', Uri.parse('$BASE_URL/saksi/$id'));
