@@ -2,11 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mapvotersapk/component/data/ListData.dart';
+import 'package:mapvotersapk/component/model/PartaiModel.dart';
+import 'package:mapvotersapk/component/service/PaslonService.dart';
 import 'package:mapvotersapk/page/Register/metod.dart';
 
-List<String> type = ["PRESIDEN", "DPR RI", "DPRD PROVINSI"];
-List<String> partai = ["PDIP", "GERINDRA", "PKS"];
+List<String> type = [
+  'gubernur',
+  'bupati/walikota',
+  'dprri',
+  'dprdprov',
+  'dprdkab',
+  'dpd'
+];
+
 String? typeselect;
 String? partaiselect;
 
@@ -31,6 +42,7 @@ class nextRegister extends StatefulWidget {
 }
 
 class _nextRegisterState extends State<nextRegister> {
+  PaslonService _service = PaslonService();
   final TextEditingController _typecontroller = TextEditingController();
   final TextEditingController _noUrutcontroller = TextEditingController();
   final TextEditingController _dapilcontroller = TextEditingController();
@@ -80,29 +92,72 @@ class _nextRegisterState extends State<nextRegister> {
               const SizedBox(
                 height: 20,
               ),
-              dropdown(
-                controller: _partaicontroller,
-                label: 'Partai',
-                list: partai,
-                onSelected: (value) {
-                  setState(() {
-                    typeselect = value;
-                  });
-                },
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    color: Colors.black12,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 60,
+                width: 350,
+                child: FutureBuilder(
+                  future: _service.showPartai(),
+                  builder: (context, snapshot) {
+                    return DropdownButtonHideUnderline(
+                      child: DropdownButton2<String>(
+                        isExpanded: true,
+                        hint: Text(
+                          'Partai',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: partailist
+                            .map((PartaiModel partai) => DropdownMenuItem(
+                                  value: partai.id.toString(),
+                                  enabled: true,
+                                  child: Text(
+                                    partai.nama.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: partaiselect,
+                        onChanged: (value) {
+                          setState(() {
+                            partaiselect = value;
+                          });
+                        },
+                        buttonStyleData: const ButtonStyleData(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 40,
+                          width: 200,
+                        ),
+                        dropdownStyleData: const DropdownStyleData(
+                          maxHeight: 200,
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
               const SizedBox(
                 height: 70,
               ),
               ElevatedButton(
                 onPressed: () {
-                  methodRegister regis = methodRegister();
-                  regis.registerUser(
+                  _service.registerPaslon(
                       widget.nama,
                       widget.email,
                       widget.noHP,
                       widget.password,
                       _typecontroller.text,
-                      _partaicontroller.text,
+                      partaiselect!,
                       _dapilcontroller.text,
                       _noUrutcontroller.text,
                       widget.foto);

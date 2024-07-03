@@ -113,6 +113,12 @@ class _RegisterState extends State<Registersaksi> {
                         onChanged: (value) {
                           setState(() {
                             provselect = value;
+                            kabupatenList.clear();
+                            kecamatanList.clear();
+                            kelurahanList.clear();
+                            kabselect = null;
+                            kecselect = null;
+                            kelselect = null;
                           });
                         },
                         buttonStyleData: const ButtonStyleData(
@@ -169,6 +175,10 @@ class _RegisterState extends State<Registersaksi> {
                           setState(() {
                             kabselect = value;
                             print(kabselect);
+                            kecamatanList.clear();
+                            kelurahanList.clear();
+                            kecselect = null;
+                            kelselect = null;
                           });
                         },
                         buttonStyleData: const ButtonStyleData(
@@ -225,6 +235,8 @@ class _RegisterState extends State<Registersaksi> {
                           setState(() {
                             kecselect = value;
                             print(kecselect);
+                            kelurahanList.clear();
+                            kelselect = null;
                           });
                         },
                         buttonStyleData: const ButtonStyleData(

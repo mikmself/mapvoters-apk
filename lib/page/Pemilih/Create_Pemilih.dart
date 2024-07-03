@@ -2,15 +2,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/model/KabupatenModel.dart';
 import 'package:mapvotersapk/component/model/KecamatanModel.dart';
 import 'package:mapvotersapk/component/model/KelurahanModel.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:mapvotersapk/component/service/PemilihService.dart';
 import 'package:mapvotersapk/component/service/WilayahService.dart';
 
 WilayahService service = WilayahService();
+PemilihService service2 = PemilihService();
 
 class CreatePemilih extends StatefulWidget {
   final VoidCallback onBack;
@@ -120,6 +123,12 @@ class _CreatePemilihState extends State<CreatePemilih> {
                         onChanged: (value) {
                           setState(() {
                             _selectedProvinsi = value;
+                            kabupatenList.clear();
+                            kecamatanList.clear();
+                            kelurahanList.clear();
+                            _selectedKabupaten = null;
+                            _selectedKecamatan = null;
+                            _selectedKelurahan = null;
                             print(_selectedProvinsi);
                           });
                         },
@@ -169,6 +178,10 @@ class _CreatePemilihState extends State<CreatePemilih> {
                         onChanged: (value) {
                           setState(() {
                             _selectedKabupaten = value;
+                            kecamatanList.clear();
+                            kelurahanList.clear();
+                            _selectedKecamatan = null;
+                            _selectedKelurahan = null;
                             print(_selectedKabupaten);
                           });
                         },
@@ -218,6 +231,8 @@ class _CreatePemilihState extends State<CreatePemilih> {
                         onChanged: (value) {
                           setState(() {
                             _selectedKecamatan = value;
+                            kelurahanList.clear();
+                            _selectedKelurahan = null;
                             print(_selectedKecamatan);
                           });
                         },
@@ -287,7 +302,54 @@ class _CreatePemilihState extends State<CreatePemilih> {
                 ),
               ),
               _buildContainer(_buildTextField(_tpsController, 'TPS')),
-              _buildSubmitButton(context),
+              ElevatedButton(
+                onPressed: () async {
+                  service2.CreatePemilih(
+                    _nameController.text,
+                    _nikController.text,
+                    foto_ktp,
+                    _telephoneController.text,
+                    _tpsController.text,
+                    _selectedProvinsi!,
+                    _selectedKabupaten!,
+                    _selectedKecamatan!,
+                    _selectedKelurahan!,
+                  );
+                  _nameController.clear();
+                  _nikController.clear();
+                  foto_ktp = File('');
+                  _telephoneController.clear();
+                  _tpsController.clear();
+                  setState(() {
+                    _selectedProvinsi = null;
+                    _selectedKabupaten = null;
+                    _selectedKecamatan = null;
+                    _selectedKelurahan = null;
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Berhasil menambahkan Pemilih'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF00A6A6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  "TAMBAH",
+                  style: GoogleFonts.getFont(
+                    'Nunito',
+                    fontWeight: FontWeight.w900,
+                    fontSize: 17,
+                    letterSpacing: 1,
+                    color: const Color.fromARGB(255, 27, 25, 25),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -364,10 +426,18 @@ class _CreatePemilihState extends State<CreatePemilih> {
         width: 150,
         child: ElevatedButton(
           onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              // Handle form submission
-              print('Form submitted');
-            }
+            print(_selectedKelurahan);
+            service2.CreatePemilih(
+              _nameController.text,
+              _nikController.text,
+              foto_ktp,
+              _telephoneController.text,
+              _tpsController.text,
+              _selectedProvinsi!,
+              _selectedKabupaten!,
+              _selectedKecamatan!,
+              _selectedKelurahan!,
+            );
           },
           child: Text('TAMBAH'),
         ),
