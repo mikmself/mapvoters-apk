@@ -13,7 +13,8 @@ class SaksiService {
   GetAllDataSaksi() async {
     var request = http.Request(
       'GET',
-      Uri.parse(BASE_URL + '/v2/saksi/${loginData['userId']}/${loginData['role']}'),
+      Uri.parse(
+          BASE_URL + '/v2/saksi/${loginData['userID']}/${loginData['role']}'),
     );
 
     http.StreamedResponse response = await request.send();
@@ -35,6 +36,7 @@ class SaksiService {
       print(response.reasonPhrase);
     }
   }
+
   GetSaksiDetail(int id) async {
     try {
       var request = http.Request('GET', Uri.parse('$BASE_URL/saksi/$id'));
@@ -55,7 +57,16 @@ class SaksiService {
     }
   }
 
-  Future<void> createSaksi(String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps, String name, String email, String telephone, String password) async {
+  Future<void> createSaksi(
+      String provinsi,
+      String kabupaten,
+      String kecamatan,
+      String kelurahan,
+      String tps,
+      String name,
+      String email,
+      String telephone,
+      String password) async {
     try {
       var response = await http.post(
         Uri.parse(BASE_URL + '/v2/saksi'),
@@ -68,59 +79,68 @@ class SaksiService {
           'kecamatan_id': kecamatan,
           'kelurahan_id': kelurahan,
           'tps': tps,
-          'name' : name,
-          'email' : email,
-          'telephone' : telephone,
-          'password' : password,
+          'name': name,
+          'email': email,
+          'telephone': telephone,
+          'password': password,
           "koordinator_id": loginData['userID']
         }),
       );
-       // Print the response
-  print(response.body);
+      // Print the response
+      print(response.body);
 
-  // If the response is JSON, decode it and print
-  var responseData = jsonDecode(response.body);
-  print(responseData);
+      // If the response is JSON, decode it and print
+      var responseData = jsonDecode(response.body);
+      print(responseData);
       if (response.statusCode == 200) {
         print('Saksi berhasil dibuat');
-      } 
+      }
     } catch (e) {
       print('Terjadi kesalahan saat membuat Saksi: $e');
     }
   }
-Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamatan, String kelurahan, String tps, String name, String email, String telephone) async {
+
+  Future<void> EditSaksi(
+      int id,
+      String provinsi,
+      String kabupaten,
+      String kecamatan,
+      String kelurahan,
+      String tps,
+      String name,
+      String email,
+      String telephone) async {
     try {
       var response = await http.post(
         Uri.parse(BASE_URL + '/saksi/update/$id'),
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({         
-          'name' : name,
-          'email' : email,
-          'telephone' : telephone,
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'telephone': telephone,
           'provinsi_id': provinsi,
           'kabupaten_id': kabupaten,
           'kecamatan_id': kecamatan,
-          'kelurahan_id': kelurahan,   
-          'tps': tps,      
+          'kelurahan_id': kelurahan,
+          'tps': tps,
           "koordinator_id": loginData['userID']
         }),
       );
-       // Print the response
-  print(response.body);
+      // Print the response
+      print(response.body);
 
-  // If the response is JSON, decode it and print
-  var responseData = jsonDecode(response.body);
-  print(responseData);
+      // If the response is JSON, decode it and print
+      var responseData = jsonDecode(response.body);
+      print(responseData);
       if (response.statusCode == 200) {
         print('Saksi berhasil diedit');
-      } 
+      }
     } catch (e) {
       print('Terjadi kesalahan saat mengedit Saksi: $e');
     }
   }
-
 
   // EditSaksi(int id, String nama, String email, String telephone,
   //     String provinsi, String kabupaten, String kecamatan,
@@ -176,6 +196,7 @@ Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamat
       print('Terjadi kesalahan saat menghapus Saksi: $e');
     }
   }
+
   Future<void> showProvinsi() async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/provinsi'));
 
@@ -189,7 +210,8 @@ Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamat
 
       provinsiList.clear();
       for (var element in data) {
-        provinsiList.add(ProvinsiModel(id: element['id'], nama: element['nama']));
+        provinsiList
+            .add(ProvinsiModel(id: element['id'], nama: element['nama']));
       }
       print(provinsiList);
 
@@ -212,15 +234,15 @@ Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamat
 
       kabupatenList.clear();
       for (var element in data) {
-        kabupatenList.add(KabupatenModel(id: element['id'], nama: element['nama']));
+        kabupatenList
+            .add(KabupatenModel(id: element['id'], nama: element['nama']));
       }
       print(kabupatenList[0].id);
-
-
     } else {
       print(response.reasonPhrase);
     }
   }
+
   Future<void> showkecamatan(id) async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/kabupaten/$id'));
 
@@ -234,15 +256,15 @@ Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamat
 
       kecamatanList.clear();
       for (var element in data) {
-        kecamatanList.add(KecamatanModel(id: element['id'], nama: element['nama']));
+        kecamatanList
+            .add(KecamatanModel(id: element['id'], nama: element['nama']));
       }
       print(kecamatanList[0].id);
-
-
     } else {
       print(response.reasonPhrase);
     }
   }
+
   Future<void> showkelurahan(id) async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/kecamatan/$id'));
 
@@ -256,16 +278,12 @@ Future<void> EditSaksi(int id, String provinsi, String kabupaten, String kecamat
 
       kelurahanList.clear();
       for (var element in data) {
-        kelurahanList.add(KelurahanModel(id: element['id'], nama: element['nama']));
+        kelurahanList
+            .add(KelurahanModel(id: element['id'], nama: element['nama']));
       }
       print(kelurahanList[0].id);
-
-
     } else {
       print(response.reasonPhrase);
     }
   }
-
-  
-  
 }
