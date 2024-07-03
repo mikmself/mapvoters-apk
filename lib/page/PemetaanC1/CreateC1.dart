@@ -201,8 +201,7 @@ class _CreateC1State extends State<CreateC1> {
       var responseString = await response.stream.bytesToString();
 
       if (response.statusCode == 200) {
-        CustomSnackBar(context,
-            'Sukses Upload C1: ${jsonDecode(responseString)}', Colors.red);
+        CustomSnackBar(context, 'Sukses Upload C1:}', Colors.green);
         print(jsonDecode(responseString));
       } else {
         CustomSnackBar(context, 'Gagal Upload C1: ${response}', Colors.red);
