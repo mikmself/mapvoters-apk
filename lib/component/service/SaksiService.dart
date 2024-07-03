@@ -13,7 +13,7 @@ class SaksiService {
   GetAllDataSaksi() async {
     var request = http.Request(
       'GET',
-      Uri.parse(BASE_URL + '/saksi'),
+      Uri.parse(BASE_URL + '/v2/saksi/${loginData['userId']}/${loginData['role']}'),
     );
 
     http.StreamedResponse response = await request.send();
