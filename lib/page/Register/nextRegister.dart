@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/model/PartaiModel.dart';
 import 'package:mapvotersapk/component/service/PaslonService.dart';
-import 'package:mapvotersapk/page/Register/metod.dart';
 
 List<String> type = [
   'gubernur',
@@ -46,7 +45,6 @@ class _nextRegisterState extends State<nextRegister> {
   final TextEditingController _typecontroller = TextEditingController();
   final TextEditingController _noUrutcontroller = TextEditingController();
   final TextEditingController _dapilcontroller = TextEditingController();
-  final TextEditingController _partaicontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -150,17 +148,38 @@ class _nextRegisterState extends State<nextRegister> {
                 height: 70,
               ),
               ElevatedButton(
-                onPressed: () {
-                  _service.registerPaslon(
-                      widget.nama,
-                      widget.email,
-                      widget.noHP,
-                      widget.password,
-                      _typecontroller.text,
-                      partaiselect!,
-                      _dapilcontroller.text,
-                      _noUrutcontroller.text,
-                      widget.foto);
+                onPressed: () async {
+                  if (_typecontroller.text == '' ||
+                      partaiselect! == '' ||
+                      _dapilcontroller.text == '' ||
+                      _noUrutcontroller.text == '') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Lengkapi Data!'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  } else {
+                    bool regissukses = await _service.registerPaslon(
+                        widget.nama,
+                        widget.email,
+                        widget.noHP,
+                        widget.password,
+                        _typecontroller.text,
+                        partaiselect!,
+                        _dapilcontroller.text,
+                        _noUrutcontroller.text,
+                        widget.foto,
+                        context);
+                    if (regissukses) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Register Succesfully!'),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black12,
