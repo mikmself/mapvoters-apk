@@ -103,7 +103,7 @@ class Service {
 
   Future<void> showTPS(id, kelurahanId) async {
     var request = http.Request(
-        'GET', Uri.parse(BASE_URL + '/get-suarabytps/$id/$kelurahanId'));
+        'GET', Uri.parse(BASE_URL + '/pemetaan-c1-TPS/$kelurahanId/$id'));
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var responseString = await response.stream.bytesToString();
