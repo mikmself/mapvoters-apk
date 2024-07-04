@@ -39,18 +39,10 @@ class LoginService {
       );
 
       return true;
-    } else if (response.statusCode == 401) {
+    } else if (response.statusCode == 401 || response.statusCode == 422) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Email atau Password Salah, Periksa Kembali!'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return false;
-    } else if (response.statusCode == 422) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lengkapi Email atau Password'),
           backgroundColor: Colors.red,
         ),
       );

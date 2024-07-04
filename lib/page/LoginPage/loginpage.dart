@@ -94,23 +94,42 @@ class _loginpageState extends State<loginpage> {
                             warnatext: Colors.white,
                             metod: () async {
                               LoginService login = LoginService();
-                              bool loginsukses = await login.auth(
-                                  _emailcontroller.text,
-                                  _paswwordcontroller.text,
-                                  context);
-                              if (loginsukses) {
-                                _emailcontroller.text = '';
-                                _paswwordcontroller.text = '';
-                                loginData.containsValue('saksi')
-                                    ? Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => CreateC1()))
-                                    : Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                SidebarApp()));
+                              if (_emailcontroller.text == '' ||
+                                  _paswwordcontroller.text == '') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Email atau Password Tidak Boleh Kosong!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Center(
+                                        child: CircularProgressIndicator()),
+                                    backgroundColor: Colors.blue,
+                                  ),
+                                );
+                                bool loginsukses = await login.auth(
+                                    _emailcontroller.text,
+                                    _paswwordcontroller.text,
+                                    context);
+
+                                if (loginsukses) {
+                                  _emailcontroller.text = '';
+                                  _paswwordcontroller.text = '';
+                                  loginData.containsValue('saksi')
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => CreateC1()))
+                                      : Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SidebarApp()));
+                                }
                               }
                             },
                           ),
