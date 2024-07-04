@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
@@ -51,7 +52,7 @@ class PaslonService {
     }
   }
 
-  registerPaslon(
+  Future<bool> registerPaslon(
       String nama,
       String email,
       String telp,
@@ -60,7 +61,8 @@ class PaslonService {
       String partai_id,
       String dapil,
       String noUrut,
-      File foto) async {
+      File foto,
+      BuildContext context) async {
     try {
       var request = http.MultipartRequest(
           'POST', Uri.parse(BASE_URL + '/v2/registerpaslon'));
@@ -79,12 +81,33 @@ class PaslonService {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        print(await response.stream.bytesToString());
+        var responseString = await response.stream.bytesToString();
+        Map<String, dynamic> responsDecode = jsonDecode(responseString);
+        var msg = responsDecode['message'];
+
+        if (msg.toString().contains('The email has already been taken')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email telah Digunakan, Silahkan Pilih Yang Lain!'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        } else {
+          return true;
+        }
       } else {
-        print(response.reasonPhrase);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal!'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false;
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 }
