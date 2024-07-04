@@ -134,18 +134,30 @@ class _RegisterState extends State<Register> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10))),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => nextRegister(
-                                    nama: _namacontroller.text,
-                                    email: _emailcontroller.text,
-                                    noHP: _noHPcontroller.text,
-                                    password: _passwordcontroller.text,
-                                    foto: _imageFile,
+                              if (_namacontroller.text == '' ||
+                                  _emailcontroller.text == '' ||
+                                  _noHPcontroller.text == '' ||
+                                  _passwordcontroller.text == '') {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Lengkapi Data!'),
+                                    backgroundColor: Colors.red,
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => nextRegister(
+                                      nama: _namacontroller.text,
+                                      email: _emailcontroller.text,
+                                      noHP: _noHPcontroller.text,
+                                      password: _passwordcontroller.text,
+                                      foto: _imageFile,
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                             child: Text(
                               "NEXT",
