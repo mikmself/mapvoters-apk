@@ -14,7 +14,7 @@ class SaksiService {
     var request = http.Request(
       'GET',
       Uri.parse(
-          BASE_URL + '/v2/saksi/${loginData['userId']}/${loginData['role']}'),
+          BASE_URL + '/v2/saksi/${loginData['userID']}/${loginData['role']}'),
     );
 
     http.StreamedResponse response = await request.send();
