@@ -71,7 +71,7 @@ class _PemetaanSuaraC1State extends State<PemetaanSuaraC1> {
   }
 
   void fetchTPS(id, String kelurahanId) async {
-    await service.showTPS(id, kelurahanId);
+    await service.showTPS(kelurahanId, id);
     setState(() {
       currentlevel = 'TPS';
       searchResults = TPSlist;

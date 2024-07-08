@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mapvotersapk/component/controller/PemilihController.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/page/Pemilih/Create_Pemilih.dart';
-import 'package:mapvotersapk/page/Register/metod.dart';
-import 'package:mapvotersapk/component/controller/PemilihController.dart';
 
 class Pemilih extends StatefulWidget {
   const Pemilih({

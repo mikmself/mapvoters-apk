@@ -262,7 +262,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             image: paslon != null && paslon!.foto != null
                                 ? DecorationImage(
                               image: NetworkImage(
-                                BASE_URL.replaceFirst('/api', '/') + paslon!.foto!,
+                                BASE_URL.replaceFirst('/api', '/${paslon!.foto!}'),
                               ),
                               fit: BoxFit.cover,
                             )
