@@ -54,18 +54,25 @@ class _RegisterState extends State<Register> {
             Flexible(
               flex: 2,
               child: textfield(
-                  controller: _namacontroller, obscure: false, label: 'Nama'),
+                  typeinput: TextInputType.text,
+                  controller: _namacontroller,
+                  obscure: false,
+                  label: 'Nama'),
             ),
             const SizedBox(height: 15),
             Flexible(
               flex: 2,
               child: textfield(
-                  controller: _emailcontroller, obscure: false, label: 'Email'),
+                  typeinput: TextInputType.emailAddress,
+                  controller: _emailcontroller,
+                  obscure: false,
+                  label: 'Email'),
             ),
             const SizedBox(height: 15),
             Flexible(
               flex: 2,
               child: textfield(
+                  typeinput: TextInputType.phone,
                   controller: _noHPcontroller,
                   obscure: false,
                   label: 'Telephone'),
@@ -74,6 +81,7 @@ class _RegisterState extends State<Register> {
             Flexible(
               flex: 2,
               child: textfield(
+                  typeinput: TextInputType.text,
                   controller: _passwordcontroller,
                   obscure: true,
                   label: 'Password'),

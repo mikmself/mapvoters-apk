@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
@@ -57,7 +58,7 @@ class SaksiService {
     }
   }
 
-  Future<void> createSaksi(
+  Future<bool> createSaksi(
       String provinsi,
       String kabupaten,
       String kecamatan,
@@ -66,37 +67,65 @@ class SaksiService {
       String name,
       String email,
       String telephone,
-      String password) async {
+      String password,
+      BuildContext context) async {
     try {
-      var response = await http.post(
-        Uri.parse(BASE_URL + '/v2/saksi'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'provinsi_id': provinsi,
-          'kabupaten_id': kabupaten,
-          'kecamatan_id': kecamatan,
-          'kelurahan_id': kelurahan,
-          'tps': tps,
-          'name': name,
-          'email': email,
-          'telephone': telephone,
-          'password': password,
-          "koordinator_id": loginData['userID']
-        }),
-      );
-      // Print the response
-      print(response.body);
+      var request =
+          http.MultipartRequest('POST', Uri.parse(BASE_URL + '/v2/saksi'));
 
-      // If the response is JSON, decode it and print
-      var responseData = jsonDecode(response.body);
-      print(responseData);
+      request.fields.addAll({
+        'provinsi_id': provinsi,
+        'kabupaten_id': kabupaten,
+        'kecamatan_id': kecamatan,
+        'kelurahan_id': kelurahan,
+        'tps': tps,
+        'name': name,
+        'email': email,
+        'telephone': telephone,
+        'password': password,
+        "koordinator_id": loginData['userID'].toString()
+      });
+
+      http.StreamedResponse response = await request.send();
+
       if (response.statusCode == 200) {
-        print('Saksi berhasil dibuat');
+        var responseString = await response.stream.bytesToString();
+        Map<String, dynamic> responsDecode = jsonDecode(responseString);
+        var msg = responsDecode['message'];
+
+        if (msg.toString().contains('email')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email telah Digunakan, Silahkan Pilih Yang Lain!'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        } else if (msg.toString().contains('telephone')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('Telephone telah Digunakan, Silahkan Pilih Yang Lain!'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal Menyimpan !'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false;
       }
     } catch (e) {
       print('Terjadi kesalahan saat membuat Saksi: $e');
+      print(loginData['userID']);
+      return false;
     }
   }
 
@@ -111,7 +140,7 @@ class SaksiService {
       String email,
       String telephone) async {
     try {
-      var response = await http.post(
+      var response = await http.put(
         Uri.parse(BASE_URL + '/saksi/update/$id'),
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +154,7 @@ class SaksiService {
           'kecamatan_id': kecamatan,
           'kelurahan_id': kelurahan,
           'tps': tps,
-          "koordinator_id": loginData['userID']
+          // "koordinator_id": loginData['userID']
         }),
       );
       // Print the response
@@ -197,7 +226,7 @@ class SaksiService {
     }
   }
 
-  Future<void> showProvinsi() async {
+  Future<List<ProvinsiModel>> showProvinsi() async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/provinsi'));
 
     http.StreamedResponse response = await request.send();
@@ -207,21 +236,18 @@ class SaksiService {
 
       Map<String, dynamic> responseData = jsonDecode(responseString);
       List<dynamic> data = responseData['data'];
-
       provinsiList.clear();
       for (var element in data) {
         provinsiList
             .add(ProvinsiModel(id: element['id'], nama: element['nama']));
       }
-      print(provinsiList);
-
-      print(responseData['message']);
+      return provinsiList;
     } else {
-      print(response.reasonPhrase);
+      throw Exception("Failed to load provinsi");
     }
   }
 
-  Future<void> showKab(id) async {
+  Future<List<KabupatenModel>> showKab(id) async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/provinsi/$id'));
 
     http.StreamedResponse response = await request.send();
@@ -237,13 +263,13 @@ class SaksiService {
         kabupatenList
             .add(KabupatenModel(id: element['id'], nama: element['nama']));
       }
-      print(kabupatenList[0].id);
+      return kabupatenList;
     } else {
-      print(response.reasonPhrase);
+      throw Exception("Failed to load kabupaten");
     }
   }
 
-  Future<void> showkecamatan(id) async {
+  Future<List<KecamatanModel>> showkecamatan(id) async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/kabupaten/$id'));
 
     http.StreamedResponse response = await request.send();
@@ -259,13 +285,13 @@ class SaksiService {
         kecamatanList
             .add(KecamatanModel(id: element['id'], nama: element['nama']));
       }
-      print(kecamatanList[0].id);
+      return kecamatanList;
     } else {
-      print(response.reasonPhrase);
+      throw Exception("Failed to load kecamatan");
     }
   }
 
-  Future<void> showkelurahan(id) async {
+  Future<List<KelurahanModel>> showkelurahan(id) async {
     var request = http.Request('GET', Uri.parse(BASE_URL + '/kecamatan/$id'));
 
     http.StreamedResponse response = await request.send();
@@ -281,9 +307,9 @@ class SaksiService {
         kelurahanList
             .add(KelurahanModel(id: element['id'], nama: element['nama']));
       }
-      print(kelurahanList[0].id);
+      return kelurahanList;
     } else {
-      print(response.reasonPhrase);
+      throw Exception("Failed to load kelurahan");
     }
   }
 }

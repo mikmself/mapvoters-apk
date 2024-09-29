@@ -3,11 +3,10 @@ import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/page/PemetaanC1/C1Controller.dart';
 import 'package:mapvotersapk/page/PemetaanSuara/pemetaanSuara.dart';
 import 'package:mapvotersapk/page/Pemilih/Pemilih.dart';
-import 'package:mapvotersapk/page/Profile.dart';
 import 'package:mapvotersapk/page/Saksi/saksi.dart';
-import 'package:mapvotersapk/page/Setting.dart';
 import 'package:mapvotersapk/page/Koordinator/Koordinator.dart';
 import 'package:mapvotersapk/page/dashboard.dart';
+import 'package:mapvotersapk/page/testi.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 GlobalKey<_SidebarAppState> sidebarKey = GlobalKey<_SidebarAppState>();
@@ -51,12 +50,11 @@ class _SidebarAppState extends State<SidebarApp> {
         ),
       Saksi(title: "Saksi"),
       Pemilih(title: "Pemilih"),
-      Pemetaansuara(title: "Pemetaan Suara"),
+      if (loginData['role'] != 'koordinator')
+        Pemetaansuara(title: "Pemetaan Suara"),
       if (loginData['role'] != 'koordinator')
         PemetaanSuaraC1(labeltext: 'cari', title: 'Pemetaan C1'),
-      if (loginData['role'] != 'koordinator')
-        ProfilePage(title: "Profile Paslon"),
-      if (loginData['role'] != 'koordinator') SettingPage(title: 'Pengaturan'),
+      Pengaturan(title: 'Pengaturan'),
     ];
 
     _sidebarItems = [
@@ -89,37 +87,29 @@ class _SidebarAppState extends State<SidebarApp> {
           onItemTapped(loginData['role'] == 'koordinator' ? 2 : 3);
         },
       ),
-      SidebarXItem(
-        icon: Icons.map,
-        label: 'PETA SUARA',
-        onTap: () {
-          onItemTapped(loginData['role'] == 'koordinator' ? 3 : 4);
-        },
-      ),
+      if (loginData['role'] != 'koordinator')
+        SidebarXItem(
+          icon: Icons.map,
+          label: 'PETA SUARA',
+          onTap: () {
+            onItemTapped(4);
+          },
+        ),
       if (loginData['role'] != 'koordinator')
         SidebarXItem(
           icon: Icons.photo,
           label: 'C1 SUARA',
           onTap: () {
-            onItemTapped(loginData['role'] == 'koordinator' ? 4 : 5);
+            onItemTapped(5);
           },
         ),
-      if (loginData['role'] != 'koordinator')
-        SidebarXItem(
-          icon: Icons.people_alt_sharp,
-          label: 'PROFILE',
-          onTap: () {
-            onItemTapped(loginData['role'] == 'koordinator' ? 5 : 6);
-          },
-        ),
-      if (loginData['role'] != 'koordinator')
-        SidebarXItem(
-          icon: Icons.settings,
-          label: 'PENGATURAN',
-          onTap: () {
-            onItemTapped(loginData['role'] == 'koordinator' ? 6 : 7);
-          },
-        ),
+      SidebarXItem(
+        icon: Icons.settings,
+        label: 'PENGATURAN',
+        onTap: () {
+          onItemTapped(loginData['role'] == 'koordinator' ? 3 : 6);
+        },
+      ),
     ];
   }
 
@@ -163,8 +153,7 @@ class _SidebarAppState extends State<SidebarApp> {
                               _widgetOptions[_selectedIndex] is Pemilih ||
                               _widgetOptions[_selectedIndex]
                                   is PemetaanSuaraC1 ||
-                              _widgetOptions[_selectedIndex] is ProfilePage ||
-                              _widgetOptions[_selectedIndex] is SettingPage
+                              _widgetOptions[_selectedIndex] is Pengaturan
                           ? (_widgetOptions[_selectedIndex] as dynamic).title
                           : 'Map Voters',
                       style: TextStyle(color: Colors.white),

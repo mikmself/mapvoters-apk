@@ -46,7 +46,7 @@ class LoginService {
           backgroundColor: Colors.red,
         ),
       );
-      return false;
+      return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -54,7 +54,7 @@ class LoginService {
           backgroundColor: Colors.red,
         ),
       );
-      return false;
+      return true;
     }
   }
 }

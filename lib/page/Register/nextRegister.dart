@@ -81,12 +81,16 @@ class _nextRegisterState extends State<nextRegister> {
               ),
               const SizedBox(height: 20),
               textfield(
+                  typeinput: TextInputType.number,
                   controller: _noUrutcontroller,
                   obscure: false,
                   label: 'No Urut'),
               const SizedBox(height: 20),
               textfield(
-                  controller: _dapilcontroller, obscure: false, label: 'Dapil'),
+                  typeinput: TextInputType.text,
+                  controller: _dapilcontroller,
+                  obscure: false,
+                  label: 'Dapil'),
               const SizedBox(
                 height: 20,
               ),
@@ -225,11 +229,13 @@ class textfield extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final bool obscure;
+  final TextInputType typeinput;
   const textfield({
     super.key,
     required this.controller,
     required this.obscure,
     required this.label,
+    required this.typeinput,
   });
 
   @override
@@ -239,6 +245,7 @@ class textfield extends StatelessWidget {
       height: 60,
       width: 350,
       child: TextField(
+        keyboardType: typeinput,
         controller: controller,
         obscureText: obscure,
         decoration: InputDecoration(

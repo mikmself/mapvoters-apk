@@ -7,15 +7,17 @@ import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/model/SettingModel.dart';
 import 'package:mapvotersapk/component/service/SettingService.dart';
 
-class SettingPage extends StatefulWidget {
-  const SettingPage({Key? key, required this.title}) : super(key: key);
+class TargetSuaraPage extends StatefulWidget {
+  final VoidCallback onBack;
+  const TargetSuaraPage({Key? key, required this.title, required this.onBack})
+      : super(key: key);
   final String title;
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  State<TargetSuaraPage> createState() => _TargetSuaraPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _TargetSuaraPageState extends State<TargetSuaraPage> {
   final SettingService service = SettingService();
   SettingModel? setting;
   final TextEditingController _targetSuaraController = TextEditingController();
@@ -28,7 +30,7 @@ class _SettingPageState extends State<SettingPage> {
 
   Future<void> getSetting() async {
     final SettingModel? fetchedSetting =
-    await service.GetSettingDetail(loginData['userID'] as int);
+        await service.GetSettingDetail(loginData['userID'] as int);
     if (fetchedSetting != null) {
       setState(() {
         setting = fetchedSetting;
@@ -96,11 +98,13 @@ class _SettingPageState extends State<SettingPage> {
                       color: Colors.black,
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.black, width: 2),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.blue, width: 2),
+                      borderSide:
+                          const BorderSide(color: Colors.blue, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     fillColor: Colors.white,
@@ -114,11 +118,9 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ElevatedButton(
+              Row(
+                children: [
+                  ElevatedButton(
                     onPressed: () {
                       print(_targetSuaraController.text);
                       updateSetting();
@@ -141,7 +143,27 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ),
                   ),
-                ),
+                  ElevatedButton(
+                    onPressed: widget.onBack,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black12,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      fixedSize: const Size(200, 50),
+                    ),
+                    child: Text(
+                      "Update Setting",
+                      style: GoogleFonts.getFont(
+                        'Nunito',
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.1,
+                        fontSize: 18,
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

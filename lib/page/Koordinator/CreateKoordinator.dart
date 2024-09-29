@@ -55,19 +55,34 @@ class _RegisterState extends State<CreateKoordinator> {
               ),
               const SizedBox(height: 15),
               textfield(
-                  controller: _namacontroller, obscure: false, label: 'Nama'),
+                  typeinput: TextInputType.text,
+                  controller: _namacontroller,
+                  obscure: false,
+                  label: 'Nama'),
               const SizedBox(height: 15),
               textfield(
-                  controller: _NIKcontroller, obscure: false, label: 'NIK'),
+                  typeinput: TextInputType.number,
+                  controller: _NIKcontroller,
+                  obscure: false,
+                  label: 'NIK'),
               const SizedBox(height: 15),
               textfield(
-                  controller: _emailcontroller, obscure: false, label: 'Email'),
+                  typeinput: TextInputType.emailAddress,
+                  controller: _emailcontroller,
+                  obscure: false,
+                  label: 'Email'),
               const SizedBox(height: 15),
               textfield(
-                  controller: _noHPcontroller, obscure: false, label: 'Telephone'),
+                  typeinput: TextInputType.phone,
+                  controller: _noHPcontroller,
+                  obscure: false,
+                  label: 'Telephone'),
               const SizedBox(height: 15),
               textfield(
-                  controller: _passwordcontroller, obscure: true, label: 'Password'),
+                  typeinput: TextInputType.text,
+                  controller: _passwordcontroller,
+                  obscure: true,
+                  label: 'Password'),
               const SizedBox(height: 15),
               Container(
                 width: 350,
@@ -88,7 +103,8 @@ class _RegisterState extends State<CreateKoordinator> {
                         child: DecoratedBox(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: FileImage(_imageFile), fit: BoxFit.cover),
+                                image: FileImage(_imageFile),
+                                fit: BoxFit.cover),
                             border: Border.all(),
                             color: Colors.black12,
                             borderRadius: BorderRadius.circular(5),
@@ -103,7 +119,8 @@ class _RegisterState extends State<CreateKoordinator> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black12,
-                            fixedSize: Size(MediaQuery.of(context).size.width * 0.32, 50),
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width * 0.32, 50),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -120,7 +137,8 @@ class _RegisterState extends State<CreateKoordinator> {
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('Berhasil menambahkan koordinator'),
+                                content:
+                                    Text('Berhasil menambahkan koordinator'),
                                 backgroundColor: Colors.green,
                               ),
                             );
@@ -150,7 +168,8 @@ class _RegisterState extends State<CreateKoordinator> {
   }
 
   Future<void> _pickAnyFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       File file = File(result.files.first.path!);

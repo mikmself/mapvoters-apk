@@ -1,23 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mapvotersapk/component/data/GlobalVariable.dart';
 import 'package:mapvotersapk/component/model/SaksiModel.dart';
 import 'package:mapvotersapk/component/service/SaksiService.dart';
 import 'package:mapvotersapk/component/sidebar.dart';
-import 'package:mapvotersapk/page/Saksi/saksi.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:mapvotersapk/component/data/ListData.dart';
 import 'package:mapvotersapk/component/model/ProvinsiModel.dart';
 import 'package:mapvotersapk/component/model/KabupatenModel.dart';
 import 'package:mapvotersapk/component/model/KecamatanModel.dart';
 import 'package:mapvotersapk/component/model/KelurahanModel.dart';
-
-String? provselect;
-String? kabselect;
-String? kecselect;
-String? kelselect;
 
 SaksiService service = SaksiService();
 
@@ -42,6 +33,14 @@ class GetAllDataSaksi extends StatefulWidget {
 class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
   TextEditingController searchController = TextEditingController();
   List<dynamic> searchResults = [];
+  String? provselect;
+  String? kabselect;
+  String? kecselect;
+  String? kelselect;
+  Future<List<ProvinsiModel>>? _provinsiFuture;
+  Future<List<KabupatenModel>>? _kabupatenFuture;
+  Future<List<KecamatanModel>>? _kecamatanFuture;
+  Future<List<KelurahanModel>>? _kelurahanFuture;
 
   @override
   void initState() {
@@ -100,30 +99,30 @@ class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
     }
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 14.0,
-          ),
-        ),
-        SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(height: 8),
-      ],
-    );
-  }
+  // Widget _buildDetailRow(String label, String value) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text(
+  //         label,
+  //         style: TextStyle(
+  //           color: Colors.grey,
+  //           fontSize: 14.0,
+  //         ),
+  //       ),
+  //       SizedBox(height: 4),
+  //       Text(
+  //         value,
+  //         style: TextStyle(
+  //           fontSize: 16.0,
+  //           fontWeight: FontWeight.bold,
+  //           color: Colors.black,
+  //         ),
+  //       ),
+  //       SizedBox(height: 8),
+  //     ],
+  //   );
+  // }
 
   void _editSaksi(int id) async {
     SaksiModel? saksi = await service.GetSaksiDetail(id);
@@ -133,333 +132,427 @@ class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
         TextEditingController(text: saksi.user!.email);
     TextEditingController telephoneController =
         TextEditingController(text: saksi.user!.telephone);
-    String _provSelected = saksi.provinsi!.id.toString();
-    String _kabSelected = saksi.kabupaten!.id.toString();
-    String _kecSelected = saksi.kecamatan!.id.toString();
-    String _kelSelected = saksi.kelurahan!.id.toString();
+    provselect = saksi.provinsi!.id.toString();
+    kabselect = saksi.kabupaten!.id.toString();
+    kecselect = saksi.kecamatan!.id.toString();
+    kelselect = saksi.kelurahan!.id.toString();
     TextEditingController tpsController =
         TextEditingController(text: saksi.tps!);
+
+    _kabupatenFuture = service.showKab(provselect);
+    _kecamatanFuture = service.showkecamatan(kabselect);
+    _kelurahanFuture = service.showkelurahan(kecselect);
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-            title: Text('Edit Saksi'),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: nameController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      labelText: 'Nama',
-                      border: OutlineInputBorder(),
-                    ),
+          title: Text('Edit Saksi'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20),
+                TextField(
+                  controller: nameController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Nama',
+                    border: OutlineInputBorder(),
                   ),
-                  SizedBox(height: 15),
-                  TextField(
-                    controller: emailController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                    ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: emailController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
                   ),
-                  SizedBox(height: 15),
-                  TextField(
-                    controller: telephoneController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      labelText: 'Telephone',
-                      border: OutlineInputBorder(),
-                    ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: telephoneController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'Telephone',
+                    border: OutlineInputBorder(),
                   ),
-                  SizedBox(height: 15),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    height: 60,
-                    width: 350,
-                    child: FutureBuilder(
-                      future: service.showProvinsi(),
-                      builder: (context, snapshot) {
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'Provinsi',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: provinsiList
-                                .map((ProvinsiModel provinsi) =>
-                                    DropdownMenuItem(
-                                      value: provinsi.id.toString(),
-                                      enabled: true,
-                                      child: Text(
-                                        provinsi.nama.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                            value: _provSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _provSelected = value!;
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              height: 40,
-                              width: 200,
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
+                ),
+                SizedBox(height: 15),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  height: 60,
+                  width: 350,
+                  child: FutureBuilder<List<ProvinsiModel>>(
+                    future: _provinsiFuture,
+                    builder: (context, snapshot) {
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: Text(
+                            'Provinsi',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
                             ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    height: 60,
-                    width: 350,
-                    child: FutureBuilder(
-                      future: service.showKab(_provSelected),
-                      builder: (context, snapshot) {
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'Kabupaten',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: kabupatenList
-                                .map((KabupatenModel kabupaten) =>
-                                    DropdownMenuItem(
-                                      value: kabupaten.id.toString(),
-                                      enabled: true,
-                                      child: Text(
-                                        kabupaten.nama.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
+                          items: provinsiList
+                              .map((ProvinsiModel provinsi) => DropdownMenuItem(
+                                    value: provinsi.id.toString(),
+                                    enabled: true,
+                                    child: Text(
+                                      provinsi.nama.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 14,
                                       ),
-                                    ))
-                                .toList(),
-                            value: _kabSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                kabselect = value;
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              height: 40,
-                              width: 200,
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                            ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: provselect,
+                          onChanged: (value) {
+                            setState(() {
+                              provselect = value;
+                              kabselect = null;
+                              kecselect = null;
+                              kelselect = null;
+                              kabupatenList.clear();
+                              kecamatanList.clear();
+                              kelurahanList.clear();
+                              _kabupatenFuture = service.showKab(provselect);
+                            });
+                          },
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            height: 40,
+                            width: 200,
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    height: 60,
-                    width: 350,
-                    child: FutureBuilder(
-                      future: service.showkecamatan(_kabSelected),
-                      builder: (context, snapshot) {
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'kecamatan',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: kecamatanList
-                                .map((KecamatanModel kecamatan) =>
-                                    DropdownMenuItem(
-                                      value: kecamatan.id.toString(),
-                                      enabled: true,
-                                      child: Text(
-                                        kecamatan.nama.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                            value: _kecSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _kecSelected = value!;
-                                print(_kecSelected);
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              height: 40,
-                              width: 200,
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                            ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(),
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    height: 60,
-                    width: 350,
-                    child: FutureBuilder(
-                      future: service.showkelurahan(_kecSelected),
-                      builder: (context, snapshot) {
-                        return DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'Kelurahan',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: kelurahanList
-                                .map((KelurahanModel kelurahan) =>
-                                    DropdownMenuItem(
-                                      value: kelurahan.id.toString(),
-                                      enabled: true,
-                                      child: Text(
-                                        kelurahan.nama.toString(),
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ))
-                                .toList(),
-                            value: _kelSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _kelSelected = value!;
-                                print(_kelSelected);
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              height: 40,
-                              width: 200,
-                            ),
-                            dropdownStyleData: const DropdownStyleData(
-                              maxHeight: 200,
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                            ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  TextField(
-                    controller: tpsController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      labelText: 'TPS',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(height: 15),
-                  ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await service.EditSaksi(
-                        saksi.id!,
-                        nameController.text,
-                        emailController.text,
-                        telephoneController.text,
-                        _provSelected,
-                        _kabSelected,
-                        _kecSelected,
-                        _kelSelected,
-                        tpsController.text,
+                        ),
                       );
-                      widget.refresh();
-                        await service.GetAllDataSaksi();
-                        setState(() {
-                          searchResults = widget.list;
-                        });
-                      Navigator.of(context)
-                          .pop(); // Tutup dialog setelah simpan
-                      ScaffoldMessenger.of(context).showSnackBar(
+                    },
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  height: 60,
+                  width: 350,
+                  child: FutureBuilder(
+                    future: _kabupatenFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text("Error: ${snapshot.error}"),
+                        );
+                      }
+                      kabupatenList = snapshot.data!;
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: Text(
+                            'Kabupaten',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: kabupatenList
+                              .map((KabupatenModel kabupaten) =>
+                                  DropdownMenuItem(
+                                    value: kabupaten.id.toString(),
+                                    enabled: true,
+                                    child: Text(
+                                      kabupaten.nama.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: kabselect,
+                          onChanged: (value) {
+                            setState(() {
+                              kabselect = value;
+                              kecselect = null;
+                              kelselect = null;
+                              kecamatanList.clear();
+                              kelurahanList.clear();
+                              _kecamatanFuture =
+                                  service.showkecamatan(kabselect);
+                            });
+                          },
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            height: 40,
+                            width: 200,
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  height: 60,
+                  width: 350,
+                  child: FutureBuilder(
+                    future: _kecamatanFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text("Error: ${snapshot.error}"),
+                        );
+                      }
+                      kecamatanList = snapshot.data!;
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: Text(
+                            'kecamatan',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: kecamatanList
+                              .map((KecamatanModel kecamatan) =>
+                                  DropdownMenuItem(
+                                    value: kecamatan.id.toString(),
+                                    enabled: true,
+                                    child: Text(
+                                      kecamatan.nama.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: kecselect,
+                          onChanged: (value) {
+                            setState(() {
+                              kecselect = value;
+                              kelselect = null;
+                              kelurahanList.clear();
+                              _kelurahanFuture =
+                                  service.showkelurahan(kecselect);
+                            });
+                          },
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            height: 40,
+                            width: 200,
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(),
+                      color: Colors.black12,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  height: 60,
+                  width: 350,
+                  child: FutureBuilder(
+                    future: _kelurahanFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                          child: Text("Error: ${snapshot.error}"),
+                        );
+                      }
+                      kelurahanList = snapshot.data!;
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2<String>(
+                          isExpanded: true,
+                          hint: Text(
+                            'Kelurahan',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: kelurahanList
+                              .map((KelurahanModel kelurahan) =>
+                                  DropdownMenuItem(
+                                    value: kelurahan.id.toString(),
+                                    enabled: true,
+                                    child: Text(
+                                      kelurahan.nama.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                          value: kelselect,
+                          onChanged: (value) {
+                            setState(() {
+                              kelselect = value;
+                              print(kelselect);
+                            });
+                          },
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                            }
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            height: 40,
+                            width: 200,
+                          ),
+                          dropdownStyleData: const DropdownStyleData(
+                            maxHeight: 200,
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 15),
+                TextField(
+                  controller: tpsController,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    labelText: 'TPS',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        try {
+                          await service.EditSaksi(
+                            saksi.id!,
+                            provselect!,
+                            kabselect!,
+                            kecselect!,
+                            kelselect!,
+                            tpsController.text,
+                            nameController.text,
+                            emailController.text,
+                            telephoneController.text,
+                          );
+                          widget.refresh();
+                          await service.GetAllDataSaksi();
+                          setState(() {
+                            searchResults = widget.list;
+                          });
+                          Navigator.of(context)
+                              .pop(); // Tutup dialog setelah simpan
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Data berhasil disimpan'),
                             ),
                           );
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("gagal :"+e.toString())));
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(120, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("gagal :" + e.toString())));
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(120, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'SIMPAN',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      'SIMPAN',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: Colors.black,
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(120, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'TUTUP',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            )
+                  ],
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -572,6 +665,10 @@ class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
                                   icon: const Icon(Icons.edit),
                                   onPressed: () {
                                     _editSaksi(searchResults[index].id);
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => MyApp()));
                                   },
                                 ),
                                 IconButton(
@@ -591,14 +688,17 @@ class _GetAllDataSaksiState extends State<GetAllDataSaksi> {
               ),
             ],
           ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: () {
-                widget.onItemSelected(1);
-              },
-              child: Icon(Icons.add),
+          Visibility(
+            visible: loginData['role'] == 'koordinator',
+            child: Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () {
+                  widget.onItemSelected(1);
+                },
+                child: Icon(Icons.add),
+              ),
             ),
           ),
         ],
